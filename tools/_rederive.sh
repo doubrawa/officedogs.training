@@ -54,6 +54,22 @@ sed -i "s|\"Über mich\.html\"|\"${MAIN}/ueber-mich/\"|g" "$F"
 # claude.ai/design-Projekt korrigiert ist, läuft dieses sed einfach leer.
 sed -i "s|info@adventuredogs\.training|julia@officedogs.training|g" "$F"
 
+# --- Preisangabe -----------------------------------------------------------
+# Julia ist Kleinunternehmerin nach § 19 UStG — es wird also gar keine
+# Umsatzsteuer ausgewiesen. Der Zusatz "zzgl. MwSt." aus dem Design ist
+# damit schlicht falsch und widerspricht dem eigenen Impressum.
+# (Ab 2027 wird das Thema relevant, dann hier bewusst neu entscheiden.)
+#
+# Der Zusatz trug 28 px Abstand zum Button bei; beim Entfernen wandert der
+# Ausgleich in die margin von .price, sonst klebt der Button am Preis.
+# Beides passiert nur, wenn der Zusatz überhaupt noch da ist — sobald es im
+# Design korrigiert ist, greift der Block gar nicht mehr.
+if grep -q 'class="price-sub">zzgl\. MwSt\.' "$F"; then
+  sed -i '/<div class="price-sub">zzgl\. MwSt\.<\/div>/d' "$F"
+  sed -i 's|\(\.price{[^}]*\)margin:12px 0 7px}|\1margin:12px 0 34px}|' "$F"
+  echo "  Preis: 'zzgl. MwSt.' entfernt (Kleinunternehmerregelung)"
+fi
+
 # --- Bilder ----------------------------------------------------------------
 # Der Export liefert den Hero als 1,9-MB-PNG. optimize-images.ps1 macht daraus
 # ein ~140-KB-JPG; die Referenz im HTML muss mitwandern.
