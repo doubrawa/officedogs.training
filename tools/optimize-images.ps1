@@ -53,10 +53,40 @@ function Convert-Image($srcPath, $dstPath, $w, $h, $quality, $anchorY) {
   } finally { $img.Dispose() }
 }
 
+# Wie Convert-Image, aber PNG. $bgHex leer -> Transparenz bleibt erhalten
+# (fuer das Browser-Favicon), sonst wird die Flaeche unterlegt (fuer das
+# apple-touch-icon: iOS komponiert Alpha auf Schwarz, das saehe haesslich aus).
+function Convert-Png($srcPath, $dstPath, $size, $bgHex) {
+  $img = [System.Drawing.Image]::FromFile($srcPath)
+  try {
+    $bmp = New-Object System.Drawing.Bitmap($size, $size)
+    $g   = [System.Drawing.Graphics]::FromImage($bmp)
+    $g.CompositingQuality = 'HighQuality'
+    $g.InterpolationMode  = 'HighQualityBicubic'
+    $g.SmoothingMode      = 'HighQuality'
+    $g.PixelOffsetMode    = 'HighQuality'
+    if ($bgHex) { $g.Clear([System.Drawing.ColorTranslator]::FromHtml($bgHex)) }
+    $g.DrawImage($img, 0, 0, $size, $size)
+    $g.Dispose()
+    $bmp.Save($dstPath, [System.Drawing.Imaging.ImageFormat]::Png)
+    $bmp.Dispose()
+    $kb = [math]::Round((Get-Item $dstPath).Length / 1KB, 1)
+    Write-Output ("  {0,-26} {1}x{1}  {2} KB" -f (Split-Path $dstPath -Leaf), $size, $kb)
+  } finally { $img.Dispose() }
+}
+
 Write-Output "Bilder optimieren:"
 # Hero: full-bleed Hintergrund. Quelle ist nur 1536x1024, also nicht hochskalieren.
+# Bewusst KEINE kleinere Mobil-Variante: der Hero ist "cover" auf einem hohen
+# Viewport, dort limitiert die Hoehe — ein 375x812-Display braucht rechnerisch
+# mehr Bildbreite als ein Desktop, nicht weniger.
 Convert-Image "$Src\hero-office-dogs.png" "$Dst\hero-office-dogs.jpg" 1536 1024 82 0.5
-# Portrait: wird nur in einer schmalen Spalte gezeigt (max ~520 px), 900 px reicht mit Reserve.
-Convert-Image "$Src\julia-portrait.jpg"   "$Dst\julia-portrait.jpg"   900  1200 82 0.18
+# Portrait: runder Ausschnitt, Box max. 200 px bei background-size:150% —
+# also 300 px bei 1x, 600 px bei 2x. 640 px deckt das mit Reserve ab.
+Convert-Image "$Src\julia-portrait.jpg"   "$Dst\julia-portrait.jpg"   640  853  82 0.18
 # og:image fuer Social-Previews (Facebook/LinkedIn/WhatsApp erwarten 1200x630).
 Convert-Image "$Src\hero-office-dogs.png" "$Dst\og-office-dogs.jpg"   1200 630  84 0.5
+# Favicon-Fallback fuer Browser ohne SVG-Support (Alpha bleibt).
+Convert-Png   "$Src\logo-office-dogs.png" "$Dst\favicon-192.png"      192 ""
+# iOS-Homescreen: deckende Flaeche in Paper-Ton, sonst komponiert iOS auf Schwarz.
+Convert-Png   "$Src\logo-office-dogs.png" "$Dst\apple-touch-icon.png" 180 "#FCFAF6"

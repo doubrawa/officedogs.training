@@ -82,9 +82,16 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass \
 # Logo direkt übernehmen (SVG, ~30 KB — keine Optimierung nötig).
 cp "$SRC/assets/logo-office-dogs.svg" "$DST/assets/"
 
-# --- SEO / Social ----------------------------------------------------------
+# --- SEO / Social / Performance --------------------------------------------
 # title + description liefert das Design (Single Source of Truth); hier kommen
-# nur die Dinge dazu, die das Design-Tool nicht ausgibt.
+# nur die Dinge dazu, die das Design-Tool nicht ausgibt:
+#   - canonical, OpenGraph, Twitter-Card
+#   - Favicon-Varianten: das Design liefert nur SVG. PNG als Fallback für
+#     ältere Browser, apple-touch-icon für den iOS-Homescreen.
+#   - Preload des Heros: der liegt als CSS-Hintergrund in .hero-img und wird
+#     dadurch erst nach dem CSS-Parse entdeckt. Er ist aber das grösste
+#     Element above the fold, also der LCP-Kandidat — ein Preload mit
+#     fetchpriority=high zieht ihn nach vorn.
 inject_seo() {
   local f="$1"
   grep -q '<link rel="canonical"' "$f" && { echo "  SEO bereits vorhanden"; return; }
@@ -103,7 +110,11 @@ inject_seo() {
 <meta property=\"og:image\" content=\"${BASE}/assets/og-office-dogs.jpg\">\n\
 <meta property=\"og:image:width\" content=\"1200\">\n\
 <meta property=\"og:image:height\" content=\"630\">\n\
-<meta name=\"twitter:card\" content=\"summary_large_image\">"
+<meta property=\"og:image:alt\" content=\"Heller Golden Retriever sitzt entspannt unter einem Schreibtisch in einem hellen, modernen Büro\">\n\
+<meta name=\"twitter:card\" content=\"summary_large_image\">\n\
+<link rel=\"icon\" type=\"image/png\" href=\"/assets/favicon-192.png\">\n\
+<link rel=\"apple-touch-icon\" href=\"/assets/apple-touch-icon.png\">\n\
+<link rel=\"preload\" as=\"image\" href=\"/assets/hero-office-dogs.jpg\" fetchpriority=\"high\">"
 
   # ASCII GS (0x1d) als sed-Delimiter — kommt in HTML/URLs nie vor.
   local D=$(printf '\035')
