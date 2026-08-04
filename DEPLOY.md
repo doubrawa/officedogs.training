@@ -1,6 +1,9 @@
 # Deployment officedogs.training
 
-Einmalige Schritte, um dieses lokale Repo live zu bekommen.
+> **Status: live seit 04.08.2026.** Repo `doubrawa/officedogs.training` (public),
+> GitHub Pages von `main`/root, Custom Domain über die `CNAME`-Datei, Zertifikat
+> ausgestellt, Enforce HTTPS aktiv, DNS bei IONOS auf die GitHub-Adressen.
+> Die Schritte unten sind ab hier Dokumentation bzw. Referenz für den Wiederaufbau.
 
 ## 1. GitHub-Repo anlegen und pushen
 
