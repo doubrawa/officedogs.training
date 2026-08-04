@@ -26,14 +26,19 @@ bash tools/_rederive.sh
 `_rederive.sh` erledigt:
 
 - `Office Dogs Vollbild Logo.html` → `index.html`
-- Querverweise (`Landing Page.html`, `Kontakt.html`, `Impressum.html` …) auf
-  absolute `https://adventuredogs.training/…`-URLs umbiegen – relative Pfade
-  laufen von dieser Domain aus ins Leere
+- Querverweise (`Landing Page.html`, `Kontakt.html` …) auf absolute
+  `https://adventuredogs.training/…`-URLs umbiegen – relative Pfade laufen von
+  dieser Domain aus ins Leere. Ausnahme: Impressum/Datenschutz zeigen nach
+  innen auf `/impressum/`
+- `info@adventuredogs.training` (existiert nicht) → `julia@officedogs.training`
 - `tools/optimize-images.ps1` (Hero-PNG 1,9 MB → JPG ~140 KB, Portrait
   runterskalieren, og:image 1200×630 erzeugen)
 - canonical / OpenGraph / Twitter-Card injizieren
 - `tools/schema.json.html` (Schema.org ProfessionalService) einhängen
 - `sitemap.xml` neu schreiben
+
+**Nicht** aus dem Design kommt `impressum/index.html` – die Seite ist von Hand
+gepflegt und wird von der Pipeline nicht angefasst.
 
 ## Deployment
 

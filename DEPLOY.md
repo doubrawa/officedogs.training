@@ -65,10 +65,21 @@ um und fasst `officedogs.training` nicht an:
 
 ## Offen / zu prüfen
 
-- **Eigenes Impressum:** Der Footer verlinkt aktuell auf
-  `adventuredogs.training/impressum/`. Die Betreiberin ist im Footer genannt und
-  das Impressum ist mit einem Klick erreichbar; ein eigenes `/impressum/` auf
-  dieser Domain wäre trotzdem die sicherere Variante.
-- **E-Mail-Adresse:** Die Seite verwendet `info@adventuredogs.training`, der
-  Hauptbetrieb `julia@adventuredogs.training`. Sicherstellen, dass `info@`
-  wirklich zugestellt wird.
+- **Postfach `julia@officedogs.training` einrichten.** Die Seite und das
+  Impressum nennen diese Adresse. Beim Registrar entweder ein Postfach anlegen
+  oder eine Weiterleitung auf `julia@adventuredogs.training` einrichten – ohne
+  das laufen alle Anfragen ins Leere.
+- **E-Mail im Design korrigieren.** Der claude.ai/design-Export liefert noch
+  `info@adventuredogs.training` (existiert nicht). `_rederive.sh` biegt das beim
+  Import auf `julia@officedogs.training` um; sobald es im Design gefixt ist,
+  läuft das sed einfach leer.
+- **Umsatzsteuer klären.** Die Startseite weist „649 € **zzgl. MwSt.**" aus, das
+  Impressum nennt die Kleinunternehmerregelung nach § 19 UStG (dann wird gerade
+  *keine* Umsatzsteuer ausgewiesen). Beides zusammen passt nicht – entweder den
+  Preis auf „649 €" ohne MwSt.-Zusatz ändern (im Design) oder, falls inzwischen
+  regelbesteuert, den § 19-Absatz im Impressum durch die USt-IdNr. ersetzen.
+- **Impressum ist handgepflegt**, nicht aus dem Design: `impressum/index.html`
+  wird von `_rederive.sh` nicht angefasst. Änderungen dort direkt vornehmen.
+- **Hauptseite:** Deren Impressum zitiert noch das TMG. Seit Mai 2024 gilt das
+  DDG (§ 5 DDG statt § 5 TMG, §§ 7–10 DDG statt TMG). Auf dieser Seite ist es
+  schon korrekt; das Hauptrepo müsste bei Gelegenheit nachziehen.

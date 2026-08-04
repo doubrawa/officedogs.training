@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Impressum & Datenschutz – Office Dogs</title>
+<meta name="description" content="Impressum und Datenschutzerklärung von Office Dogs – Bürohunde-Beratung für Unternehmen, Julia Doubrawa, Krumbach.">
+<link rel="canonical" href="https://officedogs.training/impressum/">
+<meta name="theme-color" content="#2b3444">
+<meta name="robots" content="index, follow">
+<link rel="icon" href="../assets/logo-office-dogs.svg" type="image/svg+xml">
+<link href="../assets/fonts.css" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --slate:oklch(33% 0.042 250);--slate-mid:oklch(46% 0.045 250);--slate-lt:oklch(66% 0.03 250);
+  --sand:oklch(80% 0.022 85);--sand-deep:oklch(64% 0.034 78);--sand-lt:oklch(93% 0.014 85);
+  --paper:oklch(98.5% 0.005 85);--cream:oklch(95.5% 0.011 85);
+  --text:oklch(38% 0.018 250);--text-lt:oklch(52% 0.015 250);
+  --line:oklch(33% 0.042 250 / 0.16);--line-soft:oklch(33% 0.042 250 / 0.09);
+  --maxw:1240px;--pad:clamp(22px,4vw,52px);--r:16px;
+}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--text);
+  overflow-x:hidden;-webkit-font-smoothing:antialiased}
+a{color:var(--sand-deep)}a:hover{color:var(--slate)}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 var(--pad)}
+h1,h2,h3{color:var(--slate);font-weight:600;letter-spacing:-0.015em;text-wrap:pretty}
+.label{font-size:11px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:var(--sand-deep)}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;height:80px;display:flex;align-items:center;
+  justify-content:space-between;gap:20px;padding:0 var(--pad);
+  background:oklch(98.5% 0.005 85 / .92);backdrop-filter:blur(12px);border-bottom:1px solid var(--line-soft)}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none}
+.brand img{width:46px;height:46px}
+.brand b{font-size:15px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--slate);line-height:1.2}
+.brand small{display:block;font-size:10.5px;font-weight:500;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--sand-deep);margin-top:3px}
+.back{font-size:13.5px;font-weight:500;color:var(--text);text-decoration:none;transition:color .2s}
+.back:hover{color:var(--sand-deep)}
+
+/* TITEL */
+.head{background:var(--cream);border-bottom:1px solid var(--line-soft);
+  padding:clamp(48px,7vw,84px) 0 clamp(40px,6vw,68px)}
+.head-in{display:flex;flex-direction:column;gap:14px}
+.head h1{font-size:clamp(30px,4vw,48px);line-height:1.12}
+.head p{font-size:16.5px;line-height:1.75;color:var(--text-lt);font-weight:300;max-width:60ch}
+
+/* INHALT */
+.content{padding:clamp(52px,7vw,88px) 0 clamp(64px,9vw,112px)}
+.content-in{display:grid;grid-template-columns:1fr 280px;gap:clamp(32px,6vw,72px);align-items:start}
+.block{margin-bottom:clamp(34px,4vw,48px)}
+.block:last-child{margin-bottom:0}
+.block h2{font-size:clamp(20px,2.2vw,25px);line-height:1.25;margin-bottom:14px;
+  padding-bottom:12px;border-bottom:1px solid var(--line-soft)}
+.block h3{font-size:16px;line-height:1.4;margin:22px 0 8px;font-weight:600}
+.block h3:first-of-type{margin-top:4px}
+.block p{font-size:15.5px;line-height:1.8;color:var(--text-lt);font-weight:300}
+.block p+p{margin-top:12px}
+.block strong{color:var(--slate);font-weight:500}
+.stand{font-size:13px;color:var(--text-lt);margin-top:18px;font-style:italic}
+.notice{display:flex;gap:13px;align-items:flex-start;background:var(--sand-lt);
+  border:1px solid var(--sand);border-radius:var(--r);padding:16px 18px;margin-top:16px}
+.notice svg{width:19px;height:19px;flex:none;margin-top:2px;stroke:var(--sand-deep);fill:none}
+.notice p{font-size:14.5px;line-height:1.65;color:var(--slate);font-weight:500;margin:0}
+
+/* SIDEBAR */
+.side{position:sticky;top:104px;background:var(--cream);border:1px solid var(--line-soft);
+  border-radius:var(--r);padding:28px 26px}
+.side h3{font-size:15px;margin-bottom:14px}
+.side a{display:block;font-size:14.5px;line-height:1.5;text-decoration:none;color:var(--text-lt);
+  padding:9px 0;border-bottom:1px solid var(--line-soft);transition:color .2s}
+.side a:last-child{border-bottom:0}
+.side a:hover{color:var(--sand-deep)}
+
+/* FOOTER */
+footer{background:var(--slate);color:oklch(100% 0 0 / .62);padding:32px 0;
+  font-size:13.5px;font-weight:300}
+.foot-in{max-width:var(--maxw);margin:0 auto;padding:0 var(--pad);display:flex;
+  flex-wrap:wrap;gap:16px 28px;align-items:center;justify-content:space-between}
+footer div{display:flex;flex-wrap:wrap;gap:20px}
+footer a{color:oklch(100% 0 0 / .72);text-decoration:none;transition:color .2s}
+footer a:hover{color:#fff}
+
+@media(max-width:900px){
+  .content-in{grid-template-columns:1fr}
+  .side{position:static}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="brand" href="../">
+    <img src="../assets/logo-office-dogs.svg" alt="Office Dogs">
+    <b>Office Dogs<small>Adventure Dogs · Julia Doubrawa</small></b>
+  </a>
+  <a class="back" href="../">&larr; Zur Startseite</a>
+</nav>
+
+<header class="head">
+  <div class="wrap head-in">
+    <p class="label">Rechtliches</p>
+    <h1>Impressum &amp; Datenschutz</h1>
+    <p>Angaben gemäß § 5 DDG sowie Informationen zum Umgang mit personenbezogenen Daten auf dieser Website.</p>
+  </div>
+</header>
+
+<div class="content">
+  <div class="wrap content-in">
+
+    <main>
+
+      <div class="block" id="angaben">
+        <h2>Angaben gemäß § 5 DDG</h2>
+        <p><strong>Hundetraining Julia Doubrawa</strong></p>
+        <p>Ligusterweg 5<br>86381 Krumbach</p>
+        <div class="notice">
+          <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <p>Dies ist die Geschäftsadresse. Trainings und Beratungen finden vor Ort in Ihrem Unternehmen statt.</p>
+        </div>
+      </div>
+
+      <div class="block" id="kontakt">
+        <h2>Kontakt</h2>
+        <p>Telefon: <a href="tel:+491632652070">+49 163 265 20 70</a></p>
+        <p>E-Mail: <a href="mailto:julia@officedogs.training">julia@officedogs.training</a></p>
+      </div>
+
+      <div class="block">
+        <h2>Behördliche Zulassung</h2>
+        <p>Die für die Ausübung der angebotenen Leistungen erforderliche <strong>Erlaubnis nach § 11 Abs. 1 Nr. 8f TierSchG liegt vor.</strong></p>
+      </div>
+
+      <div class="block">
+        <h2>Aufsichtsbehörde</h2>
+        <p><strong><a href="https://www.landkreis-guenzburg.de/amt-und-verwaltung/veterinaerwesen-und-verbraucherschutz/" target="_blank" rel="noopener">Veterinäramt Günzburg</a></strong></p>
+        <p>An der Kapuzinermauer 1<br>89312 Günzburg</p>
+      </div>
+
+      <div class="block">
+        <h2>Steuerliche Angaben</h2>
+        <p>Gemäß <strong>§ 19 UStG</strong> wird keine Umsatzsteuer berechnet und daher auch nicht ausgewiesen (Kleinunternehmerregelung).</p>
+      </div>
+
+      <div class="block">
+        <h2>Verbraucherstreitbeilegung</h2>
+        <p>Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>
+      </div>
+
+      <div class="block" id="datenschutz">
+        <h2>Datenschutzerklärung</h2>
+
+        <h3>1. Verantwortliche Stelle</h3>
+        <p>Verantwortlich im Sinne der DSGVO ist die im Impressum genannte Person:<br>
+        Julia Doubrawa · Ligusterweg 5 · 86381 Krumbach<br>
+        E-Mail: <a href="mailto:julia@officedogs.training">julia@officedogs.training</a></p>
+
+        <h3>2. Grundsatz: minimale Datenerhebung</h3>
+        <p>Diese Website erhebt und verarbeitet personenbezogene Daten nur, soweit dies technisch erforderlich ist oder Sie uns diese freiwillig mitteilen (etwa per E-Mail oder Telefon).</p>
+        <p>Es werden <strong>keine Cookies gesetzt</strong>, keine Tracking- oder Analysewerkzeuge eingesetzt und keine Nutzungsprofile erstellt. Es sind keine Inhalte Dritter eingebunden.</p>
+
+        <h3>3. Hosting</h3>
+        <p>Diese Website wird über GitHub Pages bereitgestellt. Anbieter ist die GitHub, Inc., 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, USA – ein Unternehmen der Microsoft Corporation.</p>
+        <p>Beim Abrufen der Seite überträgt Ihr Browser technisch bedingt Daten an den Server des Anbieters (z. B. IP-Adresse, Datum und Uhrzeit, aufgerufene Seite, Browser-Typ). Diese Server-Logfiles werden vom Anbieter zur Sicherstellung des Betriebs verarbeitet. Wir selbst haben auf diese Logfiles keinen Zugriff und werten sie nicht aus.</p>
+        <p>Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse am sicheren und effizienten Betrieb der Website). Dabei können Daten in die USA übertragen werden. Der Anbieter ist unter dem EU-U.S. Data Privacy Framework zertifiziert; ergänzend bestehen Standardvertragsklauseln nach Art. 46 DSGVO.</p>
+
+        <h3>4. Schriftarten</h3>
+        <p>Schriftarten werden ausschließlich vom eigenen Server geladen – es findet keine Übertragung an externe Anbieter wie Google Fonts statt.</p>
+
+        <h3>5. Kontakt per E-Mail oder Telefon</h3>
+        <p>Wenn Sie uns kontaktieren, werden die übermittelten Daten (z. B. Name, E-Mail-Adresse, Unternehmen, Inhalt der Anfrage) ausschließlich zur Bearbeitung Ihrer Anfrage verwendet. Eine Weitergabe an Dritte findet nicht statt.</p>
+        <p>Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO (Durchführung vorvertraglicher Maßnahmen) bzw. Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an der Bearbeitung von Anfragen).</p>
+        <p>Die Daten werden gelöscht, sobald Ihr Anliegen abschließend bearbeitet ist, sofern keine gesetzlichen Aufbewahrungspflichten entgegenstehen.</p>
+
+        <h3>6. Verlinkung auf adventuredogs.training</h3>
+        <p>Diese Website verlinkt auf <a href="https://adventuredogs.training/">adventuredogs.training</a>, den Auftritt der Hundeschule derselben Betreiberin. Ein Aufruf dieser Seiten erfolgt erst, wenn Sie einen entsprechenden Link anklicken. Dort gilt die dortige Datenschutzerklärung.</p>
+
+        <h3>7. Ihre Rechte</h3>
+        <p>Sie haben uns gegenüber folgende Rechte hinsichtlich der Sie betreffenden personenbezogenen Daten: Recht auf Auskunft (Art. 15 DSGVO), Berichtigung (Art. 16), Löschung (Art. 17), Einschränkung der Verarbeitung (Art. 18), Datenübertragbarkeit (Art. 20) sowie Widerspruch (Art. 21 DSGVO).</p>
+        <p>Sie haben zudem das Recht, sich bei einer Datenschutz-Aufsichtsbehörde zu beschweren. Zuständig ist das Bayerische Landesamt für Datenschutzaufsicht (BayLDA), <a href="https://www.lda.bayern.de" target="_blank" rel="noopener">www.lda.bayern.de</a>.</p>
+
+        <p class="stand">Stand: August 2026</p>
+      </div>
+
+      <div class="block">
+        <h2>Haftung für Inhalte</h2>
+        <p>Als Diensteanbieter sind wir gemäß § 7 Abs. 1 DDG für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 DDG sind wir als Diensteanbieter jedoch nicht verpflichtet, übermittelte oder gespeicherte fremde Informationen zu überwachen oder nach Umständen zu forschen, die auf eine rechtswidrige Tätigkeit hinweisen.</p>
+        <p>Verpflichtungen zur Entfernung oder Sperrung der Nutzung von Informationen nach den allgemeinen Gesetzen bleiben hiervon unberührt. Eine diesbezügliche Haftung ist jedoch erst ab dem Zeitpunkt der Kenntnis einer konkreten Rechtsverletzung möglich. Bei Bekanntwerden von entsprechenden Rechtsverletzungen werden wir diese Inhalte umgehend entfernen.</p>
+      </div>
+
+      <div class="block">
+        <h2>Haftung für Links</h2>
+        <p>Unser Angebot enthält Links zu externen Websites Dritter, auf deren Inhalte wir keinen Einfluss haben. Deshalb können wir für diese fremden Inhalte auch keine Gewähr übernehmen. Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber der Seiten verantwortlich.</p>
+        <p>Die verlinkten Seiten wurden zum Zeitpunkt der Verlinkung auf mögliche Rechtsverstöße überprüft. Rechtswidrige Inhalte waren zum Zeitpunkt der Verlinkung nicht erkennbar. Eine permanente inhaltliche Kontrolle der verlinkten Seiten ist jedoch ohne konkrete Anhaltspunkte einer Rechtsverletzung nicht zumutbar. Bei Bekanntwerden von Rechtsverletzungen werden wir derartige Links umgehend entfernen.</p>
+      </div>
+
+      <div class="block">
+        <h2>Urheberrecht</h2>
+        <p>Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht. Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechtes bedürfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers.</p>
+        <p>Downloads und Kopien dieser Seite sind nur für den privaten, nicht kommerziellen Gebrauch gestattet. Soweit die Inhalte auf dieser Seite nicht vom Betreiber erstellt wurden, werden die Urheberrechte Dritter beachtet. Sollten Sie trotzdem auf eine Urheberrechtsverletzung aufmerksam werden, bitten wir um einen entsprechenden Hinweis.</p>
+      </div>
+
+    </main>
+
+    <aside class="side">
+      <h3>Auf dieser Seite</h3>
+      <a href="#angaben">Angaben gemäß § 5 DDG</a>
+      <a href="#kontakt">Kontakt</a>
+      <a href="#datenschutz">Datenschutzerklärung</a>
+      <a href="../">Zurück zur Startseite</a>
+      <a href="https://adventuredogs.training/">Hundeschule Adventure Dogs</a>
+    </aside>
+
+  </div>
+</div>
+
+<footer>
+  <div class="foot-in">
+    <span>Adventure Dogs · Hundeschule Julia Doubrawa · Krumbach</span>
+    <div>
+      <a href="https://adventuredogs.training/">Hundeschule</a>
+      <a href="https://adventuredogs.training/angebot/">Angebote</a>
+      <a href="../">Office Dogs</a>
+      <a href="./">Impressum</a>
+      <a href="#datenschutz">Datenschutz</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
