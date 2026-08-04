@@ -82,6 +82,24 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass \
 # Logo direkt übernehmen (SVG, ~30 KB — keine Optimierung nötig).
 cp "$SRC/assets/logo-office-dogs.svg" "$DST/assets/"
 
+# --- Struktur / Barrierefreiheit -------------------------------------------
+# 1) <main>-Landmark. Das Design liefert nav/header/footer, aber kein <main> —
+#    Screenreader haben damit keinen "zum Hauptinhalt"-Sprungpunkt. Beide
+#    Anker sind auf der Seite eindeutig, und die mobile Nav (div.mnav) steht
+#    davor, bleibt also korrekterweise ausserhalb.
+if ! grep -q '<main' "$F"; then
+  sed -i 's|<header class="hero"|<main>\n<header class="hero"|' "$F"
+  sed -i 's|<footer>|</main>\n<footer>|' "$F"
+  echo "  <main>-Landmark ergänzt"
+fi
+
+# 2) Das Logo steht zweimal identisch im Markup: in der Nav (dort trägt es die
+#    Bedeutung "Office Dogs") und in der Kontakt-Sektion, wo es rein
+#    dekorativ ist. Screenreader lesen es sonst doppelt vor. Der sed-Bereich
+#    grenzt auf die cta-Section ein, sonst wäre das zweite Vorkommen vom
+#    ersten nicht zu unterscheiden.
+sed -i '/<section class="cta"/,/<\/section>/ s|\(<img class="badge"[^>]*\)alt="Office Dogs"|\1alt=""|' "$F"
+
 # --- SEO / Social / Performance --------------------------------------------
 # title + description liefert das Design (Single Source of Truth); hier kommen
 # nur die Dinge dazu, die das Design-Tool nicht ausgibt:
