@@ -73,13 +73,16 @@ um und fasst `officedogs.training` nicht an:
   `info@adventuredogs.training` (existiert nicht). `_rederive.sh` biegt das beim
   Import auf `julia@officedogs.training` um; sobald es im Design gefixt ist,
   läuft das sed einfach leer.
-- **Umsatzsteuer klären.** Die Startseite weist „649 € **zzgl. MwSt.**" aus, das
-  Impressum nennt die Kleinunternehmerregelung nach § 19 UStG (dann wird gerade
-  *keine* Umsatzsteuer ausgewiesen). Beides zusammen passt nicht – entweder den
-  Preis auf „649 €" ohne MwSt.-Zusatz ändern (im Design) oder, falls inzwischen
-  regelbesteuert, den § 19-Absatz im Impressum durch die USt-IdNr. ersetzen.
+- **Preis im Design nachziehen.** Der Export liefert weiterhin „zzgl. MwSt.";
+  `_rederive.sh` entfernt den Zusatz beim Import und gleicht den Abstand aus.
+  Wenn es im Design korrigiert ist, läuft der Block leer.
 - **Impressum ist handgepflegt**, nicht aus dem Design: `impressum/index.html`
   wird von `_rederive.sh` nicht angefasst. Änderungen dort direkt vornehmen.
-- **Hauptseite:** Deren Impressum zitiert noch das TMG. Seit Mai 2024 gilt das
-  DDG (§ 5 DDG statt § 5 TMG, §§ 7–10 DDG statt TMG). Auf dieser Seite ist es
-  schon korrekt; das Hauptrepo müsste bei Gelegenheit nachziehen.
+
+### Ab 2027 beachten
+
+Julia ist derzeit Kleinunternehmerin nach § 19 UStG – deshalb steht auf der
+Seite „649 €" ohne Umsatzsteuer-Zusatz und im Impressum der § 19-Absatz. Ab
+2027 wird die Umsatzsteuer relevant. Dann sind **drei** Stellen anzufassen:
+Preisangabe (Design), § 19-Absatz im Impressum (→ USt-IdNr.) und der
+`price-sub`-Block in `_rederive.sh`.
