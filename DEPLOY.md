@@ -68,10 +68,7 @@ um und fasst `officedogs.training` nicht an:
 
 ## Offen / zu prüfen
 
-- **Postfach `julia@officedogs.training` einrichten.** Die Seite und das
-  Impressum nennen diese Adresse. Beim Registrar entweder ein Postfach anlegen
-  oder eine Weiterleitung auf `julia@adventuredogs.training` einrichten – ohne
-  das laufen alle Anfragen ins Leere.
+- ~~Postfach `julia@officedogs.training` einrichten.~~ Erledigt am 04.08.2026.
 - **E-Mail im Design korrigieren.** Der claude.ai/design-Export liefert noch
   `info@adventuredogs.training` (existiert nicht). `_rederive.sh` biegt das beim
   Import auf `julia@officedogs.training` um; sobald es im Design gefixt ist,
