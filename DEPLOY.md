@@ -74,9 +74,14 @@ um und fasst `officedogs.training` nicht an:
   MwSt.-Zusatz. Die beiden Korrekturregeln in `_rederive.sh` laufen dadurch
   leer. Sie bleiben trotzdem drin – falls ein späterer Export sie wieder
   einschleppt, fangen sie es ab.
-- **Google Search Console**: Property für `officedogs.training` anlegen und
-  `sitemap.xml` einreichen. Empfohlen als *Domain-Property* (Verifizierung per
-  TXT-Record bei IONOS) – die deckt Apex und `www` gemeinsam ab.
+- **Google Search Console**: Property für `officedogs.training` anlegen.
+  Empfohlen als *Domain-Property* (Verifizierung per TXT-Record bei IONOS) –
+  die deckt Apex und `www` gemeinsam ab. Sitemap dort mit der **vollständigen
+  URL** einreichen: `https://officedogs.training/sitemap.xml`. Der relative
+  Pfad `sitemap.xml` genügt nur bei URL-Präfix-Properties, weil eine
+  Domain-Property kein einzelnes Präfix hat.
+  Achtung beim TXT-Record: auf `@` liegt bereits der SPF-Eintrag – den
+  Google-Wert **zusätzlich** anlegen, nicht überschreiben.
 - **Impressum ist handgepflegt**, nicht aus dem Design: `impressum/index.html`
   wird von `_rederive.sh` nicht angefasst. Änderungen dort direkt vornehmen.
 
