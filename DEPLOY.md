@@ -69,13 +69,14 @@ um und fasst `officedogs.training` nicht an:
 ## Offen / zu prüfen
 
 - ~~Postfach `julia@officedogs.training` einrichten.~~ Erledigt am 04.08.2026.
-- **E-Mail im Design korrigieren.** Der claude.ai/design-Export liefert noch
-  `info@adventuredogs.training` (existiert nicht). `_rederive.sh` biegt das beim
-  Import auf `julia@officedogs.training` um; sobald es im Design gefixt ist,
-  läuft das sed einfach leer.
-- **Preis im Design nachziehen.** Der Export liefert weiterhin „zzgl. MwSt.";
-  `_rederive.sh` entfernt den Zusatz beim Import und gleicht den Abstand aus.
-  Wenn es im Design korrigiert ist, läuft der Block leer.
+- ~~E-Mail und Preisangabe im Design korrigieren.~~ Erledigt mit Export v53:
+  das Design liefert jetzt selbst `julia@officedogs.training` und den Preis ohne
+  MwSt.-Zusatz. Die beiden Korrekturregeln in `_rederive.sh` laufen dadurch
+  leer. Sie bleiben trotzdem drin – falls ein späterer Export sie wieder
+  einschleppt, fangen sie es ab.
+- **Google Search Console**: Property für `officedogs.training` anlegen und
+  `sitemap.xml` einreichen. Empfohlen als *Domain-Property* (Verifizierung per
+  TXT-Record bei IONOS) – die deckt Apex und `www` gemeinsam ab.
 - **Impressum ist handgepflegt**, nicht aus dem Design: `impressum/index.html`
   wird von `_rederive.sh` nicht angefasst. Änderungen dort direkt vornehmen.
 
