@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Office Dogs – Beratung für hundefreundliche Unternehmen | Julia Doubrawa</title>
+<link rel="canonical" href="https://officedogs.training/">
+<meta name="theme-color" content="#2b3444">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Office Dogs">
+<meta property="og:locale" content="de_DE">
+<meta property="og:title" content="Office Dogs – Beratung für hundefreundliche Unternehmen | Julia Doubrawa">
+<meta property="og:description" content="Office Dogs begleitet Unternehmen dabei, Hunde im Büro erfolgreich zu integrieren: Bürohunde-Analyse, individueller Office Dog Guide und Praxis-Coaching vor Ort.">
+<meta property="og:url" content="https://officedogs.training/">
+<meta property="og:image" content="https://officedogs.training/assets/og-office-dogs.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="description" content="Office Dogs begleitet Unternehmen dabei, Hunde im Büro erfolgreich zu integrieren: Bürohunde-Analyse, individueller Office Dog Guide und Praxis-Coaching vor Ort.">
+<link rel="icon" href="assets/logo-office-dogs.svg" type="image/svg+xml">
+<link href="assets/fonts.css" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --slate:oklch(33% 0.042 250);--slate-mid:oklch(46% 0.045 250);--slate-lt:oklch(66% 0.03 250);
+  --sand:oklch(80% 0.022 85);--sand-deep:oklch(64% 0.034 78);--sand-lt:oklch(93% 0.014 85);
+  --paper:oklch(98.5% 0.005 85);--cream:oklch(95.5% 0.011 85);
+  --text:oklch(38% 0.018 250);--text-lt:oklch(52% 0.015 250);
+  --line:oklch(33% 0.042 250 / 0.16);--line-soft:oklch(33% 0.042 250 / 0.09);
+  --maxw:1240px;--pad:clamp(22px,4vw,52px);--r:16px;
+}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--text);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+a{color:var(--sand-deep)}a:hover{color:var(--slate)}
+section{scroll-margin-top:80px}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 var(--pad)}
+h1,h2,h3{color:var(--slate);font-weight:600;letter-spacing:-0.015em;text-wrap:pretty}
+.label{font-size:11px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:var(--sand-deep)}
+.badge{display:inline-block}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;height:80px;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:0 var(--pad);background:transparent;border-bottom:1px solid transparent;transition:background .3s,backdrop-filter .3s,border-color .3s}
+nav.scrolled{background:oklch(98.5% 0.005 85 / .92);backdrop-filter:blur(12px);border-bottom-color:var(--line-soft)}
+nav .brand b{color:#fff;text-shadow:0 1px 10px oklch(0% 0 0 / .3)}
+nav .brand small{color:oklch(92% 0.02 85)}
+nav .links a{color:oklch(100% 0 0 / .92);text-shadow:0 1px 10px oklch(0% 0 0 / .3)}
+nav .links a:hover{color:#fff}
+nav .links .cta{background:var(--paper);color:var(--slate)!important;text-shadow:none}
+nav .links .cta:hover{background:var(--cream)}
+nav .burger span{background:#fff}
+nav.scrolled .brand b{color:var(--slate);text-shadow:none}
+nav.scrolled .brand small{color:var(--sand-deep)}
+nav.scrolled .links a{color:var(--text);text-shadow:none}
+nav.scrolled .links a:hover{color:var(--sand-deep)}
+nav.scrolled .links .cta{background:var(--slate);color:var(--paper)!important}
+nav.scrolled .links .cta:hover{background:var(--slate-mid)}
+nav.scrolled .burger span{background:var(--slate)}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none}
+.brand img{width:46px;height:46px}
+.brand b{font-size:15px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--slate);line-height:1.2}
+.brand small{display:block;font-size:10.5px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--sand-deep);margin-top:3px}
+.links{display:flex;align-items:center;gap:30px;list-style:none}
+.links a{font-size:13.5px;font-weight:500;color:var(--text);text-decoration:none;letter-spacing:.01em;transition:color .2s}
+.links a:hover{color:var(--sand-deep)}
+.links .cta{background:var(--slate);color:var(--paper)!important;padding:12px 22px;border-radius:999px;font-weight:600}
+.links .cta:hover{background:var(--slate-mid)}
+.burger{display:none;background:none;border:0;cursor:pointer;width:28px;height:20px;flex-direction:column;justify-content:space-between;padding:2px 0}
+.burger span{display:block;height:1.6px;border-radius:2px;background:var(--slate);transition:transform .25s,opacity .2s}
+.burger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.burger.open span:nth-child(2){opacity:0}
+.burger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.mnav{display:none;position:fixed;top:80px;left:0;right:0;z-index:99;flex-direction:column;background:var(--paper);border-bottom:1px solid var(--line-soft);padding:8px var(--pad) 24px}
+.mnav.open{display:flex}
+.mnav a{font-size:15px;color:var(--text);text-decoration:none;padding:14px 0;border-bottom:1px solid var(--line-soft)}
+.mnav a.cta{margin-top:14px;background:var(--slate);color:var(--paper);border-radius:999px;text-align:center;font-weight:600;border-bottom:0}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:9px;text-decoration:none;font-size:14.5px;font-weight:600;padding:15px 28px;border-radius:999px;transition:background .2s,border-color .2s,color .2s}
+.btn svg{width:15px;height:15px}
+.b-slate{background:var(--slate);color:var(--paper)}
+.b-slate:hover{background:var(--slate-mid);color:var(--paper)}
+.b-line{border:1px solid var(--line);color:var(--slate)}
+.b-line:hover{border-color:var(--slate);color:var(--slate)}
+.b-sand{background:var(--sand-lt);color:var(--slate)}
+.b-sand:hover{background:var(--sand);color:var(--slate)}
+.b-paper{background:var(--paper);color:var(--slate)}
+.b-paper:hover{background:var(--cream);color:var(--slate)}
+.b-ghost{border:1px solid oklch(100% 0 0 / .32);color:#fff}
+.b-ghost:hover{border-color:#fff;background:oklch(100% 0 0 / .08);color:#fff}
+
+/* HERO */
+.hero{position:relative;height:100svh;min-height:620px;display:flex;align-items:flex-end;overflow:hidden;padding-top:80px}
+.hero-img{position:absolute;inset:0;background:url('assets/hero-office-dogs.jpg') 62% center / cover no-repeat}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(to right,oklch(22% 0.04 250 / .70) 0%,oklch(22% 0.04 250 / .30) 58%,oklch(22% 0.04 250 / .06) 100%),linear-gradient(to bottom,oklch(24% 0.04 250 / .46) 0%,oklch(24% 0.04 250 / .16) 32%,oklch(22% 0.04 250 / .62) 72%,oklch(18% 0.04 250 / .88) 100%)}
+.hero-in{position:relative;z-index:2;width:100%;max-width:var(--maxw);margin:0 auto;padding:0 var(--pad) clamp(52px,7vh,88px);display:flex;flex-direction:column;align-items:flex-start}
+.hero-in img{width:clamp(84px,8vw,112px);height:auto;margin-bottom:22px;filter:drop-shadow(0 6px 24px oklch(0% 0 0 / .28))}
+.hero .label{color:oklch(93% 0.02 85)}
+.hero h1{font-size:clamp(32px,4.6vw,60px);line-height:1.1;color:#fff;max-width:18ch;margin:16px 0 20px;text-shadow:0 2px 24px oklch(0% 0 0 / .32)}
+.hero p{font-size:clamp(16px,1.5vw,19px);line-height:1.7;color:oklch(100% 0 0 / .88);font-weight:300;max-width:50ch;margin-bottom:32px;text-shadow:0 1px 14px oklch(0% 0 0 / .35)}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap}
+.hero-scroll{position:absolute;right:var(--pad);bottom:clamp(52px,7vh,88px);z-index:2;display:flex;align-items:center;gap:12px;font-size:11px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:oklch(100% 0 0 / .72);text-decoration:none;writing-mode:vertical-rl;transition:color .2s}
+.hero-scroll:hover{color:#fff}
+.hero-scroll::after{content:'';width:1px;height:54px;background:linear-gradient(to bottom,oklch(100% 0 0 / .7),oklch(100% 0 0 / 0))}
+
+/* MEHRWERT */
+.value{padding:clamp(72px,9vw,112px) 0 clamp(72px,9vw,112px)}
+.value-head{max-width:760px;margin:0 auto clamp(40px,5vw,60px);text-align:center;display:flex;flex-direction:column;align-items:center;gap:16px}
+.value-head h2{font-size:clamp(26px,3.1vw,40px);line-height:1.18}
+.value-head p{font-size:17px;line-height:1.8;color:var(--text-lt);font-weight:300;max-width:62ch}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.card{background:#fff;border:1px solid var(--line-soft);border-radius:var(--r);padding:32px 30px 34px}
+.dot{width:38px;height:38px;border-radius:50%;background:var(--sand-lt);border:1px solid var(--sand);display:flex;align-items:center;justify-content:center;margin-bottom:20px}
+.dot span{width:11px;height:11px;border-radius:50%;background:var(--sand-deep)}
+.card h3{font-size:19px;line-height:1.3;margin-bottom:10px}
+.card p{font-size:14.5px;line-height:1.75;color:var(--text-lt);font-weight:300}
+
+/* ANSATZ */
+.approach{background:var(--cream);padding:clamp(72px,9vw,112px) 0}
+.approach-in{display:grid;grid-template-columns:.9fr 1.1fr;gap:clamp(32px,6vw,86px);align-items:start}
+.approach h2{font-size:clamp(26px,3.1vw,40px);line-height:1.15;margin-top:16px}
+.claims{display:flex;flex-direction:column;margin-bottom:28px}
+.claims div{display:flex;gap:14px;align-items:baseline;font-size:17px;font-weight:400;color:var(--slate);padding:15px 0;border-bottom:1px solid var(--line-soft)}
+.claims div:first-child{padding-top:0}
+.claims i{font-style:normal;font-size:11px;font-weight:600;letter-spacing:.14em;color:var(--sand-deep);flex:none}
+.approach p{font-size:16.5px;line-height:1.8;color:var(--text-lt);font-weight:300}
+.approach p+p{margin-top:18px}
+.approach strong{color:var(--slate);font-weight:500}
+
+/* ABLAUF */
+.proc{padding:clamp(72px,9vw,112px) 0}
+.proc-head{max-width:620px;margin-bottom:clamp(36px,4vw,52px);display:flex;flex-direction:column;gap:16px}
+.proc-head h2{font-size:clamp(26px,3.1vw,40px);line-height:1.15}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
+.step{position:relative;padding-top:26px}
+.step::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:var(--line-soft)}
+.step:first-child::before{background:var(--sand)}
+.num{width:34px;height:34px;border-radius:50%;background:var(--slate);color:var(--paper);display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:600;letter-spacing:.02em;margin-bottom:18px}
+.step h3{font-size:18.5px;line-height:1.3;margin-bottom:10px}
+.step p{font-size:14.5px;line-height:1.75;color:var(--text-lt);font-weight:300}
+
+/* PAKET */
+.pkg-sec{padding:0 0 clamp(72px,9vw,112px)}
+.pkg{display:grid;grid-template-columns:1.2fr .8fr;background:#fff;border:1px solid var(--line-soft);border-radius:var(--r);overflow:hidden}
+.pkg-l{padding:clamp(30px,4vw,52px)}
+.pkg-l h2{font-size:clamp(23px,2.5vw,32px);line-height:1.2;margin:14px 0 6px}
+.pkg-l>p{font-size:15px;line-height:1.7;color:var(--text-lt);font-weight:300;margin-bottom:26px;max-width:44ch}
+.pkg-list{list-style:none;display:flex;flex-direction:column}
+.pkg-list li{display:flex;gap:14px;align-items:flex-start;font-size:15.5px;line-height:1.5;color:var(--slate);padding:14px 0;border-top:1px solid var(--line-soft)}
+.pkg-list li:last-child{border-bottom:1px solid var(--line-soft)}
+.tick{width:22px;height:22px;border-radius:50%;background:var(--sand-lt);flex:none;display:flex;align-items:center;justify-content:center;margin-top:1px}
+.tick svg{width:12px;height:12px;color:var(--slate)}
+.pkg-r{background:var(--cream);padding:clamp(30px,4vw,52px);display:flex;flex-direction:column;justify-content:center}
+.price{font-size:clamp(38px,4.4vw,54px);font-weight:600;letter-spacing:-0.03em;color:var(--slate);line-height:1;margin:12px 0 7px}
+.price-sub{font-size:13.5px;color:var(--text-lt);margin-bottom:28px}
+.pkg-r .btn{justify-content:center}
+.pkg-note{font-size:13px;line-height:1.7;color:var(--text-lt);font-weight:300;margin-top:22px;padding-top:20px;border-top:1px solid var(--line)}
+
+/* ZITAT */
+.quote{padding:0 0 clamp(72px,9vw,112px)}
+.quote-in{display:grid;grid-template-columns:auto 1fr;gap:clamp(28px,5vw,64px);align-items:center;background:var(--cream);border-radius:var(--r);padding:clamp(30px,4vw,56px)}
+.portrait{width:clamp(140px,16vw,200px);aspect-ratio:1;border-radius:50%;background:url('assets/julia-portrait.jpg') 46% 18% / 150% no-repeat}
+blockquote{font-family:'Playfair Display',serif;font-size:clamp(21px,2.5vw,32px);font-style:italic;font-weight:600;line-height:1.35;color:var(--slate);max-width:26ch;margin:16px 0 20px}
+.quote-in p{font-size:16px;line-height:1.8;color:var(--text-lt);font-weight:300;max-width:56ch}
+.by{margin-top:20px;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.by b{font-size:15px;color:var(--slate)}
+
+/* CTA */
+.cta{background:var(--slate);padding:clamp(72px,9vw,112px) 0;text-align:center}
+.cta img{width:96px;height:96px;margin-bottom:26px}
+.cta .label{color:var(--sand)}
+.cta h2{color:#fff;font-size:clamp(28px,3.6vw,48px);line-height:1.12;max-width:22ch;margin:16px auto 18px}
+.cta p{font-size:17px;line-height:1.75;color:oklch(100% 0 0 / .74);font-weight:300;max-width:56ch;margin:0 auto 32px}
+.cta-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.sign{margin-top:40px;padding-top:26px;border-top:1px solid oklch(100% 0 0 / .16);display:inline-flex;flex-direction:column;gap:5px}
+.sign b{font-size:17px;color:#fff;font-weight:600}
+.sign span{font-size:11px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:oklch(100% 0 0 / .6)}
+
+/* FOOTER */
+footer{padding:30px var(--pad);display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;border-top:1px solid var(--line-soft)}
+footer span,footer a{font-size:12.5px;color:var(--text-lt);text-decoration:none}
+footer div{display:flex;gap:22px;flex-wrap:wrap}
+footer a:hover{color:var(--sand-deep)}
+
+@media (max-width:1020px){
+  .links{display:none}.burger{display:flex}
+  .cards,.steps{grid-template-columns:1fr 1fr}
+  .approach-in,.pkg,.quote-in{grid-template-columns:1fr;gap:28px}
+  .quote-in{justify-items:start}
+}
+@media (max-width:1020px){
+  .hero-scroll{display:none}
+}
+@media (max-height:820px){
+  .hero-in img{width:76px;margin-bottom:14px}
+  .hero h1{margin:12px 0 16px}
+  .hero p{margin-bottom:24px}
+}
+@media (max-width:660px){
+  .cards,.steps{grid-template-columns:1fr}
+  .hero{min-height:540px}
+}
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <a class="brand" href="#top">
+    <img class="badge" src="assets/logo-office-dogs.svg" alt="Office Dogs">
+    <b>Office Dogs<small>Adventure Dogs · Julia Doubrawa</small></b>
+  </a>
+  <ul class="links">
+    <li><a href="#mehrwert">Mehrwert</a></li>
+    <li><a href="#ansatz">Ansatz</a></li>
+    <li><a href="#ablauf">Ablauf</a></li>
+    <li><a href="#paket">Paket</a></li>
+    <li><a href="#kontakt" class="cta">Gespräch vereinbaren</a></li>
+  </ul>
+  <button class="burger" id="burger" aria-label="Menü öffnen"><span></span><span></span><span></span></button>
+</nav>
+<div class="mnav" id="mnav">
+  <a href="#mehrwert">Mehrwert</a>
+  <a href="#ansatz">Ansatz</a>
+  <a href="#ablauf">Ablauf</a>
+  <a href="#paket">Paket</a>
+  <a href="#kontakt" class="cta">Gespräch vereinbaren</a>
+</div>
+
+<header class="hero" id="top" data-screen-label="Hero">
+  <div class="hero-img"></div>
+  <div class="hero-overlay"></div>
+  <a href="#mehrwert" class="hero-scroll">Mehr erfahren</a>
+  <div class="hero-in">
+    <p class="label">Beratung für hundefreundliche Unternehmen</p>
+    <h1>Hunde erfolgreich in den Arbeitsalltag integrieren.</h1>
+    <p>Individuelle Bürohunde-Konzepte – von der Analyse vor Ort bis zu Strukturen, die im Alltag Ihres Unternehmens wirklich funktionieren.</p>
+    <div class="hero-actions">
+      <a href="#kontakt" class="btn b-paper">Gespräch vereinbaren<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      <a href="#paket" class="btn b-ghost">Leistungen &amp; Investition</a>
+    </div>
+  </div>
+</header>
+
+<section class="value" id="mehrwert" data-screen-label="Mehrwert">
+  <div class="wrap">
+    <div class="value-head">
+      <p class="label">Warum Bürohunde</p>
+      <h2>Ein Bürohund kann den Arbeitsalltag bereichern – wenn die Rahmenbedingungen stimmen.</h2>
+      <p>Immer mehr Unternehmen entscheiden sich dafür, Hunde im Büro zu erlauben. Damit das langfristig funktioniert, braucht es mehr als die Erlaubnis, Hunde mitzubringen.</p>
+    </div>
+    <div class="cards">
+      <div class="card">
+        <div class="dot"><span></span></div>
+        <h3>Arbeitgeberattraktivität</h3>
+        <p>Ein durchdachtes Bürohunde-Konzept ist ein sichtbares Signal an Mitarbeitende und Bewerbende.</p>
+      </div>
+      <div class="card">
+        <div class="dot"><span></span></div>
+        <h3>Wohlbefinden im Team</h3>
+        <p>Klare Regeln nehmen Unsicherheiten – bei Hundehaltenden und bei Kolleginnen und Kollegen ohne Hund.</p>
+      </div>
+      <div class="card">
+        <div class="dot"><span></span></div>
+        <h3>Moderne Unternehmenskultur</h3>
+        <p>Hunde im Büro funktionieren dort, wo Rücksicht, Struktur und Verantwortung selbstverständlich sind.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="approach" id="ansatz" data-screen-label="Ansatz">
+  <div class="wrap approach-in">
+    <div>
+      <p class="label">Unser Ansatz</p>
+      <h2>Individuelle Lösungen statt Standardkonzepte</h2>
+    </div>
+    <div>
+      <div class="claims">
+        <div><i>01</i>Kein Unternehmen gleicht dem anderen.</div>
+        <div><i>02</i>Jedes Team arbeitet anders.</div>
+        <div><i>03</i>Und jeder Hund ist anders.</div>
+      </div>
+      <p>Arbeitsabläufe, Räumlichkeiten und Teams unterscheiden sich – genauso wie die Hunde selbst. Deshalb entwickeln wir gemeinsam ein Konzept, das genau zu Ihrem Unternehmen passt.</p>
+      <p>Unser Ziel ist ein Arbeitsalltag, in dem sich <strong>Mitarbeitende mit und ohne Hund, Besucher und Hunde gleichermaßen wohlfühlen.</strong></p>
+    </div>
+  </div>
+</section>
+
+<section class="proc" id="ablauf" data-screen-label="Ablauf">
+  <div class="wrap">
+    <div class="proc-head">
+      <p class="label">Zusammenarbeit</p>
+      <h2>So läuft die Zusammenarbeit ab</h2>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="num">01</div>
+        <h3>Bürohunde-Analyse</h3>
+        <p>Wir lernen Ihre Arbeitsabläufe, Räumlichkeiten und Mensch-Hund-Teams kennen und identifizieren Chancen sowie mögliche Herausforderungen.</p>
+      </div>
+      <div class="step">
+        <div class="num">02</div>
+        <h3>Office Dog Guide</h3>
+        <p>Auf Basis der Analyse entsteht ein individueller Guide mit klaren Strukturen, Empfehlungen und praxisnahen Lösungen.</p>
+      </div>
+      <div class="step">
+        <div class="num">03</div>
+        <h3>Praxis-Coaching</h3>
+        <p>Die ersten Maßnahmen setzen wir direkt im Unternehmen um. Dort, wo der Alltag stattfindet.</p>
+      </div>
+      <div class="step">
+        <div class="num">04</div>
+        <h3>Weitere Begleitung</h3>
+        <p>Auf Wunsch langfristig: neue Mitarbeitende, weitere Hunde oder veränderte Abläufe fließen in das bestehende Konzept ein.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="pkg-sec" id="paket" data-screen-label="Paket">
+  <div class="wrap">
+    <div class="pkg">
+      <div class="pkg-l">
+        <p class="label">Leistungspaket</p>
+        <h2>Bürohunde-Analyse &amp; Konzept</h2>
+        <p>Der Einstieg für Unternehmen, die Hunde im Büro auf eine verlässliche Grundlage stellen möchten.</p>
+        <ul class="pkg-list">
+          <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg></span>Telefonische Vorbesprechung</li>
+          <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg></span>Analyse vor Ort in Ihrem Unternehmen</li>
+          <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg></span>Individueller Office Dog Guide</li>
+          <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg></span>Erstes Praxis-Coaching</li>
+          <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg></span>Konkrete Handlungsempfehlungen</li>
+          <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg></span>Telefonische Nachbesprechung innerhalb von vier Wochen</li>
+        </ul>
+      </div>
+      <div class="pkg-r">
+        <p class="label">Investition</p>
+        <div class="price">649 €</div>
+        <div class="price-sub">zzgl. MwSt.</div>
+        <a href="#kontakt" class="btn b-slate">Anfrage senden<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        <p class="pkg-note">Für größere Standorte oder mehrere Teams erstellen wir Ihnen ein individuelles Angebot.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="quote" data-screen-label="Warum Office Dogs">
+  <div class="wrap">
+    <div class="quote-in">
+      <div class="portrait"></div>
+      <div>
+        <p class="label">Warum Office Dogs</p>
+        <blockquote>„Nachhaltige Veränderungen entstehen dort, wo der Alltag stattfindet."</blockquote>
+        <p>Als Hundetrainerin begleite ich Mensch-Hund-Teams dabei, alltagstaugliche Lösungen für ein entspanntes Zusammenleben zu entwickeln. Genau diesen Ansatz übertrage ich auf Unternehmen – nicht mit fertigen Lösungen, sondern mit Konzepten, die zu Ihrem Unternehmen und Ihren Mitarbeitenden passen.</p>
+        <div class="by"><b>Julia Doubrawa</b><span class="label">Office Dogs</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta" id="kontakt" data-screen-label="Kontakt">
+  <div class="wrap">
+    <img class="badge" src="assets/logo-office-dogs.svg" alt="Office Dogs">
+    <p class="label">Kontakt</p>
+    <h2>Lassen Sie uns ins Gespräch kommen.</h2>
+    <p>Sie möchten Hunde erfolgreich in den Arbeitsalltag integrieren oder Ihr bestehendes Konzept weiterentwickeln? Ich freue mich darauf, Ihr Unternehmen kennenzulernen.</p>
+    <div class="cta-actions">
+      <a href="https://adventuredogs.training/kontakt/" class="btn b-paper">Kontakt aufnehmen<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      <a href="mailto:info@adventuredogs.training?subject=Anfrage%20Office%20Dogs" class="btn b-ghost">E-Mail schreiben</a>
+    </div>
+    <div class="sign"><b>Julia Doubrawa</b><span>Office Dogs</span></div>
+  </div>
+</section>
+
+<footer>
+  <span>Adventure Dogs · Hundeschule Julia Doubrawa · Krumbach</span>
+  <div>
+    <a href="https://adventuredogs.training/">Hundeschule</a>
+    <a href="https://adventuredogs.training/angebot/">Angebote</a>
+    <a href="https://adventuredogs.training/kontakt/">Kontakt</a>
+    <a href="https://adventuredogs.training/impressum/">Impressum</a>
+    <a href="https://adventuredogs.training/impressum/#datenschutz">Datenschutz</a>
+  </div>
+</footer>
+
+<script>
+const nav=document.getElementById('nav');
+addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>16),{passive:true});
+const b=document.getElementById('burger'),m=document.getElementById('mnav');
+b.addEventListener('click',()=>{const o=m.classList.toggle('open');b.classList.toggle('open',o);b.setAttribute('aria-label',o?'Menü schließen':'Menü öffnen')});
+m.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{m.classList.remove('open');b.classList.remove('open')}));
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  "@id": "https://officedogs.training/#business",
+  "name": "Office Dogs – Beratung für hundefreundliche Unternehmen",
+  "description": "Office Dogs begleitet Unternehmen dabei, Hunde im Büro erfolgreich zu integrieren: Bürohunde-Analyse, individueller Office Dog Guide und Praxis-Coaching vor Ort.",
+  "url": "https://officedogs.training/",
+  "logo": "https://officedogs.training/assets/logo-office-dogs.svg",
+  "image": "https://officedogs.training/assets/og-office-dogs.jpg",
+  "email": "info@adventuredogs.training",
+  "telephone": "+49 163 2652070",
+  "priceRange": "€€",
+  "serviceType": "Bürohunde-Beratung und Coaching für Unternehmen",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Ligusterweg 5",
+    "postalCode": "86381",
+    "addressLocality": "Krumbach",
+    "addressRegion": "Bayern",
+    "addressCountry": "DE"
+  },
+  "areaServed": [
+    { "@type": "AdministrativeArea", "name": "Landkreis Günzburg" },
+    { "@type": "AdministrativeArea", "name": "Schwaben, Bayern" },
+    { "@type": "AdministrativeArea", "name": "Bayern" }
+  ],
+  "founder": { "@type": "Person", "name": "Julia Doubrawa" },
+  "provider": {
+    "@type": "Person",
+    "name": "Julia Doubrawa",
+    "jobTitle": "Hundetrainerin",
+    "url": "https://adventuredogs.training/ueber-mich/"
+  },
+  "parentOrganization": {
+    "@type": "Organization",
+    "name": "Adventure Dogs – Hundeschule Julia Doubrawa",
+    "url": "https://adventuredogs.training/"
+  },
+  "sameAs": [
+    "https://adventuredogs.training/",
+    "https://www.instagram.com/adventuredogs.training"
+  ]
+}
+</script>
+</body>
+</html>

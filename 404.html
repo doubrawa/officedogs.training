@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Seite nicht gefunden – Office Dogs</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/assets/logo-office-dogs.svg" type="image/svg+xml">
+<link href="/assets/fonts.css" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --slate:oklch(33% 0.042 250);--slate-mid:oklch(46% 0.045 250);
+  --sand-deep:oklch(64% 0.034 78);--sand-lt:oklch(93% 0.014 85);
+  --paper:oklch(98.5% 0.005 85);
+  --text:oklch(38% 0.018 250);--text-lt:oklch(52% 0.015 250);
+  --line:oklch(33% 0.042 250 / 0.16);
+}
+body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--text);
+  min-height:100svh;display:flex;align-items:center;justify-content:center;
+  padding:clamp(22px,5vw,52px);-webkit-font-smoothing:antialiased}
+main{max-width:520px;text-align:center;display:flex;flex-direction:column;align-items:center}
+img{width:96px;height:96px;margin-bottom:28px}
+.label{font-size:11px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:var(--sand-deep)}
+h1{color:var(--slate);font-weight:600;letter-spacing:-0.015em;
+  font-size:clamp(26px,3.4vw,38px);line-height:1.18;margin:14px 0 16px}
+p{font-size:16.5px;line-height:1.8;color:var(--text-lt);font-weight:300}
+.actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:32px}
+.btn{display:inline-flex;align-items:center;gap:9px;text-decoration:none;font-size:14.5px;
+  font-weight:600;padding:15px 28px;border-radius:999px;transition:background .2s,border-color .2s,color .2s}
+.b-slate{background:var(--slate);color:var(--paper)}
+.b-slate:hover{background:var(--slate-mid)}
+.b-line{border:1px solid var(--line);color:var(--slate)}
+.b-line:hover{border-color:var(--slate)}
+</style>
+</head>
+<body>
+<main>
+  <img src="/assets/logo-office-dogs.svg" alt="Office Dogs">
+  <p class="label">Fehler 404</p>
+  <h1>Diese Seite gibt es nicht (mehr).</h1>
+  <p>Vielleicht hat sich ein Tippfehler eingeschlichen, oder die Seite ist umgezogen. Zurück zum Anfang geht es hier:</p>
+  <div class="actions">
+    <a href="/" class="btn b-slate">Zur Startseite</a>
+    <a href="https://adventuredogs.training/kontakt/" class="btn b-line">Kontakt</a>
+  </div>
+</main>
+</body>
+</html>
