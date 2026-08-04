@@ -90,7 +90,7 @@ nav.scrolled .burger span{background:var(--slate)}
 
 /* HERO */
 .hero{position:relative;height:100svh;min-height:620px;display:flex;align-items:flex-end;overflow:hidden;padding-top:80px}
-.hero-img{position:absolute;inset:0;background:url('assets/hero-office-dogs.jpg') 62% center / cover no-repeat}
+.hero-img{position:absolute;inset:0;background:url('assets/hero-office-dogs.jpg') 62% bottom / cover no-repeat}
 .hero-overlay{position:absolute;inset:0;background:linear-gradient(to right,oklch(22% 0.04 250 / .70) 0%,oklch(22% 0.04 250 / .30) 58%,oklch(22% 0.04 250 / .06) 100%),linear-gradient(to bottom,oklch(24% 0.04 250 / .46) 0%,oklch(24% 0.04 250 / .16) 32%,oklch(22% 0.04 250 / .62) 72%,oklch(18% 0.04 250 / .88) 100%)}
 .hero-in{position:relative;z-index:2;width:100%;max-width:var(--maxw);margin:0 auto;padding:0 var(--pad) clamp(52px,7vh,88px);display:flex;flex-direction:column;align-items:flex-start}
 .hero-in img{width:clamp(84px,8vw,112px);height:auto;margin-bottom:22px;filter:drop-shadow(0 6px 24px oklch(0% 0 0 / .28))}
@@ -151,7 +151,6 @@ nav.scrolled .burger span{background:var(--slate)}
 .tick svg{width:12px;height:12px;color:var(--slate)}
 .pkg-r{background:var(--cream);padding:clamp(30px,4vw,52px);display:flex;flex-direction:column;justify-content:center}
 .price{font-size:clamp(38px,4.4vw,54px);font-weight:600;letter-spacing:-0.03em;color:var(--slate);line-height:1;margin:12px 0 34px}
-.price-sub{font-size:13.5px;color:var(--text-lt);margin-bottom:28px}
 .pkg-r .btn{justify-content:center}
 .pkg-note{font-size:13px;line-height:1.7;color:var(--text-lt);font-weight:300;margin-top:22px;padding-top:20px;border-top:1px solid var(--line)}
 
@@ -199,6 +198,8 @@ footer a:hover{color:var(--sand-deep)}
   .cards,.steps{grid-template-columns:1fr}
   .hero{min-height:540px}
 }
+/* sechster Nav-Eintrag: schmale Desktop-Breiten */
+@media (min-width:1021px) and (max-width:1240px){.links{gap:20px}.links a{font-size:13px}.links .cta{padding:11px 17px}}
 </style>
 </head>
 <body>
@@ -213,6 +214,7 @@ footer a:hover{color:var(--sand-deep)}
     <li><a href="#ansatz">Ansatz</a></li>
     <li><a href="#ablauf">Ablauf</a></li>
     <li><a href="#paket">Paket</a></li>
+    <li><a href="https://adventuredogs.training/">Adventure Dogs</a></li>
     <li><a href="#kontakt" class="cta">Gespräch vereinbaren</a></li>
   </ul>
   <button class="burger" id="burger" aria-label="Menü öffnen"><span></span><span></span><span></span></button>
@@ -222,6 +224,7 @@ footer a:hover{color:var(--sand-deep)}
   <a href="#ansatz">Ansatz</a>
   <a href="#ablauf">Ablauf</a>
   <a href="#paket">Paket</a>
+  <a href="https://adventuredogs.training/">Adventure Dogs</a>
   <a href="#kontakt" class="cta">Gespräch vereinbaren</a>
 </div>
 

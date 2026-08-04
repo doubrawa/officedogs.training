@@ -16,7 +16,7 @@
 # Bewusst schlank gehalten: keine Artikel-/Hub-/Bilder-Sitemap-Maschinerie
 # wie im Hauptrepo — hier gibt es genau eine Seite.
 set -e
-SRC="C:/DATA/Claude/design-extract-v52"
+SRC="C:/DATA/Claude/design-extract-v53"
 PAGE="Office Dogs Vollbild Logo.html"
 DST="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 BASE="https://officedogs.training"
