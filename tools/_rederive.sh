@@ -341,11 +341,29 @@ inject_schema() {
 inject_schema "$F"
 
 # --- sitemap.xml -----------------------------------------------------------
-# lastmod je Seite aus dem letzten Commit der jeweiligen Datei.
-# `|| true`: in einem frisch initialisierten Repo (noch kein Commit) liefert
-# git log Exit 128 — das würde sonst wegen `set -e` das Script abbrechen.
+# lastmod je Seite: hat DIESER Lauf die Datei verändert, ist heute das Datum
+# der Änderung — sonst zählt der letzte Commit der Datei.
+#
+# Warum nicht einfach immer das Commit-Datum: die Sitemap entsteht MITTEN im
+# Lauf, also bevor die soeben erzeugten Änderungen committet sind. `git log`
+# liefert dann den Stand von vorher, und die Sitemap meldet für eine gerade
+# geänderte Seite hartnäckig das Datum der vorherigen Runde. Das fällt nicht
+# auf, solange Umbau und Commit auf denselben Tag fallen — läuft der Import
+# aber an einem anderen Tag als der letzte Commit, steht dort ein Datum zu
+# früh. Google gewichtet lastmod ohnehin nur, wenn es nachweislich stimmt.
+#
+# `diff HEAD` deckt Arbeitsverzeichnis UND Index ab, egal ob schon `git add`
+# gelaufen ist. Im frisch initialisierten Repo (noch kein HEAD) scheitert es
+# mit Exit 128 — dann greift ebenfalls das heutige Datum, was dort richtig
+# ist. Beides steht in einer `if`-Bedingung, `set -e` greift also nicht.
 lastmod_of() {
-  local d=$(git -C "$DST" log -1 --format=%cd --date=short -- "$1" 2>/dev/null || true)
+  local f="$1"
+  if ! git -C "$DST" diff --quiet HEAD -- "$f" 2>/dev/null; then
+    date -u +%Y-%m-%d
+    return
+  fi
+  # `|| true`: unversionierte Datei → git log Exit 128 statt leerer Ausgabe.
+  local d=$(git -C "$DST" log -1 --format=%cd --date=short -- "$f" 2>/dev/null || true)
   [ -z "$d" ] && d=$(date -u +%Y-%m-%d)
   echo "$d"
 }
