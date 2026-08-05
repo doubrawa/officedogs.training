@@ -64,6 +64,27 @@ sed -i "s|\"Kontakt\.html\"|\"${MAIN}/kontakt/\"|g" "$F"
 sed -i "s|\"Alltagstipps\.html\"|\"${MAIN}/alltagstipps/\"|g" "$F"
 sed -i "s|\"Über mich\.html\"|\"${MAIN}/ueber-mich/\"|g" "$F"
 
+# --- Title und Description --------------------------------------------------
+# Beides kommt aus dem Design und ist zu lang für die Suchergebnisse: der Titel
+# hatte 72 Zeichen (Google zeigt rund 60, "| Julia Doubrawa" fiel also weg),
+# die Description 161 (Anzeige endet bei etwa 155). Jetzt 48 bzw. 150.
+#
+# Im Titel steht bewusst die Leistung statt des Namens — nach "Bürohunde-
+# Beratung" wird gesucht, nach "Julia Doubrawa" nicht. Der Name steht weiterhin
+# sichtbar auf der Seite, im Schema und im Impressum. In der Description ist
+# "in Bayern" ergänzt, weil die Beratung vor Ort stattfindet und regionale
+# Suchanfragen sonst ins Leere laufen.
+#
+# Muster bewusst nur mit ASCII (^<title>.*</title>$): sed matcht in Git Bash
+# Umlaute im SUCHmuster unzuverlässig — im Ersetzungstext sind sie unkritisch.
+#
+# Muss VOR inject_seo laufen: og:title und og:description werden von dort aus
+# dem fertigen <title>/<meta> abgeleitet.
+must_sed "s|^<title>.*</title>$|<title>Office Dogs – Bürohunde-Beratung für Unternehmen</title>|" \
+         "^<title>"
+must_sed "s|^<meta name=\"description\" content=\".*\">$|<meta name=\"description\" content=\"Bürohunde-Beratung für Unternehmen in Bayern: Analyse vor Ort, individueller Office Dog Guide und Praxis-Coaching – damit Hunde im Büro funktionieren.\">|" \
+         "^<meta name=\"description\""
+
 # --- E-Mail-Adresse --------------------------------------------------------
 # Das Design liefert info@adventuredogs.training — die Adresse existiert nicht.
 # Auf dieser Domain gilt julia@officedogs.training. Sobald das im
@@ -126,6 +147,7 @@ must_sed "s|^\.hero-overlay{.*}$|.hero-overlay{position:absolute;inset:0;backgro
 # verteilt die Deckkraft so weit, dass direkt an der Buchstabenkante kaum
 # etwas ankommt. Ein 3-px-Kern traegt dort deutlich mehr.
 sed -i 's|text-shadow:0 1px 10px oklch(0% 0 0 / \.3)|text-shadow:0 1px 3px oklch(0% 0 0 / .5),0 2px 14px oklch(0% 0 0 / .4)|g' "$F"
+
 must_sed "s|^\.hero \.label{color:oklch(93% 0.02 85)}$|.hero .label{color:oklch(93% 0.02 85);text-shadow:0 1px 3px oklch(0% 0 0 / .5),0 1px 14px oklch(0% 0 0 / .4)}|" \
          "^\.hero \.label{"
 
@@ -208,6 +230,20 @@ must_sed "s|^\.portrait{.*}$|.portrait{width:100%;height:100%;min-height:340px;o
 # deshalb als Nachtrag ans Ende des Stylesheets, wo die Kaskade sie gewinnen
 # laesst.
 cat > "$DST/.css-patch.tmp" <<'CSS'
+/* Die kleinen Grossbuchstaben-Zeilen ueber den Ueberschriften. `.label` legt
+   sie auf 11px/600 fest, aber in fuenf von neun Faellen gewinnt eine
+   Absatzregel des jeweiligen Abschnitts (`.hero p`, `.value-head p`,
+   `.approach p`, `.pkg-l>p`, `.quote-in p`, `.cta p`) -- alle sind
+   Klasse+Element und damit spezifischer als die blosse Klasse. Ergebnis waren
+   fuenf verschiedene Groessen zwischen 11 und 18 px, im Hero mit 18px/300 so
+   gross, dass die Zeile umbrach. `p.label` ist gleich spezifisch und steht
+   weiter hinten, gewinnt also. max-width und margin-bottom muessen mit: 50ch
+   waeren bei 11px keine 300px und wuerden weiter umbrechen, und die geerbten
+   26-32px Abstand rissen Luecken, die es in den korrekt gerenderten
+   Abschnitten (dort 16px) nicht gibt. margin-bottom statt margin, damit das
+   zentrierende `margin:0 auto` im Kontaktblock erhalten bleibt. */
+p.label{font-size:11px;font-weight:600;line-height:1.6;max-width:none;margin-bottom:0}
+
 /* Bildpanel im "Warum Office Dogs"-Block, schmale Viewports: ueber dem Text,
    volle Breite. Der 28-px-Gap der Sammelregel wuerde das buendige Panel
    wieder abloesen, und justify-items:start liesse das <img> auf seine
@@ -285,14 +321,21 @@ inject_seo "$F"
 # Schema.org: eigenständige ProfessionalService-Entität, die per
 # parentOrganization auf Adventure Dogs verweist. Adresse/Telefon sind
 # identisch zum Hauptbetrieb (gleiche Betreiberin).
+#
+# build-schema.py ergänzt den statischen Rumpf um das konkrete Angebot und
+# liest Preis, Paketname und Leistungsposten dafür aus index.html — damit
+# kann die Preisangabe in den strukturierten Daten nicht von der sichtbaren
+# Seite abdriften.
 inject_schema() {
   local f="$1"
   grep -q 'application/ld+json' "$f" && { echo "  Schema bereits vorhanden"; return; }
+  py "$DST/tools/build-schema.py" "$f" "$DST/.schema.tmp"
   # Per awk vor </body> einfügen statt per sed — der JSON-Block enthält
   # Zeichen (&, \, /), die in einem sed-Replacement escapt werden müssten.
-  awk -v s="$DST/tools/schema.json.html" '
+  awk -v s="$DST/.schema.tmp" '
     /<\/body>/ && !done { while ((getline line < s) > 0) print line; done=1 }
     { print }' "$f" > "$f.tmp" && mv "$f.tmp" "$f"
+  rm -f "$DST/.schema.tmp"
   echo "  Schema.org injiziert"
 }
 inject_schema "$F"

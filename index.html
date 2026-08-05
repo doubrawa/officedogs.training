@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Office Dogs – Beratung für hundefreundliche Unternehmen | Julia Doubrawa</title>
+<title>Office Dogs – Bürohunde-Beratung für Unternehmen</title>
 <link rel="canonical" href="https://officedogs.training/">
 <meta name="theme-color" content="#2b3444">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Office Dogs">
 <meta property="og:locale" content="de_DE">
-<meta property="og:title" content="Office Dogs – Beratung für hundefreundliche Unternehmen | Julia Doubrawa">
-<meta property="og:description" content="Office Dogs begleitet Unternehmen dabei, Hunde im Büro erfolgreich zu integrieren: Bürohunde-Analyse, individueller Office Dog Guide und Praxis-Coaching vor Ort.">
+<meta property="og:title" content="Office Dogs – Bürohunde-Beratung für Unternehmen">
+<meta property="og:description" content="Bürohunde-Beratung für Unternehmen in Bayern: Analyse vor Ort, individueller Office Dog Guide und Praxis-Coaching – damit Hunde im Büro funktionieren.">
 <meta property="og:url" content="https://officedogs.training/">
 <meta property="og:image" content="https://officedogs.training/assets/og-office-dogs.jpg">
 <meta property="og:image:width" content="1200">
@@ -20,7 +20,7 @@
 <link rel="icon" type="image/png" href="/assets/favicon-192.png">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <link rel="preload" as="image" href="/assets/hero-office-dogs.jpg" fetchpriority="high">
-<meta name="description" content="Office Dogs begleitet Unternehmen dabei, Hunde im Büro erfolgreich zu integrieren: Bürohunde-Analyse, individueller Office Dog Guide und Praxis-Coaching vor Ort.">
+<meta name="description" content="Bürohunde-Beratung für Unternehmen in Bayern: Analyse vor Ort, individueller Office Dog Guide und Praxis-Coaching – damit Hunde im Büro funktionieren.">
 <link rel="icon" href="assets/logo-office-dogs.svg" type="image/svg+xml">
 <link href="assets/fonts.css" rel="stylesheet">
 <style>
@@ -200,6 +200,20 @@ footer a:hover{color:var(--sand-deep)}
 }
 /* sechster Nav-Eintrag: schmale Desktop-Breiten */
 @media (min-width:1021px) and (max-width:1240px){.links{gap:20px}.links a{font-size:13px}.links .cta{padding:11px 17px}}
+/* Die kleinen Grossbuchstaben-Zeilen ueber den Ueberschriften. `.label` legt
+   sie auf 11px/600 fest, aber in fuenf von neun Faellen gewinnt eine
+   Absatzregel des jeweiligen Abschnitts (`.hero p`, `.value-head p`,
+   `.approach p`, `.pkg-l>p`, `.quote-in p`, `.cta p`) -- alle sind
+   Klasse+Element und damit spezifischer als die blosse Klasse. Ergebnis waren
+   fuenf verschiedene Groessen zwischen 11 und 18 px, im Hero mit 18px/300 so
+   gross, dass die Zeile umbrach. `p.label` ist gleich spezifisch und steht
+   weiter hinten, gewinnt also. max-width und margin-bottom muessen mit: 50ch
+   waeren bei 11px keine 300px und wuerden weiter umbrechen, und die geerbten
+   26-32px Abstand rissen Luecken, die es in den korrekt gerenderten
+   Abschnitten (dort 16px) nicht gibt. margin-bottom statt margin, damit das
+   zentrierende `margin:0 auto` im Kontaktblock erhalten bleibt. */
+p.label{font-size:11px;font-weight:600;line-height:1.6;max-width:none;margin-bottom:0}
+
 /* Bildpanel im "Warum Office Dogs"-Block, schmale Viewports: ueber dem Text,
    volle Breite. Der 28-px-Gap der Sammelregel wuerde das buendige Panel
    wieder abloesen, und justify-items:start liesse das <img> auf seine
@@ -424,11 +438,23 @@ m.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{m.classList.r
     "addressCountry": "DE"
   },
   "areaServed": [
-    { "@type": "AdministrativeArea", "name": "Landkreis Günzburg" },
-    { "@type": "AdministrativeArea", "name": "Schwaben, Bayern" },
-    { "@type": "AdministrativeArea", "name": "Bayern" }
+    {
+      "@type": "AdministrativeArea",
+      "name": "Landkreis Günzburg"
+    },
+    {
+      "@type": "AdministrativeArea",
+      "name": "Schwaben, Bayern"
+    },
+    {
+      "@type": "AdministrativeArea",
+      "name": "Bayern"
+    }
   ],
-  "founder": { "@type": "Person", "name": "Julia Doubrawa" },
+  "founder": {
+    "@type": "Person",
+    "name": "Julia Doubrawa"
+  },
   "provider": {
     "@type": "Person",
     "name": "Julia Doubrawa",
@@ -443,7 +469,71 @@ m.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{m.classList.r
   "sameAs": [
     "https://adventuredogs.training/",
     "https://www.instagram.com/adventuredogs.training"
-  ]
+  ],
+  "makesOffer": {
+    "@type": "Offer",
+    "name": "Bürohunde-Analyse & Konzept",
+    "price": "649",
+    "priceCurrency": "EUR",
+    "availability": "https://schema.org/InStock",
+    "url": "https://officedogs.training/#paket",
+    "itemOffered": {
+      "@type": "Service",
+      "name": "Bürohunde-Analyse & Konzept",
+      "serviceType": "Bürohunde-Beratung und Coaching für Unternehmen",
+      "provider": {
+        "@id": "https://officedogs.training/#business"
+      },
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Enthaltene Leistungen",
+        "itemListElement": [
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Telefonische Vorbesprechung"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Analyse vor Ort in Ihrem Unternehmen"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Individueller Office Dog Guide"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Erstes Praxis-Coaching"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Konkrete Handlungsempfehlungen"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Telefonische Nachbesprechung innerhalb von vier Wochen"
+            }
+          }
+        ]
+      }
+    }
+  }
 }
 </script>
 </body>
