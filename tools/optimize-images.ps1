@@ -37,6 +37,17 @@ function Open-Image($path) {
   return $out
 }
 
+# Aufloesungs-Metadaten fest auf 96 dpi setzen.
+#
+# Ohne das erbt jede neue Bitmap die DPI des aufrufenden Prozesses -- und die
+# haengt davon ab, WIE die PowerShell gestartet wurde (120 dpi aus der einen
+# Umgebung, 96 aus der anderen). Ergebnis: bei jedem Pipeline-Lauf aendern sich
+# in PNG der pHYs-Chunk und in JPEG das JFIF-Dichtefeld, die Bilddaten (IDAT)
+# bleiben identisch. Das sind 8 geaenderte Bytes pro Datei, die im git-Diff wie
+# ein neues Bild aussehen und das Repo bei jedem Import unnoetig aufblaehen.
+# Fuer die Darstellung im Browser ist der Wert ohnehin bedeutungslos.
+function Set-Dpi($bmp) { $bmp.SetResolution(96, 96) }
+
 function Save-Jpeg($bmp, $path, $quality) {
   $ep = New-Object System.Drawing.Imaging.EncoderParameters(1)
   $ep.Param[0] = New-Object System.Drawing.Imaging.EncoderParameter(
@@ -67,6 +78,7 @@ function Convert-Image($srcPath, $dstPath, $w, $h, $quality, $anchorY) {
     $g.Clear([System.Drawing.Color]::White)
     $g.DrawImage($img, $offX, $offY, $sw, $sh)
     $g.Dispose()
+    Set-Dpi $bmp
     Save-Jpeg $bmp $dstPath $quality
     $bmp.Dispose()
     $kb = [math]::Round((Get-Item $dstPath).Length / 1KB, 1)
@@ -89,6 +101,7 @@ function Convert-Png($srcPath, $dstPath, $size, $bgHex) {
     if ($bgHex) { $g.Clear([System.Drawing.ColorTranslator]::FromHtml($bgHex)) }
     $g.DrawImage($img, 0, 0, $size, $size)
     $g.Dispose()
+    Set-Dpi $bmp
     $bmp.Save($dstPath, [System.Drawing.Imaging.ImageFormat]::Png)
     $bmp.Dispose()
     $kb = [math]::Round((Get-Item $dstPath).Length / 1KB, 1)
@@ -98,16 +111,21 @@ function Convert-Png($srcPath, $dstPath, $size, $bgHex) {
 
 Write-Output "Bilder optimieren:"
 # Hero: full-bleed Hintergrund. Die Quelle liegt NICHT im Design-Export, sondern
-# als Original in tools\assets-src -- das Bild kam direkt vom Auftraggeber. Mit
-# 1200x801 ist sie klein fuer einen Vollbild-Hero; nicht hochskalieren, das
-# erfindet keine Details und kostet nur Bytes.
+# als Original in tools\assets-src -- das Bild kam direkt vom Auftraggeber
+# (1536x1024).
+# 1440 breit ausliefern, nicht 1200: der Hero ist das LCP-Element und liegt auf
+# der haeufigsten Desktop-Breite damit nativ, statt um ein Fuenftel hochskaliert
+# zu werden -- bei einem Fellmotiv sieht man das. Und nicht die vollen 1536:
+# das leichte Herunterrechnen kostet 24 KB weniger und schaerft das Bild eher,
+# als dass es Details verliert. Hochskalieren waere in beiden Faellen sinnlos.
 # Bewusst KEINE kleinere Mobil-Variante: der Hero ist "cover" auf einem hohen
 # Viewport, dort limitiert die Hoehe -- ein 375x812-Display braucht rechnerisch
 # mehr Bildbreite als ein Desktop, nicht weniger.
-Convert-Image "$Local\hero-office-dogs.webp" "$Dst\hero-office-dogs.jpg" 1200 800 82 0.5
+Convert-Image "$Local\hero-office-dogs.png" "$Dst\hero-office-dogs.jpg" 1440 960 82 0.5
 # og:image fuer Social-Previews (Facebook/LinkedIn/WhatsApp erwarten 1200x630).
-# anchorY 0.35: 170 px muessen weg, oben bleiben die Gesichter, unten der Hund.
-Convert-Image "$Local\hero-office-dogs.webp" "$Dst\og-office-dogs.jpg"   1200 630  84 0.35
+# Aus 1200x800 muessen 170 px Hoehe weg. anchorY 0.45 laesst oben genug Luft
+# ueber dem Kopf und schneidet unten nur die vorgestreckten Pfoten an.
+Convert-Image "$Local\hero-office-dogs.png" "$Dst\og-office-dogs.jpg"   1200 630  84 0.45
 # Bildpanel im "Warum Office Dogs"-Block, zwei Breiten fuer srcset. Angezeigt
 # wird es mit rund 570 CSS-px (halbe Karte): 620 px reichen fuer normale
 # Displays, 1240 px sind die 2x-Fassung. Zielverhaeltnis 1.498 entspricht der

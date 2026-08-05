@@ -82,8 +82,17 @@ sed -i "s|\"Über mich\.html\"|\"${MAIN}/ueber-mich/\"|g" "$F"
 # dem fertigen <title>/<meta> abgeleitet.
 must_sed "s|^<title>.*</title>$|<title>Office Dogs – Bürohunde-Beratung für Unternehmen</title>|" \
          "^<title>"
-must_sed "s|^<meta name=\"description\" content=\".*\">$|<meta name=\"description\" content=\"Bürohunde-Beratung für Unternehmen in Bayern: Analyse vor Ort, individueller Office Dog Guide und Praxis-Coaching – damit Hunde im Büro funktionieren.\">|" \
+must_sed "s|^<meta name=\"description\" content=\".*\">$|<meta name=\"description\" content=\"Bürohunde-Beratung für Unternehmen in Bayern: Analyse vor Ort, individueller Office Dogs Guide und Praxis-Coaching – damit Hunde im Büro funktionieren.\">|" \
          "^<meta name=\"description\""
+
+# --- Produktname -----------------------------------------------------------
+# Das Design schreibt "Office Dog Guide", richtig heisst das Produkt aber
+# "Office Dogs Guide" (wie die Marke). Global, damit Ueberschrift, Leistungs-
+# liste und jede kuenftige Erwaehnung gleich heissen — eine Seite, auf der
+# derselbe Name zweimal anders geschrieben steht, liest sich wie ein Tippfehler.
+# Idempotent: "Office Dogs Guide" enthaelt "Office Dog Guide" nicht.
+# Das JSON-LD-Angebot liest den Namen ohnehin aus der Seite und folgt von selbst.
+must_sed "s|Office Dog Guide|Office Dogs Guide|g" "Office Dog Guide"
 
 # --- E-Mail-Adresse --------------------------------------------------------
 # Das Design liefert info@adventuredogs.training — die Adresse existiert nicht.
@@ -118,13 +127,21 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass \
   -Local "$(cygpath -w "$DST/tools/assets-src")" \
   -Dst   "$(cygpath -w "$DST/assets")"
 
-# Hero-Ausschnitt. Das Design ankert 62%/bottom — das passte zum alten Motiv
-# (ein Hund unter dem Schreibtisch). Das jetzige Bild zeigt ein Team am Tisch:
-# oben die Gesichter, in der Mitte der Hund, unten nur Boden. Auf breiten
-# Viewports beschneidet "cover" vertikal, und "bottom" wuerde ausgerechnet die
-# Gesichter abschneiden — deshalb nach oben ankern. Horizontal (nur auf
-# schmalen Viewports relevant) haelt 50% den Hund im Bild.
-must_sed "s|\(assets/hero-office-dogs\.jpg') \)62% bottom|\150% 44%|" \
+# Hero-Ausschnitt. Das Design ankert 62%/bottom — das passte zu einem frueheren
+# Motiv. Das jetzige Bild zeigt eine Frau am Schreibtisch (links oben) und den
+# Hund davor auf dem Boden (Mitte unten).
+#
+# Mit "cover" beschneidet immer nur EINE Achse: breite Viewports vertikal,
+# schmale horizontal. Die beiden Werte stoeren sich also nie gegenseitig.
+#   44% vertikal  — greift auf breiten Viewports, laesst oben die Decke und
+#                   unten die Pfoten gerade noch im Bild.
+#   36% horizontal — greift auf Telefonen, wo nur rund 31 % der Bildbreite zu
+#                   sehen sind. Bei den vorher gesetzten 50 % zeigte das
+#                   Telefon einen leeren Buroflur: ihr Gesicht links raus,
+#                   der Hund hinter dem Text. 36 % holt beide ins Bild.
+#                   Gemessen, nicht geschaetzt — 30/36/42 % gerendert und
+#                   verglichen.
+must_sed "s|assets/hero-office-dogs\.jpg') 62% bottom|assets/hero-office-dogs.jpg') 36% 44%|" \
          "hero-office-dogs.jpg') 62% bottom"
 
 # --- Hero-Schleier ----------------------------------------------------------
@@ -252,6 +269,27 @@ p.label{font-size:11px;font-weight:600;line-height:1.6;max-width:none;margin-bot
   .quote-in{gap:0;justify-items:stretch}
   .portrait{height:auto;min-height:0;aspect-ratio:3/2}
 }
+
+/* Hero-Schleier auf Telefonen. Der Verlauf des Designs hat seine helle Delle
+   bei 32 % Hoehe und wird erst ab 72 % richtig dunkel — das passt zum Desktop,
+   wo der Textblock bei rund 56 % beginnt. Auf einem Telefon umbricht derselbe
+   Text auf neun Zeilen und faengt schon bei 42 % an: die Kicker-Zeile steht
+   dann genau in der Delle. Gemessen an den Glyphen-Pixeln (inklusive
+   Textschatten) kam sie dort auf 3,7:1 gegen die geforderten 4,5:1 — und zwar
+   bei JEDER horizontalen Ankerung, das Problem hing nie am Bildausschnitt.
+   Hier wandert die Delle auf 20 % und die dunkle Rampe beginnt bei 42 %, also
+   dort, wo der Text beginnt. Ergebnis 5,0:1. Bewusst der kleinste Wert, der
+   traegt: 0.38 haette mit 4,66:1 zu wenig Luft gelassen, 0.46 nahm dem Foto
+   sichtbar zu viel.
+   660px ist der Telefon-Breakpoint, den das Design ohnehin schon nutzt. Der
+   Umschlagpunkt liegt gemessen zwischen 500 und 560 px Breite; die paar
+   Pixel dazwischen bekommen etwas mehr Schleier als noetig — das ist mir ein
+   fuenfter Breakpoint nicht wert. */
+@media (max-width:660px){
+  .hero-overlay{background:
+    linear-gradient(to right,oklch(22% 0.04 250 / .62) 0%,oklch(22% 0.04 250 / .24) 58%,oklch(22% 0.04 250 / .05) 100%),
+    linear-gradient(to bottom,oklch(24% 0.04 250 / .42) 0%,oklch(24% 0.04 250 / .14) 20%,oklch(22% 0.04 250 / .42) 42%,oklch(22% 0.04 250 / .66) 74%,oklch(18% 0.04 250 / .88) 100%)}
+}
 CSS
 awk -v s="$DST/.css-patch.tmp" '
   /^<\/style>$/ && !done { while ((getline line < s) > 0) print line; done=1 }
@@ -305,7 +343,7 @@ inject_seo() {
 <meta property=\"og:image\" content=\"${BASE}/assets/og-office-dogs.jpg\">\n\
 <meta property=\"og:image:width\" content=\"1200\">\n\
 <meta property=\"og:image:height\" content=\"630\">\n\
-<meta property=\"og:image:alt\" content=\"Drei Kolleginnen und Kollegen an einem Bürotisch, einer streichelt einen Golden Retriever, der entspannt daneben sitzt\">\n\
+<meta property=\"og:image:alt\" content=\"Frau am Schreibtisch in einem offenen Büro streichelt ihren großen hellen Hund, der entspannt neben ihr auf dem Boden liegt\">\n\
 <meta name=\"twitter:card\" content=\"summary_large_image\">\n\
 <link rel=\"icon\" type=\"image/png\" href=\"/assets/favicon-192.png\">\n\
 <link rel=\"apple-touch-icon\" href=\"/assets/apple-touch-icon.png\">\n\
