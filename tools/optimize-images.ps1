@@ -1,20 +1,41 @@
 # Bildoptimierung fuer officedogs.training.
 #
-# Der claude.ai/design-Export liefert die Bilder unoptimiert (Hero als 1,9-MB-PNG,
-# Portrait als 3073x4097-JPG). Dieses Script erzeugt daraus die ausgelieferten
-# Varianten. Wird von tools/_rederive.sh aufgerufen.
+# Erzeugt die ausgelieferten Bildvarianten aus zwei Quellen:
+#   $Src   = claude.ai/design-Export, liefert unoptimiert (2400x1602 u.ae.)
+#   $Local = tools\assets-src, Originale die es im Design gar nicht gibt
+# Wird von tools/_rederive.sh aufgerufen.
 #
 # Hinweis: kein ImageMagick/pngquant auf diesem Rechner -> System.Drawing.
 # Umlaute in .ps1 bewusst vermieden (PowerShell 5.1 liest die Datei als CP1252).
 param(
-  [string]$Src = "C:\DATA\Claude\design-extract-v52\assets",
-  [string]$Dst = "C:\DATA\Claude\officedogs.training\assets"
+  [string]$Src   = "C:\DATA\Claude\design-extract-v53\assets",
+  [string]$Local = "C:\DATA\Claude\officedogs.training\tools\assets-src",
+  [string]$Dst   = "C:\DATA\Claude\officedogs.training\assets"
 )
 $ErrorActionPreference = "Stop"
 Add-Type -AssemblyName System.Drawing
+Add-Type -AssemblyName PresentationCore
 
 $jpegCodec = [System.Drawing.Imaging.ImageCodecInfo]::GetImageEncoders() |
   Where-Object { $_.MimeType -eq 'image/jpeg' }
+
+# System.Drawing kennt kein WebP. Schlaegt der GDI-Loader fehl, wird ueber WIC
+# dekodiert (Windows bringt seit 10/11 einen WebP-Codec mit) und das Ergebnis
+# in eine eigenstaendige Bitmap kopiert -- FromStream wuerde sonst am Stream
+# haengen, den wir gleich danach schliessen.
+function Open-Image($path) {
+  try { return [System.Drawing.Image]::FromFile($path) } catch { }
+  $dec = [System.Windows.Media.Imaging.BitmapDecoder]::Create(
+           (New-Object System.Uri($path)), 'None', 'OnLoad')
+  $enc = New-Object System.Windows.Media.Imaging.PngBitmapEncoder
+  $enc.Frames.Add($dec.Frames[0])
+  $ms = New-Object System.IO.MemoryStream
+  $enc.Save($ms); $ms.Position = 0
+  $tmp = [System.Drawing.Image]::FromStream($ms)
+  $out = New-Object System.Drawing.Bitmap($tmp)
+  $tmp.Dispose(); $ms.Dispose()
+  return $out
+}
 
 function Save-Jpeg($bmp, $path, $quality) {
   $ep = New-Object System.Drawing.Imaging.EncoderParameters(1)
@@ -27,7 +48,7 @@ function Save-Jpeg($bmp, $path, $quality) {
 # Zeichnet $img skaliert/beschnitten in eine Zielflaeche $w x $h (cover-Verhalten,
 # $anchorY 0..1 bestimmt den vertikalen Bildausschnitt) und speichert als JPEG.
 function Convert-Image($srcPath, $dstPath, $w, $h, $quality, $anchorY) {
-  $img = [System.Drawing.Image]::FromFile($srcPath)
+  $img = Open-Image $srcPath
   try {
     if (-not $h) { $h = [int][math]::Round($w * $img.Height / $img.Width) }
     $scale  = [math]::Max($w / $img.Width, $h / $img.Height)
@@ -57,7 +78,7 @@ function Convert-Image($srcPath, $dstPath, $w, $h, $quality, $anchorY) {
 # (fuer das Browser-Favicon), sonst wird die Flaeche unterlegt (fuer das
 # apple-touch-icon: iOS komponiert Alpha auf Schwarz, das saehe haesslich aus).
 function Convert-Png($srcPath, $dstPath, $size, $bgHex) {
-  $img = [System.Drawing.Image]::FromFile($srcPath)
+  $img = Open-Image $srcPath
   try {
     $bmp = New-Object System.Drawing.Bitmap($size, $size)
     $g   = [System.Drawing.Graphics]::FromImage($bmp)
@@ -76,16 +97,24 @@ function Convert-Png($srcPath, $dstPath, $size, $bgHex) {
 }
 
 Write-Output "Bilder optimieren:"
-# Hero: full-bleed Hintergrund. Quelle ist nur 1536x1024, also nicht hochskalieren.
+# Hero: full-bleed Hintergrund. Die Quelle liegt NICHT im Design-Export, sondern
+# als Original in tools\assets-src -- das Bild kam direkt vom Auftraggeber. Mit
+# 1200x801 ist sie klein fuer einen Vollbild-Hero; nicht hochskalieren, das
+# erfindet keine Details und kostet nur Bytes.
 # Bewusst KEINE kleinere Mobil-Variante: der Hero ist "cover" auf einem hohen
-# Viewport, dort limitiert die Hoehe — ein 375x812-Display braucht rechnerisch
+# Viewport, dort limitiert die Hoehe -- ein 375x812-Display braucht rechnerisch
 # mehr Bildbreite als ein Desktop, nicht weniger.
-Convert-Image "$Src\hero-office-dogs.png" "$Dst\hero-office-dogs.jpg" 1536 1024 82 0.5
-# Portrait: runder Ausschnitt, Box max. 200 px bei background-size:150% —
-# also 300 px bei 1x, 600 px bei 2x. 640 px deckt das mit Reserve ab.
-Convert-Image "$Src\julia-portrait.jpg"   "$Dst\julia-portrait.jpg"   640  853  82 0.18
+Convert-Image "$Local\hero-office-dogs.webp" "$Dst\hero-office-dogs.jpg" 1200 800 82 0.5
 # og:image fuer Social-Previews (Facebook/LinkedIn/WhatsApp erwarten 1200x630).
-Convert-Image "$Src\hero-office-dogs.png" "$Dst\og-office-dogs.jpg"   1200 630  84 0.5
+# anchorY 0.35: 170 px muessen weg, oben bleiben die Gesichter, unten der Hund.
+Convert-Image "$Local\hero-office-dogs.webp" "$Dst\og-office-dogs.jpg"   1200 630  84 0.35
+# Bildpanel im "Warum Office Dogs"-Block, zwei Breiten fuer srcset. Angezeigt
+# wird es mit rund 570 CSS-px (halbe Karte): 620 px reichen fuer normale
+# Displays, 1240 px sind die 2x-Fassung. Zielverhaeltnis 1.498 entspricht der
+# Quelle (2400x1602), es wird also praktisch nichts beschnitten -- den
+# Ausschnitt macht spaeter object-fit im Browser, je nach Texthoehe.
+Convert-Image "$Src\hero-alltagstipps.jpg" "$Dst\julia-mit-hund-1240.jpg" 1240 828  82 0.5
+Convert-Image "$Src\hero-alltagstipps.jpg" "$Dst\julia-mit-hund-620.jpg"   620 414  82 0.5
 # Favicon-Fallback fuer Browser ohne SVG-Support (Alpha bleibt).
 Convert-Png   "$Src\logo-office-dogs.png" "$Dst\favicon-192.png"      192 ""
 # iOS-Homescreen: deckende Flaeche in Paper-Ton, sonst komponiert iOS auf Schwarz.

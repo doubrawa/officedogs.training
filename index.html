@@ -15,7 +15,7 @@
 <meta property="og:image" content="https://officedogs.training/assets/og-office-dogs.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Heller Golden Retriever sitzt entspannt unter einem Schreibtisch in einem hellen, modernen Büro">
+<meta property="og:image:alt" content="Drei Kolleginnen und Kollegen an einem Bürotisch, einer streichelt einen Golden Retriever, der entspannt daneben sitzt">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" type="image/png" href="/assets/favicon-192.png">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
@@ -46,14 +46,12 @@ h1,h2,h3{color:var(--slate);font-weight:600;letter-spacing:-0.015em;text-wrap:pr
 nav{position:fixed;top:0;left:0;right:0;z-index:100;height:80px;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:0 var(--pad);background:transparent;border-bottom:1px solid transparent;transition:background .3s,backdrop-filter .3s,border-color .3s}
 nav.scrolled{background:oklch(98.5% 0.005 85 / .92);backdrop-filter:blur(12px);border-bottom-color:var(--line-soft)}
 nav .brand b{color:#fff;text-shadow:0 1px 10px oklch(0% 0 0 / .3)}
-nav .brand small{color:oklch(92% 0.02 85)}
 nav .links a{color:oklch(100% 0 0 / .92);text-shadow:0 1px 10px oklch(0% 0 0 / .3)}
 nav .links a:hover{color:#fff}
 nav .links .cta{background:var(--paper);color:var(--slate)!important;text-shadow:none}
 nav .links .cta:hover{background:var(--cream)}
 nav .burger span{background:#fff}
 nav.scrolled .brand b{color:var(--slate);text-shadow:none}
-nav.scrolled .brand small{color:var(--sand-deep)}
 nav.scrolled .links a{color:var(--text);text-shadow:none}
 nav.scrolled .links a:hover{color:var(--sand-deep)}
 nav.scrolled .links .cta{background:var(--slate);color:var(--paper)!important}
@@ -62,7 +60,6 @@ nav.scrolled .burger span{background:var(--slate)}
 .brand{display:flex;align-items:center;gap:12px;text-decoration:none}
 .brand img{width:46px;height:46px}
 .brand b{font-size:15px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--slate);line-height:1.2}
-.brand small{display:block;font-size:10.5px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--sand-deep);margin-top:3px}
 .links{display:flex;align-items:center;gap:30px;list-style:none}
 .links a{font-size:13.5px;font-weight:500;color:var(--text);text-decoration:none;letter-spacing:.01em;transition:color .2s}
 .links a:hover{color:var(--sand-deep)}
@@ -94,10 +91,9 @@ nav.scrolled .burger span{background:var(--slate)}
 
 /* HERO */
 .hero{position:relative;height:100svh;min-height:620px;display:flex;align-items:flex-end;overflow:hidden;padding-top:80px}
-.hero-img{position:absolute;inset:0;background:url('assets/hero-office-dogs.jpg') 62% bottom / cover no-repeat}
+.hero-img{position:absolute;inset:0;background:url('assets/hero-office-dogs.jpg') 50% 44% / cover no-repeat}
 .hero-overlay{position:absolute;inset:0;background:linear-gradient(to right,oklch(22% 0.04 250 / .70) 0%,oklch(22% 0.04 250 / .30) 58%,oklch(22% 0.04 250 / .06) 100%),linear-gradient(to bottom,oklch(24% 0.04 250 / .46) 0%,oklch(24% 0.04 250 / .16) 32%,oklch(22% 0.04 250 / .62) 72%,oklch(18% 0.04 250 / .88) 100%)}
 .hero-in{position:relative;z-index:2;width:100%;max-width:var(--maxw);margin:0 auto;padding:0 var(--pad) clamp(52px,7vh,88px);display:flex;flex-direction:column;align-items:flex-start}
-.hero-in img{width:clamp(84px,8vw,112px);height:auto;margin-bottom:22px;filter:drop-shadow(0 6px 24px oklch(0% 0 0 / .28))}
 .hero .label{color:oklch(93% 0.02 85)}
 .hero h1{font-size:clamp(32px,4.6vw,60px);line-height:1.1;color:#fff;max-width:18ch;margin:16px 0 20px;text-shadow:0 2px 24px oklch(0% 0 0 / .32)}
 .hero p{font-size:clamp(16px,1.5vw,19px);line-height:1.7;color:oklch(100% 0 0 / .88);font-weight:300;max-width:50ch;margin-bottom:32px;text-shadow:0 1px 14px oklch(0% 0 0 / .35)}
@@ -160,8 +156,9 @@ nav.scrolled .burger span{background:var(--slate)}
 
 /* ZITAT */
 .quote{padding:0 0 clamp(72px,9vw,112px)}
-.quote-in{display:grid;grid-template-columns:auto 1fr;gap:clamp(28px,5vw,64px);align-items:center;background:var(--cream);border-radius:var(--r);padding:clamp(30px,4vw,56px)}
-.portrait{width:clamp(140px,16vw,200px);aspect-ratio:1;border-radius:50%;background:url('assets/julia-portrait.jpg') 46% 18% / 150% no-repeat}
+.quote-in{display:grid;grid-template-columns:1fr 1fr;align-items:stretch;background:var(--cream);border-radius:var(--r);overflow:hidden}
+.quote-in>div{padding:clamp(30px,4vw,56px)}
+.portrait{width:100%;height:100%;min-height:340px;object-fit:cover;object-position:42% 50%;display:block}
 blockquote{font-family:'Playfair Display',serif;font-size:clamp(21px,2.5vw,32px);font-style:italic;font-weight:600;line-height:1.35;color:var(--slate);max-width:26ch;margin:16px 0 20px}
 .quote-in p{font-size:16px;line-height:1.8;color:var(--text-lt);font-weight:300;max-width:56ch}
 .by{margin-top:20px;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
@@ -194,7 +191,6 @@ footer a:hover{color:var(--sand-deep)}
   .hero-scroll{display:none}
 }
 @media (max-height:820px){
-  .hero-in img{width:76px;margin-bottom:14px}
   .hero h1{margin:12px 0 16px}
   .hero p{margin-bottom:24px}
 }
@@ -204,6 +200,14 @@ footer a:hover{color:var(--sand-deep)}
 }
 /* sechster Nav-Eintrag: schmale Desktop-Breiten */
 @media (min-width:1021px) and (max-width:1240px){.links{gap:20px}.links a{font-size:13px}.links .cta{padding:11px 17px}}
+/* Bildpanel im "Warum Office Dogs"-Block, schmale Viewports: ueber dem Text,
+   volle Breite. Der 28-px-Gap der Sammelregel wuerde das buendige Panel
+   wieder abloesen, und justify-items:start liesse das <img> auf seine
+   Eigenbreite zusammenfallen. */
+@media (max-width:1020px){
+  .quote-in{gap:0;justify-items:stretch}
+  .portrait{height:auto;min-height:0;aspect-ratio:3/2}
+}
 </style>
 </head>
 <body>
@@ -211,7 +215,7 @@ footer a:hover{color:var(--sand-deep)}
 <nav id="nav">
   <a class="brand" href="#top">
     <img class="badge" src="assets/logo-office-dogs.svg" alt="Office Dogs">
-    <b>Office Dogs<small>Adventure Dogs · Julia Doubrawa</small></b>
+    <b>Office Dogs</b>
   </a>
   <ul class="links">
     <li><a href="#mehrwert">Mehrwert</a></li>
@@ -353,7 +357,7 @@ footer a:hover{color:var(--sand-deep)}
 <section class="quote" data-screen-label="Warum Office Dogs">
   <div class="wrap">
     <div class="quote-in">
-      <div class="portrait"></div>
+      <img class="portrait" src="assets/julia-mit-hund-620.jpg" srcset="assets/julia-mit-hund-620.jpg 620w, assets/julia-mit-hund-1240.jpg 1240w" sizes="(max-width:1020px) 100vw, 570px" width="1240" height="828" loading="lazy" decoding="async" alt="Julia Doubrawa sitzt entspannt in einem Sessel in einem hellen Loungebereich, ihr Hund wartet ruhig neben ihr">
       <div>
         <p class="label">Warum Office Dogs</p>
         <blockquote>„Nachhaltige Veränderungen entstehen dort, wo der Alltag stattfindet."</blockquote>

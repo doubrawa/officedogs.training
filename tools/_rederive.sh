@@ -28,6 +28,22 @@ F="$DST/index.html"
 cp "$SRC/$PAGE" "$F"
 echo "index.html aus '$PAGE' erzeugt"
 
+# Ersetzt ein Muster in index.html und bricht ab, wenn es gar nicht vorkommt.
+# Grund: ein sed, das nach einer Design-Aenderung stillschweigend ins Leere
+# laeuft, faellt beim Diff nicht auf. Genau das ist im Hauptrepo schon
+# passiert (umbenanntes Datums-Label) und hat wochenlang falsche Ausgabe
+# produziert. Lieber laut scheitern als leise nichts tun.
+must_sed() {
+  local expr="$1" probe="$2"
+  grep -q -- "$probe" "$F" || {
+    echo "FEHLER: Muster nicht mehr im Export gefunden: $probe"
+    echo "        Vermutlich hat sich das Design geaendert — sed pruefen:"
+    echo "        $expr"
+    exit 1
+  }
+  sed -i "$expr" "$F"
+}
+
 # --- Querverweise auf die Hauptsite ---------------------------------------
 # Das Design-Tool exportiert Geschwisterseiten als flache Dateinamen. Weil
 # officedogs.training eine EIGENE Domain ist, müssen daraus absolute URLs
@@ -71,16 +87,118 @@ if grep -q 'class="price-sub">zzgl\. MwSt\.' "$F"; then
 fi
 
 # --- Bilder ----------------------------------------------------------------
-# Der Export liefert den Hero als 1,9-MB-PNG. optimize-images.ps1 macht daraus
-# ein ~140-KB-JPG; die Referenz im HTML muss mitwandern.
-sed -i "s|assets/hero-office-dogs\.png|assets/hero-office-dogs.jpg|g" "$F"
+# Der Export referenziert den Hero als PNG; optimize-images.ps1 legt ein JPG ab.
+must_sed "s|assets/hero-office-dogs\.png|assets/hero-office-dogs.jpg|g" \
+         "assets/hero-office-dogs.png"
 
 powershell.exe -NoProfile -ExecutionPolicy Bypass \
   -File "$(cygpath -w "$DST/tools/optimize-images.ps1")" \
-  -Src "$(cygpath -w "$SRC/assets")" -Dst "$(cygpath -w "$DST/assets")"
+  -Src   "$(cygpath -w "$SRC/assets")" \
+  -Local "$(cygpath -w "$DST/tools/assets-src")" \
+  -Dst   "$(cygpath -w "$DST/assets")"
 
-# Logo direkt übernehmen (SVG, ~30 KB — keine Optimierung nötig).
-cp "$SRC/assets/logo-office-dogs.svg" "$DST/assets/"
+# Hero-Ausschnitt. Das Design ankert 62%/bottom — das passte zum alten Motiv
+# (ein Hund unter dem Schreibtisch). Das jetzige Bild zeigt ein Team am Tisch:
+# oben die Gesichter, in der Mitte der Hund, unten nur Boden. Auf breiten
+# Viewports beschneidet "cover" vertikal, und "bottom" wuerde ausgerechnet die
+# Gesichter abschneiden — deshalb nach oben ankern. Horizontal (nur auf
+# schmalen Viewports relevant) haelt 50% den Hund im Bild.
+must_sed "s|\(assets/hero-office-dogs\.jpg') \)62% bottom|\150% 44%|" \
+         "hero-office-dogs.jpg') 62% bottom"
+
+# --- Logo ------------------------------------------------------------------
+# scour verkleinert das SVG um rund ein Drittel (30,2 -> 20,1 KB roh,
+# 9,4 -> 6,3 KB uebertragen). Der Gewinn kommt aus relativen Pfadbefehlen und
+# weggelassenen Trennzeichen, nicht aus gerundeten Zahlen: precision=5 ist fuer
+# diese Quelle verlustfrei, weil dort hoechstens vierstellige Werte mit einer
+# Nachkommastelle stehen. Ein Pixel-Diff bei 600x600 zeigte 20 abweichende
+# Pixel von 360.000, alle auf Kanten — reines Antialiasing.
+cp "$SRC/assets/logo-office-dogs.svg" "$DST/assets/logo-office-dogs.svg"
+if py -c "import scour" >/dev/null 2>&1; then
+  py -m scour.scour -i "$DST/assets/logo-office-dogs.svg" \
+     -o "$DST/assets/logo-office-dogs.min.svg" \
+     --set-precision=5 --enable-id-stripping --enable-comment-stripping \
+     --shorten-ids --remove-metadata --strip-xml-prolog --no-line-breaks \
+     >/dev/null 2>&1
+  mv "$DST/assets/logo-office-dogs.min.svg" "$DST/assets/logo-office-dogs.svg"
+  echo "  Logo-SVG optimiert ($(stat -c%s "$DST/assets/logo-office-dogs.svg") Bytes)"
+else
+  echo "  WARNUNG: scour fehlt (py -m pip install scour) — Logo bleibt unoptimiert"
+fi
+
+# --- Marke in der Kopfzeile -------------------------------------------------
+# Neben dem Logo stand "Office Dogs" mit dem Zusatz "Adventure Dogs · Julia
+# Doubrawa". Auf einer eigenen Domain mit eigener Marke ist das eine Marke zu
+# viel; die Zuordnung zur Hundeschule steht weiterhin im Menue, im Footer und
+# im Impressum. Danach ist <b> einzeilig, und das align-items:center der
+# .brand-Zeile zentriert den Text von selbst zum 46-px-Logo — kein CSS noetig.
+# [^<]* statt des Mittelpunkts: sed ist in Git Bash mit Nicht-ASCII unzuverlaessig.
+must_sed "s|<small>Adventure Dogs[^<]*</small>||" "<small>Adventure Dogs"
+# Die drei Regeln dazu sind damit tot.
+sed -i '/^nav \.brand small{/d;/^nav\.scrolled \.brand small{/d;/^\.brand small{/d' "$F"
+
+# Der Hero trug frueher ein grosses Logo (daher der Seitenname "Vollbild
+# Logo"); seit v53 ist es raus, die zwei Regeln dafuer blieben stehen.
+# Bewusst an das Markup gekoppelt statt fest geloescht: kommt das Bild im
+# Design zurueck, bleiben die Regeln stehen und es steht nicht ploetzlich
+# ungestylt im Hero.
+if ! sed -n '/<div class="hero-in">/,/^  <\/div>/p' "$F" | grep -q '<img'; then
+  sed -i '/^\.hero-in img{/d;/^  \.hero-in img{/d' "$F"
+  echo "  tote Regeln .hero-in img entfernt (kein Logo mehr im Hero)"
+fi
+
+# --- Bildpanel im "Warum Office Dogs"-Block ---------------------------------
+# Das Design zeigt Julia in einem 200-px-Kreis. Das Bild traegt den ganzen
+# Abschnitt (Trainerin mit eigenem Hund) und soll deshalb gross zu sehen sein:
+# statt des Kreisausschnitts ein Panel ueber die halbe Kartenbreite, das bis an
+# die Kante laeuft und so hoch ist wie der Text daneben.
+#
+# Als <img> statt CSS-Hintergrund, aus drei Gruenden: es steht unter der Falz
+# und kann so per loading="lazy" wirklich nachgeladen werden, es bekommt einen
+# Alt-Text, und es kann per srcset zwei Breiten anbieten — ein
+# Hintergrundbild haette nichts davon.
+#
+# sizes: auf dem Desktop ist das Panel die halbe Karte, also rund 570 px, egal
+# wie breit das Fenster ist (die Karte deckelt bei 1240 px). Darunter stapelt
+# das Layout und das Bild laeuft ueber die volle Breite. Damit waehlt ein
+# normales Display die 620er Datei (70 KB) und nur ein 2x-Display die
+# 1240er (224 KB).
+IMG="<img class=\"portrait\" src=\"assets/julia-mit-hund-620.jpg\""
+IMG="$IMG srcset=\"assets/julia-mit-hund-620.jpg 620w, assets/julia-mit-hund-1240.jpg 1240w\""
+IMG="$IMG sizes=\"(max-width:1020px) 100vw, 570px\""
+IMG="$IMG width=\"1240\" height=\"828\" loading=\"lazy\" decoding=\"async\""
+IMG="$IMG alt=\"Julia Doubrawa sitzt entspannt in einem Sessel in einem hellen Loungebereich, ihr Hund wartet ruhig neben ihr\">"
+must_sed "s|<div class=\"portrait\"></div>|$IMG|" "<div class=\"portrait\"></div>"
+
+# Karte: Innenabstand wandert vom Container in die Textspalte, damit das Bild
+# buendig abschliesst. overflow:hidden haelt es in den runden Ecken.
+must_sed "s|^\.quote-in{.*}$|.quote-in{display:grid;grid-template-columns:1fr 1fr;align-items:stretch;background:var(--cream);border-radius:var(--r);overflow:hidden}\n.quote-in>div{padding:clamp(30px,4vw,56px)}|" \
+         "^\.quote-in{"
+# object-position 42%: Julia sitzt bei 25 % der Bildbreite, der Hund bei 58 % --
+# dazwischen liegt der Ausschnitt, der beide zeigt.
+must_sed "s|^\.portrait{.*}$|.portrait{width:100%;height:100%;min-height:340px;object-fit:cover;object-position:42% 50%;display:block}|" \
+         "^\.portrait{"
+
+# Zwei Regeln aus dem Design sind auf den Kreis zugeschnitten und muessen fuer
+# das Panel nachgezogen werden. Sie stehen in einer Sammelregel zusammen mit
+# .approach-in und .pkg, lassen sich also nicht einzeln herausoperieren —
+# deshalb als Nachtrag ans Ende des Stylesheets, wo die Kaskade sie gewinnen
+# laesst.
+cat > "$DST/.css-patch.tmp" <<'CSS'
+/* Bildpanel im "Warum Office Dogs"-Block, schmale Viewports: ueber dem Text,
+   volle Breite. Der 28-px-Gap der Sammelregel wuerde das buendige Panel
+   wieder abloesen, und justify-items:start liesse das <img> auf seine
+   Eigenbreite zusammenfallen. */
+@media (max-width:1020px){
+  .quote-in{gap:0;justify-items:stretch}
+  .portrait{height:auto;min-height:0;aspect-ratio:3/2}
+}
+CSS
+awk -v s="$DST/.css-patch.tmp" '
+  /^<\/style>$/ && !done { while ((getline line < s) > 0) print line; done=1 }
+  { print }' "$F" > "$F.tmp" && mv "$F.tmp" "$F"
+rm -f "$DST/.css-patch.tmp"
+echo "  Bildpanel statt Portrait-Kreis eingebaut"
 
 # --- Struktur / Barrierefreiheit -------------------------------------------
 # 1) <main>-Landmark. Das Design liefert nav/header/footer, aber kein <main> —
@@ -128,7 +246,7 @@ inject_seo() {
 <meta property=\"og:image\" content=\"${BASE}/assets/og-office-dogs.jpg\">\n\
 <meta property=\"og:image:width\" content=\"1200\">\n\
 <meta property=\"og:image:height\" content=\"630\">\n\
-<meta property=\"og:image:alt\" content=\"Heller Golden Retriever sitzt entspannt unter einem Schreibtisch in einem hellen, modernen Büro\">\n\
+<meta property=\"og:image:alt\" content=\"Drei Kolleginnen und Kollegen an einem Bürotisch, einer streichelt einen Golden Retriever, der entspannt daneben sitzt\">\n\
 <meta name=\"twitter:card\" content=\"summary_large_image\">\n\
 <link rel=\"icon\" type=\"image/png\" href=\"/assets/favicon-192.png\">\n\
 <link rel=\"apple-touch-icon\" href=\"/assets/apple-touch-icon.png\">\n\
