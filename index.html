@@ -45,8 +45,8 @@ h1,h2,h3{color:var(--slate);font-weight:600;letter-spacing:-0.015em;text-wrap:pr
 /* NAV */
 nav{position:fixed;top:0;left:0;right:0;z-index:100;height:80px;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:0 var(--pad);background:transparent;border-bottom:1px solid transparent;transition:background .3s,backdrop-filter .3s,border-color .3s}
 nav.scrolled{background:oklch(98.5% 0.005 85 / .92);backdrop-filter:blur(12px);border-bottom-color:var(--line-soft)}
-nav .brand b{color:#fff;text-shadow:0 1px 10px oklch(0% 0 0 / .3)}
-nav .links a{color:oklch(100% 0 0 / .92);text-shadow:0 1px 10px oklch(0% 0 0 / .3)}
+nav .brand b{color:#fff;text-shadow:0 1px 3px oklch(0% 0 0 / .5),0 2px 14px oklch(0% 0 0 / .4)}
+nav .links a{color:oklch(100% 0 0 / .92);text-shadow:0 1px 3px oklch(0% 0 0 / .5),0 2px 14px oklch(0% 0 0 / .4)}
 nav .links a:hover{color:#fff}
 nav .links .cta{background:var(--paper);color:var(--slate)!important;text-shadow:none}
 nav .links .cta:hover{background:var(--cream)}
@@ -92,9 +92,9 @@ nav.scrolled .burger span{background:var(--slate)}
 /* HERO */
 .hero{position:relative;height:100svh;min-height:620px;display:flex;align-items:flex-end;overflow:hidden;padding-top:80px}
 .hero-img{position:absolute;inset:0;background:url('assets/hero-office-dogs.jpg') 50% 44% / cover no-repeat}
-.hero-overlay{position:absolute;inset:0;background:linear-gradient(to right,oklch(22% 0.04 250 / .70) 0%,oklch(22% 0.04 250 / .30) 58%,oklch(22% 0.04 250 / .06) 100%),linear-gradient(to bottom,oklch(24% 0.04 250 / .46) 0%,oklch(24% 0.04 250 / .16) 32%,oklch(22% 0.04 250 / .62) 72%,oklch(18% 0.04 250 / .88) 100%)}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(to right,oklch(22% 0.04 250 / .62) 0%,oklch(22% 0.04 250 / .24) 58%,oklch(22% 0.04 250 / .05) 100%),linear-gradient(to bottom,oklch(24% 0.04 250 / .42) 0%,oklch(24% 0.04 250 / .14) 32%,oklch(22% 0.04 250 / .60) 72%,oklch(18% 0.04 250 / .87) 100%)}
 .hero-in{position:relative;z-index:2;width:100%;max-width:var(--maxw);margin:0 auto;padding:0 var(--pad) clamp(52px,7vh,88px);display:flex;flex-direction:column;align-items:flex-start}
-.hero .label{color:oklch(93% 0.02 85)}
+.hero .label{color:oklch(93% 0.02 85);text-shadow:0 1px 3px oklch(0% 0 0 / .5),0 1px 14px oklch(0% 0 0 / .4)}
 .hero h1{font-size:clamp(32px,4.6vw,60px);line-height:1.1;color:#fff;max-width:18ch;margin:16px 0 20px;text-shadow:0 2px 24px oklch(0% 0 0 / .32)}
 .hero p{font-size:clamp(16px,1.5vw,19px);line-height:1.7;color:oklch(100% 0 0 / .88);font-weight:300;max-width:50ch;margin-bottom:32px;text-shadow:0 1px 14px oklch(0% 0 0 / .35)}
 .hero-actions{display:flex;gap:12px;flex-wrap:wrap}

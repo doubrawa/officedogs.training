@@ -106,6 +106,29 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass \
 must_sed "s|\(assets/hero-office-dogs\.jpg') \)62% bottom|\150% 44%|" \
          "hero-office-dogs.jpg') 62% bottom"
 
+# --- Hero-Schleier ----------------------------------------------------------
+# Der blaugraue Verlauf ueber dem Hero war zu kraeftig; das Foto kam kaum durch.
+# Alle Stopps um rund ein Fuenftel zurueckgenommen (mittlere Bildhelligkeit
+# 0,071 -> 0,085). Die Stopps unten bleiben fast unangetastet: dort steht der
+# Text, und dessen Lesbarkeit haengt genau daran.
+#
+# Gemessen wurde nicht nach Gefuehl, sondern per Canvas — Hero-Bild im echten
+# cover-Ausschnitt plus beide Verlaeufe gerendert, dann der schlechteste
+# Kontrastwert hinter jedem Textblock. Ergebnis nachher: H1 3,81 (Grosstext
+# braucht 3,0), Fliesstext 6,97 (braucht 4,5).
+must_sed "s|^\.hero-overlay{.*}$|.hero-overlay{position:absolute;inset:0;background:linear-gradient(to right,oklch(22% 0.04 250 / .62) 0%,oklch(22% 0.04 250 / .24) 58%,oklch(22% 0.04 250 / .05) 100%),linear-gradient(to bottom,oklch(24% 0.04 250 / .42) 0%,oklch(24% 0.04 250 / .14) 32%,oklch(22% 0.04 250 / .60) 72%,oklch(18% 0.04 250 / .87) 100%)}|" \
+         "^\.hero-overlay{"
+
+# Zwei Textstellen liegen schon im Original knapp unter dem AA-Kontrast (die
+# Navigationslinks bei 3,4 ueber der hellen Fensterfront, die Zeile ueber der
+# Headline bei 3,4) und wuerden durch den helleren Schleier weiter absacken.
+# Gegengewicht: engerer Schatten statt breiter Weichzeichnung — 10 px Blur
+# verteilt die Deckkraft so weit, dass direkt an der Buchstabenkante kaum
+# etwas ankommt. Ein 3-px-Kern traegt dort deutlich mehr.
+sed -i 's|text-shadow:0 1px 10px oklch(0% 0 0 / \.3)|text-shadow:0 1px 3px oklch(0% 0 0 / .5),0 2px 14px oklch(0% 0 0 / .4)|g' "$F"
+must_sed "s|^\.hero \.label{color:oklch(93% 0.02 85)}$|.hero .label{color:oklch(93% 0.02 85);text-shadow:0 1px 3px oklch(0% 0 0 / .5),0 1px 14px oklch(0% 0 0 / .4)}|" \
+         "^\.hero \.label{"
+
 # --- Logo ------------------------------------------------------------------
 # scour verkleinert das SVG um rund ein Drittel (30,2 -> 20,1 KB roh,
 # 9,4 -> 6,3 KB uebertragen). Der Gewinn kommt aus relativen Pfadbefehlen und
