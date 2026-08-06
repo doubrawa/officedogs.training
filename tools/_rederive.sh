@@ -64,6 +64,21 @@ sed -i "s|\"Kontakt\.html\"|\"${MAIN}/kontakt/\"|g" "$F"
 sed -i "s|\"Alltagstipps\.html\"|\"${MAIN}/alltagstipps/\"|g" "$F"
 sed -i "s|\"Über mich\.html\"|\"${MAIN}/ueber-mich/\"|g" "$F"
 
+# --- Handlungsaufforderungen ------------------------------------------------
+# Das Design haengt "Gespraech vereinbaren" (Nav, Mobilmenue, Hero) und
+# "Anfrage senden" (Preisblock) an den seiteninternen Anker #kontakt. Auf einer
+# Seite mit eigenem Formular waere das richtig — hier nicht: die #kontakt-
+# Sektion enthaelt kein Formular, sondern selbst nur einen Knopf, der nach
+# ${MAIN}/kontakt/ fuehrt. Ein Klick scrollte also bloss an eine Stelle, an der
+# man ein zweites Mal klicken musste. Jetzt gehen alle vier direkt dorthin,
+# genau wie "Kontakt aufnehmen" im Abschluss-Block.
+#
+# Nur die href, nicht die id: die Sektion bleibt als Abschluss der Seite
+# stehen, sie wird nur nicht mehr angesprungen. Wer scrollt, sieht sie
+# weiterhin. Die anderen Anker (#mehrwert, #ansatz, #ablauf, #paket, #top)
+# springen unveraendert innerhalb der Seite — die zeigen auf echten Inhalt.
+must_sed "s|href=\"#kontakt\"|href=\"${MAIN}/kontakt/\"|g" 'href="#kontakt"'
+
 # --- Title und Description --------------------------------------------------
 # Beides kommt aus dem Design und ist zu lang für die Suchergebnisse: der Titel
 # hatte 72 Zeichen (Google zeigt rund 60, "| Julia Doubrawa" fiel also weg),
