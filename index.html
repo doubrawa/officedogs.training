@@ -169,21 +169,12 @@ nav.scrolled .burger span{background:var(--slate)}
 .step p{font-size:14.5px;line-height:1.75;color:var(--text-lt);font-weight:300}
 .step p+p{margin-top:10px}
 
-/* KLARHEIT */
-/* Vollflaechig creme statt Papier: zwischen Ablauf und Preis lagen sonst drei
-   Papier-Abschnitte in Folge. Der Streifen gibt der Seite hier ihren Takt
-   zurueck und setzt den Preisblock frisch an. */
-.clarity{background:var(--cream);padding:clamp(64px,8vw,96px) 0}
-.clarity-in{max-width:730px;margin:0 auto;display:flex;flex-direction:column;align-items:center;text-align:center;gap:16px}
-.clarity h2{font-size:clamp(24px,2.8vw,36px);line-height:1.2;max-width:24ch}
-.clarity p{font-size:16.5px;line-height:1.8;color:var(--text-lt);font-weight:300;max-width:62ch}
-.clarity .fragen{color:var(--slate);font-weight:400}
-
 /* PAKET */
-/* padding-top war 0, solange der Abschnitt direkt auf .proc folgte und sich
-   dessen Abstand teilte. Jetzt liegt der Creme-Streifen dazwischen: ohne
-   eigenen Abstand klebte die weisse Paketkarte an dessen Unterkante. */
-.pkg-sec{padding:clamp(72px,9vw,112px) 0}
+/* padding-top bleibt 0: der Abschnitt folgt wieder direkt auf .proc und teilt
+   sich dessen Abstand. (Zwischenzeitlich lag hier ein Creme-Streifen, der
+   einen eigenen brauchte — mit ihm zusammen ist auch der wieder weg, sonst
+   klafften hier zwei volle Abstaende uebereinander.) */
+.pkg-sec{padding:0 0 clamp(72px,9vw,112px)}
 .pkg{display:grid;grid-template-columns:1.2fr .8fr;background:#fff;border:1px solid var(--line-soft);border-radius:var(--r);overflow:hidden}
 .pkg-l{padding:clamp(30px,4vw,52px)}
 .pkg-l h2{font-size:clamp(23px,2.5vw,32px);line-height:1.2;margin:14px 0 6px}
@@ -451,18 +442,6 @@ p.label{font-size:11px;font-weight:600;line-height:1.6;max-width:none;margin-bot
   </div>
 </section>
 
-<section class="clarity" data-screen-label="Klarheit">
-  <div class="wrap">
-    <div class="clarity-in">
-      <p class="label">Von Anfang an Klarheit schaffen</p>
-      <h2>Bürohunde sollten nicht erst dann zum Thema werden, wenn Probleme entstehen.</h2>
-      <p class="fragen">Wer darf seinen Hund mitbringen? Wo liegen Rückzugsbereiche? Was passiert bei Konflikten? Und welche Regeln gelten für alle?</p>
-      <p>Je früher diese Fragen geklärt sind, desto leichter lässt sich ein gemeinsamer Rahmen schaffen.</p>
-      <p>Ein gutes Bürohunde-Konzept gibt Mitarbeitenden Orientierung, berücksichtigt die Bedürfnisse der Hunde und schafft klare Strukturen für den Unternehmensalltag.</p>
-    </div>
-  </div>
-</section>
-
 <section class="pkg-sec" id="paket" data-screen-label="Paket">
   <div class="wrap">
     <div class="pkg">
@@ -472,7 +451,6 @@ p.label{font-size:11px;font-weight:600;line-height:1.6;max-width:none;margin-bot
         <p>Der Einstieg für Unternehmen, die Bürohunde von Anfang an auf eine verlässliche Grundlage stellen oder bestehende Strukturen professionell weiterentwickeln möchten.</p>
         <p class="pkg-lead">Enthalten sind:</p>
         <ul class="pkg-list">
-          <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg></span>Telefonische Vorbesprechung</li>
           <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg></span>Analyse vor Ort in Ihrem Unternehmen</li>
           <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg></span>Einschätzung von Räumlichkeiten, Abläufen und Mensch-Hund-Teams</li>
           <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg></span>Individueller Office Dogs Guide</li>
@@ -615,13 +593,6 @@ m.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{m.classList.r
         "@type": "OfferCatalog",
         "name": "Enthaltene Leistungen",
         "itemListElement": [
-          {
-            "@type": "Offer",
-            "itemOffered": {
-              "@type": "Service",
-              "name": "Telefonische Vorbesprechung"
-            }
-          },
           {
             "@type": "Offer",
             "itemOffered": {
