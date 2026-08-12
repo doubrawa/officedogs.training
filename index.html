@@ -204,7 +204,29 @@ p.pkg-lead{font-size:14.5px;font-weight:500;color:var(--slate);margin-bottom:12p
 .quote{padding:0 0 clamp(72px,9vw,112px)}
 .quote-in{display:grid;grid-template-columns:1fr 1fr;align-items:stretch;background:var(--cream);border-radius:var(--r);overflow:hidden}
 .quote-in>div{padding:clamp(30px,4vw,56px)}
-.portrait{width:100%;height:100%;min-height:340px;object-fit:cover;object-position:42% 50%;display:block}
+.portrait{width:100%;height:100%;min-height:340px;object-fit:cover;object-position:47% 50%;display:block}
+/* Bildausschnitt auf dem Desktop. Der Kasten steht hochkant (rund 568x737),
+   die Quelle liegt quer (1240x828) — cover zeigt also nur etwa die halbe
+   Bildbreite, und wo dieses Fenster sitzt, entscheidet, ob der Hund rechts
+   noch mit drauf ist.
+   Er ist nicht immer so knapp gewesen: mit der Textspalte auf vier Absaetzen
+   wurde der Kasten hoeher und das Fenster dadurch SCHMALER — 638 statt vorher
+   rund 900 Quellpixel. Der Hund wurde also weggeschnitten, nicht verschoben.
+   Ein groesserer Prozentwert schiebt das Bild nach links und holt rechts nach.
+   52 % zeigt die Quelle von x 313 bis 951: der Hund steht ganz im Bild, ihr
+   Haarknoten (ab x 340) behaelt 27 px Luft.
+   Unter 1240 px ist die Bildspalte schmaler, das Fenster nur noch 555 px breit
+   — dort schnitte 52 % ihr den Kopf an. Deshalb stehen die 47 % in der
+   Basisregel und nur der breite Desktop bekommt die Ausnahme; mehr Hund ist
+   auf der schmalen Breite nicht zu haben.
+   Warum die 47 % in der Basis und nicht in einem @media (min-width:1021px):
+   ein Viewport von 1020,5 px trifft weder das noch das max-width:1020 der
+   Telefonregel, der Ausschnitt fiele dort in die Luecke. Als Basiswert kann
+   das nicht passieren.
+   Telefonen tut er nicht weh: dort laeuft das Bild auf aspect-ratio 3/2 und
+   damit fast genau auf dem Seitenverhaeltnis der Quelle (1,4976) — der
+   Ueberschuss betraegt gemessene 0,1 px, der Wert ist dort wirkungslos. */
+@media (min-width:1240px){.portrait{object-position:52% 50%}}
 blockquote{font-family:'Playfair Display',serif;font-size:clamp(21px,2.5vw,32px);font-style:italic;font-weight:600;line-height:1.35;color:var(--slate);max-width:26ch;margin:16px 0 20px}
 .quote-in p{font-size:16px;line-height:1.8;color:var(--text-lt);font-weight:300;max-width:56ch}
 .quote-in p+p{margin-top:14px}
