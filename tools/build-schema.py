@@ -36,7 +36,12 @@ def text_of(pattern: str, quelle: str, was: str) -> str:
 
 
 def preis_zahl(roh: str) -> str:
-    """'649 €' -> '649', '1.299,50 €' -> '1299.50'. Schema.org will einen Punkt."""
+    """'649 €' -> '649', '1.299,50 €' -> '1299.50'. Schema.org will einen Punkt.
+
+    Bekommt seit dem MwSt.-Zusatz auch Markup herein ('649 € <span ...>zzgl.
+    MwSt.</span>'). Der erste Zahlentreffer ist der Preis; was danach kommt,
+    interessiert hier nicht.
+    """
     m = re.search(r"([\d.,]+)", roh)
     if not m:
         raise SystemExit(f"FEHLER: keine Zahl in der Preisangabe '{roh}'")
@@ -51,16 +56,24 @@ def main() -> int:
     rohdatei = (REPO / "tools" / "schema.json.html").read_text(encoding="utf-8")
     daten = json.loads("\n".join(rohdatei.strip().splitlines()[1:-1]))
 
-    preis = preis_zahl(text_of(r'<div class="price">([^<]+)</div>', quelle, "Preis"))
+    # (.*?) statt ([^<]+): in .price steht seit dem MwSt.-Zusatz ein <span>,
+    # an dem eine Zeichenklasse ohne '<' scheitern wuerde. Nicht gierig, damit
+    # beim ersten </div> Schluss ist.
+    preis = preis_zahl(text_of(r'<div class="price">(.*?)</div>', quelle, "Preis"))
     paket = text_of(r'<div class="pkg-l">.*?<h2>([^<]+)</h2>', quelle, "Paketname")
     posten = [html.unescape(t).strip()
               for t in re.findall(r"</span>([^<]+)</li>", quelle)]
     if not posten:
         raise SystemExit("FEHLER: keine Leistungsposten in .pkg-list gefunden")
 
-    # Kein valueAddedTaxIncluded: Julia ist Kleinunternehmerin nach § 19 UStG,
-    # es wird gar keine Umsatzsteuer erhoben. Weder "true" noch "false" waere
-    # dafuer richtig, also lieber nichts behaupten.
+    # Weiterhin kein valueAddedTaxIncluded -- aber aus einem anderen Grund als
+    # frueher: die Seite weist seit dem 12.08.2026 "zzgl. MwSt." aus, das
+    # Impressum nennt dagegen unveraendert die Kleinunternehmerregelung nach
+    # § 19 UStG. Solange sich die beiden widersprechen, ist "false" eine
+    # maschinenlesbare Steueraussage, die niemand gedeckt hat. Die 649 selbst
+    # stimmen in beiden Faellen -- es ist der Betrag vor einer etwaigen
+    # Steuer. Ist die Frage entschieden, gehoert hier "valueAddedTaxIncluded":
+    # False hinein (und der § 19-Absatz im Impressum raus).
     daten["makesOffer"] = {
         "@type": "Offer",
         "name": paket,
