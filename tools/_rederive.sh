@@ -1,17 +1,54 @@
 #!/bin/bash
-# Import-Pipeline für officedogs.training.
+# Pflege- und Import-Script für officedogs.training.
 #
-# Die Seite wird im gemeinsamen claude.ai/design-Projekt "Adventure Dogs
-# Training" gepflegt (Seite: "Office Dogs Vollbild Logo") und lebt trotzdem
-# auf einer eigenen Domain/GitHub-Pages-Site. Dieses Script zieht genau
-# diese eine Seite aus dem Export und macht daraus die Startseite hier.
+# ROLLENWECHSEL AM 13.08.2026 — bitte zuerst lesen.
 #
-# Workflow pro neuem Export:
+# Bis dahin galt: die Seite wird im claude.ai/design-Projekt "Adventure Dogs
+# Training" gepflegt (Seite: "Office Dogs Vollbild Logo"), dieses Script zieht
+# sie heraus und macht daraus index.html. Der Export war die Quelle, index.html
+# das Erzeugnis.
+#
+# Das stimmt nicht mehr. QUELLE IST JETZT index.html.
+#
+# Der Seitentext wurde am 12.08.2026 in vier Commits direkt hier überarbeitet —
+# neuer Hero, neue Mehrwert-Kacheln, ein komplett neuer Abschnitt (der
+# Fragenblock .fit), neue Ablauf-Schritte, neuer Preiszusatz. Nichts davon
+# steht im Design-Projekt; der letzte Export (v53) ist vom 04.08.2026.
+#
+# Nachgemessen am 13.08.2026: ein Lauf der alten Fassung lief FEHLERFREI durch
+# und warf dabei 139 Zeilen Live-Inhalt weg. Kein must_sed schlug an, denn die
+# Sonden zielen alle auf die STRUKTUR des Exports (Klassennamen, CSS-Regeln,
+# Ankertexte) — und die war ja noch da. Nur der Text darin war ein anderer.
+# Genau die Sorte stiller Schaden, gegen die must_sed weiter unten erfunden
+# wurde, bloß eine Ebene höher: nicht ein sed lief ins Leere, sondern das `cp`
+# darüber traf.
+#
+# Deshalb ist die Sperre keine Prüfung, sondern baulich: der Import schreibt
+# nach index.neu.html und rührt index.html NICHT AN. Wer einen neuen Export
+# übernehmen will, vergleicht die beiden von Hand und holt sich heraus, was er
+# braucht. Eine Prüfung könnte man übergehen; einen Schreibpfad, den es nicht
+# gibt, nicht.
+#
+# ---------------------------------------------------------------------------
+# Aufruf
+#
+#   bash tools/_rederive.sh
+#       Pflegelauf. Fasst index.html nicht an. Erneuert Bilder und Logo-SVG
+#       aus dem Export und schreibt sitemap.xml. Ohne Export läuft er trotzdem
+#       (dann eben nur die sitemap).
+#
+#   bash tools/_rederive.sh --import
+#       Baut den Export nach index.neu.html und meldet, wie weit er von
+#       index.html entfernt ist. Danach von Hand übernehmen, was gebraucht
+#       wird, und index.neu.html löschen.
+#
+# Workflow für einen neuen Design-Export:
 #   1. "Adventure Dogs Training.zip" nach C:/DATA/Claude/design-extract-vN
 #      entpacken (der gleiche Export, den auch das Hauptrepo benutzt)
 #   2. SRC unten auf design-extract-vN setzen
-#   3. bash tools/_rederive.sh
-#   4. Diff prüfen, committen, pushen
+#   3. bash tools/_rederive.sh --import
+#   4. diff index.html index.neu.html — übernehmen, was gewollt ist
+#   5. rm index.neu.html, dann committen
 #
 # Bewusst schlank gehalten: keine Artikel-/Hub-/Bilder-Sitemap-Maschinerie
 # wie im Hauptrepo — hier gibt es genau eine Seite.
@@ -22,13 +59,127 @@ DST="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 BASE="https://officedogs.training"
 MAIN="https://adventuredogs.training"
 
-[ -f "$SRC/$PAGE" ] || { echo "FEHLER: $SRC/$PAGE nicht gefunden"; exit 1; }
+MODE=pflege
+case "$1" in
+  --import) MODE=import ;;
+  "")       ;;
+  *)        echo "Unbekannte Option: $1"; echo "Erlaubt: --import"; exit 1 ;;
+esac
 
-F="$DST/index.html"
+# Der Export wird nur für Bilder, Logo und den Import gebraucht. Fehlt er, ist
+# der Pflegelauf trotzdem sinnvoll (sitemap), der Import dagegen unmöglich.
+HAVE_SRC=0
+[ -f "$SRC/$PAGE" ] && HAVE_SRC=1
+if [ "$MODE" = import ] && [ "$HAVE_SRC" = 0 ]; then
+  echo "FEHLER: $SRC/$PAGE nicht gefunden — ohne Export kein Import."
+  exit 1
+fi
+
+# ===========================================================================
+# TEIL 1 — läuft immer. Nichts hier fasst index.html an.
+# ===========================================================================
+
+if [ "$HAVE_SRC" = 1 ]; then
+  powershell.exe -NoProfile -ExecutionPolicy Bypass \
+    -File "$(cygpath -w "$DST/tools/optimize-images.ps1")" \
+    -Src   "$(cygpath -w "$SRC/assets")" \
+    -Local "$(cygpath -w "$DST/tools/assets-src")" \
+    -Dst   "$(cygpath -w "$DST/assets")"
+
+  # --- Logo ----------------------------------------------------------------
+  # scour verkleinert das SVG um rund ein Drittel (30,2 -> 20,1 KB roh,
+  # 9,4 -> 6,3 KB uebertragen). Der Gewinn kommt aus relativen Pfadbefehlen und
+  # weggelassenen Trennzeichen, nicht aus gerundeten Zahlen: precision=5 ist fuer
+  # diese Quelle verlustfrei, weil dort hoechstens vierstellige Werte mit einer
+  # Nachkommastelle stehen. Ein Pixel-Diff bei 600x600 zeigte 20 abweichende
+  # Pixel von 360.000, alle auf Kanten — reines Antialiasing.
+  cp "$SRC/assets/logo-office-dogs.svg" "$DST/assets/logo-office-dogs.svg"
+  if py -c "import scour" >/dev/null 2>&1; then
+    py -m scour.scour -i "$DST/assets/logo-office-dogs.svg" \
+       -o "$DST/assets/logo-office-dogs.min.svg" \
+       --set-precision=5 --enable-id-stripping --enable-comment-stripping \
+       --shorten-ids --remove-metadata --strip-xml-prolog --no-line-breaks \
+       >/dev/null 2>&1
+    mv "$DST/assets/logo-office-dogs.min.svg" "$DST/assets/logo-office-dogs.svg"
+    echo "  Logo-SVG optimiert ($(stat -c%s "$DST/assets/logo-office-dogs.svg") Bytes)"
+  else
+    echo "  WARNUNG: scour fehlt (py -m pip install scour) — Logo bleibt unoptimiert"
+  fi
+else
+  echo "  Export nicht vorhanden ($SRC) — Bilder und Logo bleiben, wie sie sind."
+fi
+
+# --- sitemap.xml -----------------------------------------------------------
+# lastmod je Seite: hat DIESER Lauf die Datei verändert, ist heute das Datum
+# der Änderung — sonst zählt der letzte Commit der Datei.
+#
+# Warum nicht einfach immer das Commit-Datum: die Sitemap entsteht MITTEN im
+# Lauf, also bevor die soeben erzeugten Änderungen committet sind. `git log`
+# liefert dann den Stand von vorher, und die Sitemap meldet für eine gerade
+# geänderte Seite hartnäckig das Datum der vorherigen Runde. Das fällt nicht
+# auf, solange Umbau und Commit auf denselben Tag fallen — läuft der Import
+# aber an einem anderen Tag als der letzte Commit, steht dort ein Datum zu
+# früh. Google gewichtet lastmod ohnehin nur, wenn es nachweislich stimmt.
+#
+# `diff HEAD` deckt Arbeitsverzeichnis UND Index ab, egal ob schon `git add`
+# gelaufen ist. Im frisch initialisierten Repo (noch kein HEAD) scheitert es
+# mit Exit 128 — dann greift ebenfalls das heutige Datum, was dort richtig
+# ist. Beides steht in einer `if`-Bedingung, `set -e` greift also nicht.
+#
+# Seit dem Rollenwechsel stimmt das sogar besser als vorher: index.html wird
+# jetzt von Hand gepflegt, `git diff HEAD` sieht also genau die Bearbeitung,
+# um die es geht, statt der vom Script selbst erzeugten.
+lastmod_of() {
+  local f="$1"
+  if ! git -C "$DST" diff --quiet HEAD -- "$f" 2>/dev/null; then
+    date -u +%Y-%m-%d
+    return
+  fi
+  # `|| true`: unversionierte Datei → git log Exit 128 statt leerer Ausgabe.
+  local d=$(git -C "$DST" log -1 --format=%cd --date=short -- "$f" 2>/dev/null || true)
+  [ -z "$d" ] && d=$(date -u +%Y-%m-%d)
+  echo "$d"
+}
+cat > "$DST/sitemap.xml" <<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>${BASE}/</loc>
+    <lastmod>$(lastmod_of index.html)</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>${BASE}/impressum/</loc>
+    <lastmod>$(lastmod_of impressum/index.html)</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+</urlset>
+XML
+echo "  sitemap.xml erzeugt (2 URLs)"
+
+if [ "$MODE" = pflege ]; then
+  echo
+  echo "Pflegelauf fertig. index.html wurde nicht angefasst — sie ist die Quelle."
+  echo "Neuen Design-Export übernehmen: bash tools/_rederive.sh --import"
+  exit 0
+fi
+
+# ===========================================================================
+# TEIL 2 — nur mit --import. Schreibt ausschliesslich nach index.neu.html.
+#
+# Alles ab hier ist der alte Import-Pfad, unveraendert bis auf das Ziel. Die
+# Korrekturen bleiben dokumentiert, weil sie beim naechsten Export wieder
+# gebraucht werden: sie beschreiben, was das Design-Tool systematisch anders
+# ausgibt, als die Site es braucht.
+# ===========================================================================
+
+F="$DST/index.neu.html"
 cp "$SRC/$PAGE" "$F"
-echo "index.html aus '$PAGE' erzeugt"
+echo "index.neu.html aus '$PAGE' erzeugt"
 
-# Ersetzt ein Muster in index.html und bricht ab, wenn es gar nicht vorkommt.
+# Ersetzt ein Muster in index.neu.html und bricht ab, wenn es gar nicht vorkommt.
 # Grund: ein sed, das nach einer Design-Aenderung stillschweigend ins Leere
 # laeuft, faellt beim Diff nicht auf. Genau das ist im Hauptrepo schon
 # passiert (umbenanntes Datums-Label) und hat wochenlang falsche Ausgabe
@@ -116,10 +267,12 @@ must_sed "s|Office Dog Guide|Office Dogs Guide|g" "Office Dog Guide"
 sed -i "s|info@adventuredogs\.training|julia@officedogs.training|g" "$F"
 
 # --- Preisangabe -----------------------------------------------------------
-# Julia ist Kleinunternehmerin nach § 19 UStG — es wird also gar keine
-# Umsatzsteuer ausgewiesen. Der Zusatz "zzgl. MwSt." aus dem Design ist
-# damit schlicht falsch und widerspricht dem eigenen Impressum.
-# (Ab 2027 wird das Thema relevant, dann hier bewusst neu entscheiden.)
+# ACHTUNG, seit dem 12.08.2026 ueberholt: index.html weist inzwischen
+# "zzgl. MwSt." aus (als <span class="price-mwst"> inline neben der Zahl).
+# Dieser Block loescht den Zusatz aus dem EXPORT wieder heraus — er stammt aus
+# der Zeit der Kleinunternehmerregelung. Wer einen Import uebernimmt, muss hier
+# also bewusst entscheiden, statt den Block einfach laufen zu lassen.
+# Die offene Widerspruchslage Seite/Impressum steht in DEPLOY.md.
 #
 # Der Zusatz trug 28 px Abstand zum Button bei; beim Entfernen wandert der
 # Ausgleich in die margin von .price, sonst klebt der Button am Preis.
@@ -128,19 +281,13 @@ sed -i "s|info@adventuredogs\.training|julia@officedogs.training|g" "$F"
 if grep -q 'class="price-sub">zzgl\. MwSt\.' "$F"; then
   sed -i '/<div class="price-sub">zzgl\. MwSt\.<\/div>/d' "$F"
   sed -i 's|\(\.price{[^}]*\)margin:12px 0 7px}|\1margin:12px 0 34px}|' "$F"
-  echo "  Preis: 'zzgl. MwSt.' entfernt (Kleinunternehmerregelung)"
+  echo "  Preis: 'zzgl. MwSt.' entfernt (Kleinunternehmerregelung) — pruefen, siehe DEPLOY.md"
 fi
 
 # --- Bilder ----------------------------------------------------------------
 # Der Export referenziert den Hero als PNG; optimize-images.ps1 legt ein JPG ab.
 must_sed "s|assets/hero-office-dogs\.png|assets/hero-office-dogs.jpg|g" \
          "assets/hero-office-dogs.png"
-
-powershell.exe -NoProfile -ExecutionPolicy Bypass \
-  -File "$(cygpath -w "$DST/tools/optimize-images.ps1")" \
-  -Src   "$(cygpath -w "$SRC/assets")" \
-  -Local "$(cygpath -w "$DST/tools/assets-src")" \
-  -Dst   "$(cygpath -w "$DST/assets")"
 
 # Hero-Ausschnitt. Das Design ankert 62%/bottom — das passte zu einem frueheren
 # Motiv. Das jetzige Bild zeigt eine Frau am Schreibtisch (links oben) und den
@@ -182,26 +329,6 @@ sed -i 's|text-shadow:0 1px 10px oklch(0% 0 0 / \.3)|text-shadow:0 1px 3px oklch
 
 must_sed "s|^\.hero \.label{color:oklch(93% 0.02 85)}$|.hero .label{color:oklch(93% 0.02 85);text-shadow:0 1px 3px oklch(0% 0 0 / .5),0 1px 14px oklch(0% 0 0 / .4)}|" \
          "^\.hero \.label{"
-
-# --- Logo ------------------------------------------------------------------
-# scour verkleinert das SVG um rund ein Drittel (30,2 -> 20,1 KB roh,
-# 9,4 -> 6,3 KB uebertragen). Der Gewinn kommt aus relativen Pfadbefehlen und
-# weggelassenen Trennzeichen, nicht aus gerundeten Zahlen: precision=5 ist fuer
-# diese Quelle verlustfrei, weil dort hoechstens vierstellige Werte mit einer
-# Nachkommastelle stehen. Ein Pixel-Diff bei 600x600 zeigte 20 abweichende
-# Pixel von 360.000, alle auf Kanten — reines Antialiasing.
-cp "$SRC/assets/logo-office-dogs.svg" "$DST/assets/logo-office-dogs.svg"
-if py -c "import scour" >/dev/null 2>&1; then
-  py -m scour.scour -i "$DST/assets/logo-office-dogs.svg" \
-     -o "$DST/assets/logo-office-dogs.min.svg" \
-     --set-precision=5 --enable-id-stripping --enable-comment-stripping \
-     --shorten-ids --remove-metadata --strip-xml-prolog --no-line-breaks \
-     >/dev/null 2>&1
-  mv "$DST/assets/logo-office-dogs.min.svg" "$DST/assets/logo-office-dogs.svg"
-  echo "  Logo-SVG optimiert ($(stat -c%s "$DST/assets/logo-office-dogs.svg") Bytes)"
-else
-  echo "  WARNUNG: scour fehlt (py -m pip install scour) — Logo bleibt unoptimiert"
-fi
 
 # --- Marke in der Kopfzeile -------------------------------------------------
 # Neben dem Logo stand "Office Dogs" mit dem Zusatz "Adventure Dogs · Julia
@@ -253,6 +380,12 @@ must_sed "s|^\.quote-in{.*}$|.quote-in{display:grid;grid-template-columns:1fr 1f
          "^\.quote-in{"
 # object-position 42%: Julia sitzt bei 25 % der Bildbreite, der Hund bei 58 % --
 # dazwischen liegt der Ausschnitt, der beide zeigt.
+#
+# ACHTUNG: index.html steht seit dem 12.08.2026 auf 47 % plus einer Ausnahme
+# @media (min-width:1240px) mit 52 %. Grund war die auf vier Absaetze
+# gewachsene Textspalte — der Kasten wurde hoeher und das cover-Fenster damit
+# SCHMALER, wodurch der Hund rechts herausfiel. Die 42 % hier sind der alte
+# Stand des Designs; beim Uebernehmen den Wert aus index.html behalten.
 must_sed "s|^\.portrait{.*}$|.portrait{width:100%;height:100%;min-height:340px;object-fit:cover;object-position:42% 50%;display:block}|" \
          "^\.portrait{"
 
@@ -376,7 +509,7 @@ inject_seo "$F"
 # identisch zum Hauptbetrieb (gleiche Betreiberin).
 #
 # build-schema.py ergänzt den statischen Rumpf um das konkrete Angebot und
-# liest Preis, Paketname und Leistungsposten dafür aus index.html — damit
+# liest Preis, Paketname und Leistungsposten dafür aus der Seite — damit
 # kann die Preisangabe in den strukturierten Daten nicht von der sichtbaren
 # Seite abdriften.
 inject_schema() {
@@ -393,51 +526,24 @@ inject_schema() {
 }
 inject_schema "$F"
 
-# --- sitemap.xml -----------------------------------------------------------
-# lastmod je Seite: hat DIESER Lauf die Datei verändert, ist heute das Datum
-# der Änderung — sonst zählt der letzte Commit der Datei.
-#
-# Warum nicht einfach immer das Commit-Datum: die Sitemap entsteht MITTEN im
-# Lauf, also bevor die soeben erzeugten Änderungen committet sind. `git log`
-# liefert dann den Stand von vorher, und die Sitemap meldet für eine gerade
-# geänderte Seite hartnäckig das Datum der vorherigen Runde. Das fällt nicht
-# auf, solange Umbau und Commit auf denselben Tag fallen — läuft der Import
-# aber an einem anderen Tag als der letzte Commit, steht dort ein Datum zu
-# früh. Google gewichtet lastmod ohnehin nur, wenn es nachweislich stimmt.
-#
-# `diff HEAD` deckt Arbeitsverzeichnis UND Index ab, egal ob schon `git add`
-# gelaufen ist. Im frisch initialisierten Repo (noch kein HEAD) scheitert es
-# mit Exit 128 — dann greift ebenfalls das heutige Datum, was dort richtig
-# ist. Beides steht in einer `if`-Bedingung, `set -e` greift also nicht.
-lastmod_of() {
-  local f="$1"
-  if ! git -C "$DST" diff --quiet HEAD -- "$f" 2>/dev/null; then
-    date -u +%Y-%m-%d
-    return
-  fi
-  # `|| true`: unversionierte Datei → git log Exit 128 statt leerer Ausgabe.
-  local d=$(git -C "$DST" log -1 --format=%cd --date=short -- "$f" 2>/dev/null || true)
-  [ -z "$d" ] && d=$(date -u +%Y-%m-%d)
-  echo "$d"
-}
-cat > "$DST/sitemap.xml" <<XML
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>${BASE}/</loc>
-    <lastmod>$(lastmod_of index.html)</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>1.0</priority>
-  </url>
-  <url>
-    <loc>${BASE}/impressum/</loc>
-    <lastmod>$(lastmod_of impressum/index.html)</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
-  </url>
-</urlset>
-XML
-echo "  sitemap.xml erzeugt (2 URLs)"
-
+# --- Bericht ---------------------------------------------------------------
+# Der eigentliche Zweck des Import-Laufs: zeigen, wie weit Export und Quelle
+# auseinander sind. Ein blosses "fertig" waere hier wertlos — die Zahl darunter
+# ist die Entscheidungsgrundlage dafuer, ob sich das Uebernehmen ueberhaupt
+# lohnt oder ob der Export laengst hinterherhinkt.
 echo
-echo "Fertig. Diff prüfen: git -C \"$DST\" status"
+echo "──────────────────────────────────────────────────────────────────────"
+if [ -f "$DST/index.html" ]; then
+  WEG=$(diff "$DST/index.html" "$F" | grep -c '^<' || true)
+  NEU=$(diff "$DST/index.html" "$F" | grep -c '^>' || true)
+  echo "index.neu.html steht bereit. index.html wurde NICHT angefasst."
+  echo
+  echo "  $WEG Zeilen stehen nur in index.html (gingen beim Uebernehmen verloren)"
+  echo "  $NEU Zeilen stehen nur in index.neu.html (kaemen neu dazu)"
+  echo
+  echo "Vergleichen:   diff index.html index.neu.html"
+  echo "Aufraeumen:    rm index.neu.html"
+else
+  echo "index.neu.html steht bereit (index.html existiert nicht)."
+fi
+echo "──────────────────────────────────────────────────────────────────────"
