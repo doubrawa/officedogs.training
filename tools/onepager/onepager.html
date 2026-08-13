@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Office Dogs – Bürohunde-Beratung für Unternehmen</title>
+<meta name="author" content="Julia Doubrawa">
+<meta name="description" content="Bürohunde-Beratung für Unternehmen in Bayern: Analyse vor Ort, individuelles Konzept, Office Dogs Guide und konkrete Handlungsempfehlungen.">
+<!-- Dieselben lokalen woff2-Dateien wie die Website. Chrome laedt sie ueber
+     file:// und bettet sie als Subset ins PDF ein. -->
+<link href="../../assets/fonts.css" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════════════════════════════════
+   Office Dogs — One-Pager, EIN Blatt 210 mm x 1218 pt (429,6 mm),
+   Bildschirmfassung.
+   Gebaut von tools/build-onepager.ps1 nach assets/office-dogs-onepager.pdf.
+
+   Das Blatt war bis zum 11.08.2026 A4. Der ueberarbeitete Text braucht 1602
+   statt 1108 px; auf 297 mm gebracht haette ihn nur ein spuerbar engerer Satz
+   (kleinere Grade, kuerzeres Hero, weniger Luft). Statt das Blatt zu stauchen,
+   ist es laenger geworden: die Breite bleibt bei 210 mm, damit es beim
+   Ausdrucken sauber auf A4 herunterskaliert, die Hoehe folgt dem Inhalt.
+
+   Farben, Schriften und Bausteine sind aus officedogs.training/index.html
+   uebernommen. Die Farbwerte stehen bewusst als woertliche Kopie hier statt
+   in einer gemeinsamen Datei: die Website haelt sie inline im <style> des
+   Design-Exports, es gibt keine geteilte CSS-Datei, die man einbinden
+   koennte. Wer die Palette der Site aendert, muss sie hier nachziehen.
+
+   Die Leistungsliste zaehlt sechs Haken wie die Site. Sie stand hier zwischen-
+   durch auf vier gekuerzten Punkten — das war Platznot des A4-Blattes, die es
+   nicht mehr gibt. Untereinander stehen sie wie auf der Site, der Preis mit im
+   selben Band ueber die ganze Breite.
+
+   Der Typo-Maßstab liegt bei rund 0,8 der Website-Werte fuer schmale
+   Viewports (Lauftext 14,5 → 11 px, Zwischentitel 26 → 21 px), die H1 mit
+   34 px praktisch auf dem Wert der Site. Die Verhaeltnisse untereinander
+   bleiben; was die Seite wiedererkennbar macht, sind ohnehin Farben,
+   Schriftschnitte und Bausteine, nicht die absoluten Groessen.
+
+   Das vertikale Budget ist 1624 px (1218 pt), im Browser gemessen sind
+   1607,45 — 16,55 px Reserve. Die Blatthoehe ist KEINE runde Setzung, sondern am Inhalt gemessen;
+   wer Text hinzufuegt, muss sie nachziehen. Messen im Browser, die Datei per
+   file:// geoeffnet:
+
+       document.documentElement.style.height = 'auto';
+       document.body.style.height = 'auto';
+       document.body.getBoundingClientRect().height;              // CSS px
+
+   Den Wert aufrunden, MINDESTENS 16 px draufschlagen, auf ein Vielfaches von
+   8 px bringen und mal 0,75 nehmen — das ergibt die Punktzahl fuer @page und
+   html,body. Beide Stellen tragen denselben Wert.
+
+   Die 16 px sind Erfahrung, keine Vorsicht: die Messung oben ist die des
+   BILDSCHIRM-Layouts, gedruckt faellt derselbe Inhalt rund 10 px hoeher aus.
+   Am 12.08.2026 nachgestellt — 1679,0 px gemessen, 1688 px eingetragen (9 px
+   Reserve), und der Build meldete zwei Seiten. Mit 1704 px laeuft er durch.
+   Wer knapp kalkuliert, merkt es also erst beim Bauen.
+
+   Warum pt und warum Vielfache von 8: die Hoehe stand bis zum 11.08.2026 als
+   „359mm" da, und in manchen Betrachtern schloss das Blatt unten mit einem
+   weissen Strich ab. Chrome quantisiert die Papiergroesse auf Geraeteeinheiten
+   von 0,24 pt (1/300 Zoll) — aus 359 mm (1017,64 pt) wurde eine MediaBox von
+   1018,08 pt. Gemalt wird aber nur bis zur aufgerundeten CSS-Seitenhoehe, die
+   0,44 px Rest bleiben unbemalt, und Betrachter, die auf ganze Geraetepixel
+   aufrunden, zeichnen daraus eine weisse Linie quer ueber den Blattfuss.
+   Aus CSS ist dieser Streifen NICHT erreichbar: weder ein `box-shadow` unter
+   dem Fussband noch ein Hintergrund auf `html` malt dort hinein (beides am
+   11.08.2026 ausprobiert und am Raster nachgemessen). Der einzige Weg ist,
+   dass gar kein Rest entsteht — dafuer muss die Punktzahl sowohl durch 0,24
+   teilbar sein (Geraeteeinheit) als auch mal 4/3 eine ganze CSS-Pixelzahl
+   ergeben. Das kleinste gemeinsame Raster ist 6 pt, also 8 px. Am Vielfachen
+   nachgewiesen: bei 1020 pt mass die MediaBox exakt 1020,00 pt, Rest 0,00 px.
+
+   Die BREITE darf ruhig in mm stehen: 210 mm ergibt eine MediaBox von 594,96
+   pt = 793,28 px und ist damit SCHMALER als der Blattkasten (793,70 px). Zu
+   schmal beschneidet nur, zu hoch laesst weiss stehen — deshalb ist allein die
+   Hoehe heikel.
+
+   Zu klein gewaehlt entsteht klanglos eine zweite Seite — build-onepager.ps1
+   prueft die Seitenzahl und bricht dann ab. Etwas zu gross ist harmlos: `.foot`
+   haengt an `margin-top:auto`, der Ueberschuss landet als Luft VOR dem dunklen
+   Band. Wo eine Regel knapp kalkuliert ist, steht der gemessene Wert an ihr.
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* Die Hoehe MUSS in pt und als Vielfaches von 6 stehen, sonst bleibt unten ein
+   weisser Streifen — die Begruendung steht oben im Kopf. Nicht nach mm
+   „zurueckvereinheitlichen". */
+@page { size: 210mm 1218pt; margin: 0 }
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --slate:oklch(33% 0.042 250);
+  --sand:oklch(80% 0.022 85);--sand-deep:oklch(64% 0.034 78);--sand-lt:oklch(93% 0.014 85);
+  --paper:oklch(98.5% 0.005 85);--cream:oklch(95.5% 0.011 85);
+  --text:oklch(38% 0.018 250);--text-lt:oklch(52% 0.015 250);
+  --line:oklch(33% 0.042 250 / 0.16);--line-soft:oklch(33% 0.042 250 / 0.09);
+  --pad:38px;   /* 10 mm Seitensteg. Die Site rechnet clamp(22px,4vw,52px),
+                   was bei 794 px Seitenbreite auf 31,8 px kaeme — fuer ein
+                   Blatt ist der etwas groessere Steg die bessere Wahl. */
+  --r:13px;     /* Site: 16px, dort aber auf ~400 px breiten Karten. */
+}
+
+html,body{width:210mm;height:1218pt}   /* denselben Wert wie @page, siehe dort */
+body{
+  font-family:'DM Sans',sans-serif;
+  background:var(--paper);color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  print-color-adjust:exact;-webkit-print-color-adjust:exact;
+  display:flex;flex-direction:column;
+}
+h1,h2,h3{color:var(--slate);font-weight:600;letter-spacing:-0.015em;text-wrap:pretty}
+a{text-decoration:none;color:inherit}
+
+.label{font-size:9.5px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--sand-deep)}
+
+/* ─── HERO ─────────────────────────────────────────────────────────────
+   Bei 1440x960 auf 794x290 bindet die BREITE (Faktor 0,551, Bild wird
+   794x529). Waagerecht gibt es damit gar keinen Ueberlauf — der erste Wert
+   der background-position ist wirkungslos, nur die 58 % wirken.
+
+   Von den 290 px braucht der Inhalt des Bandes (Kopfzeile, H1, Unterzeile,
+   Innenabstaende) 230, die uebrigen 60 sind reine Bildhoehe. Solange das Blatt
+   A4 war, war das die erste Reserve, an die man ging, wenn der Text weiter
+   unten laenger wurde — seit die Blatthoehe dem Inhalt folgt, ist sie das
+   nicht mehr: laengerer Text macht das Blatt laenger, nicht das Bild kleiner.
+   Unter 230 wird der Text gestaucht, und weil der Anker das Bild um 58 %
+   verschiebt, bleibt der Hundekopf bei jeder Hoehe im Bild; das Bild ist also
+   nicht die Grenze, der Text ist es.
+
+   Anker und Schleier haengen voneinander ab und sind zusammen bestimmt
+   worden, an fertig gerenderten Baendern statt am Rohbild. Zu weit oben
+   schneidet die Unterkante dem Hund den Kopf ab; zu weit unten liegt das
+   Band im dunklen Bereich unter dem Tisch, und mit dem Schleier der Site
+   darueber bleibt vom Hund nur eine Silhouette. Der Schleier ist deshalb
+   deutlich weicher als auf der Site. Das ist vertretbar, weil der Text hier
+   nicht wie dort ueber der hellen Delle des Verlaufs sitzt, sondern ueber
+   der dunklen linken Bildhaelfte — die gemessenen Kontraste tragen. */
+.hero{position:relative;flex:none;height:290px;overflow:hidden;display:flex}
+.hero-img{position:absolute;inset:0;
+  background:url('../../assets/hero-office-dogs.jpg') 50% 58% / cover no-repeat}
+/* Zwei Lagen, die der Site (links dunkel fuer den Text, unten dunkel fuer den
+   Abschluss), nur weicher.
+   Eine dritte, `to bottom left`, hat es hier einmal gegeben: sie verdunkelte
+   allein die rechte obere Ecke, weil dort „officedogs.training" ueber dem
+   hellen Fenster im Foto stand und mit 3,6:1 zu blass war. Die Zeile ist raus,
+   damit auch der Verlauf — er verschattete sonst grundlos die Fensterecke. Wer
+   dort je wieder Text hinsetzt, braucht ihn zurueck; ein Verlauf ueber den
+   ganzen oberen Rand ist NICHT der Ersatz, der zieht einen sichtbaren
+   Schattenbalken durch die helle Bueromitte. */
+.hero-overlay{position:absolute;inset:0;background:
+  linear-gradient(to right,oklch(22% 0.04 250 / .66) 0%,oklch(22% 0.04 250 / .26) 62%,oklch(22% 0.04 250 / .04) 100%),
+  linear-gradient(to bottom,oklch(24% 0.04 250 / .34) 0%,oklch(24% 0.04 250 / .12) 24%,oklch(22% 0.04 250 / .42) 100%)}
+/* Die 11 px unten sind gemessen, nicht gegriffen. Im Foto laeuft die Tischkante
+   waagerecht durchs Band; das Bild ist 1440x960 und wird als `cover` auf 794
+   Breite gerechnet (Faktor 0,5514) und mit 58 % von oben angeschnitten, die
+   Kante liegt im Original bei y=505 und damit bei
+       505 * 0,5514 - 0,58 * (529 - 290) = 139,9 px
+   im Band. Mit 22 px Unterrand schwebte der Kicker 11 px darueber und schnitt
+   die Kante mit der H1; mit 11 px sitzt seine Unterkante auf 139,6 px, also auf
+   der Kante, und die Zeile liegt im Bild auf statt davor.
+   Wer das Band in der Hoehe aendert, verschiebt beides: die Kante wandert mit
+   0,58 px je px Bandhoehe, der Text mit 1 px. Ausgleich ueber diesen Unterrand,
+   p = 0,42 * Bandhoehe - 111,1 — bei 300 px waeren es 15, bei 310 px 19. */
+.hero-in{position:relative;z-index:2;width:100%;padding:19px var(--pad) 11px;
+  display:flex;flex-direction:column;justify-content:space-between}
+
+.hero-top{display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:11px}
+.brand img{width:38px;height:38px}
+.brand b{font-size:12.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#fff;
+  line-height:1.2;text-shadow:0 1px 3px oklch(0% 0 0 / .5),0 2px 14px oklch(0% 0 0 / .4)}
+
+.hero-txt .label{color:oklch(93% 0.02 85);text-shadow:0 1px 3px oklch(0% 0 0 / .5),0 1px 14px oklch(0% 0 0 / .4)}
+/* Der enge erste Schattenwert ist nicht Deko, sondern noetig: der weichere
+   Schleier laesst das helle Hundefell durch, und die Unterzeile laeuft
+   darueber. An der hellsten Stelle steht sonst 12,5-px-Text auf 3,6:1. Der
+   2-px-Saum legt einen dunklen Hof um jede Glyphe; dasselbe Muster benutzt
+   die Site in ihrer Nav ueber dem Hero-Foto. */
+.hero h1{font-size:34px;line-height:1.12;color:#fff;max-width:500px;margin:11px 0 11px;
+  text-shadow:0 1px 3px oklch(0% 0 0 / .5),0 2px 24px oklch(0% 0 0 / .34)}
+/* Die 470 px sind eine Kontrastgrenze, keine Geschmacksfrage. Gemessen am
+   fertigen Band (Kopie mit unsichtbarem Text, Pixel im Zeilenkasten): bis
+   x=450 liegt der Hintergrund bei 4,7:1 oder besser, ab x=458 fallen die
+   Werte auf 3,8 und weiter auf 3,3 — dort steht im Foto das helle Fenster
+   hinter dem Hund. Mit 540 px lief die erste Zeile bis x=529 und 3,7 % ihres
+   Glyphensaums lagen unter den 4,5:1, die 12,5-px-Text braucht. Mit 470
+   brechen die Zeilen bei x=426 und 392 um, beide im dunklen Teil des Bildes;
+   der Umbruch wird dadurch ausserdem gleichmaessiger (vorher 529/289).
+   Wer den Satz aendert, muss neu messen — das Verfahren steht in DEPLOY.md. */
+.hero-sub{font-size:12.5px;line-height:1.65;color:oklch(100% 0 0 / .9);font-weight:300;max-width:470px;
+  text-shadow:0 1px 2px oklch(0% 0 0 / .8),0 2px 14px oklch(0% 0 0 / .5)}
+
+/* ─── WARUM BÜROHUNDE ──────────────────────────────────────────────── */
+.value{flex:none;padding:17px var(--pad) 0}
+/* Linksbuendig wie .proc-head und alles andere auf dem Blatt. Zentriert war
+   der Kopf hier einmal, weil die Site ihn zentriert — dort steht er aber
+   allein in einer eigenen Sektion, hier eine Handbreit unter der linken
+   Hero-Achse. Deshalb auch KEIN max-width mehr: gekappt und linksbuendig
+   waere die Zeile ohne Grund frueher umgebrochen als noetig. */
+.value-head{margin:0 0 12px}
+.value-head h2{font-size:20.5px;line-height:1.22}
+/* Der Satz ist EINER, aufgeteilt in zwei Haelften, zwischen denen die drei
+   Karten stehen: „Ein Buerohund kann den Arbeitsalltag bereichern …" oben,
+   „… wenn die Rahmenbedingungen stimmen." darunter. Damit die Klammer traegt,
+   muss die zweite Haelfte denselben Grad haben wie die erste — sie ist deshalb
+   ein h2 und keine Bildunterschrift. Die Auslassungspunkte sind U+2026 und in
+   allen sechs Schriftschnitten enthalten (geprueft), kein Dreipunkt-Ersatz. */
+.value-schluss{font-size:20.5px;line-height:1.22;margin-top:14px}
+/* Rinne 12 statt 14 px und Innenabstand 14 statt 16: das bringt jeder Karte
+   5,6 px mehr Textbreite, ohne einen Millimeter Hoehe zu kosten. Bei 196 px
+   stand die erste Karte auf 1 Zeichen vor dem vierten Umbruch, jetzt sind es
+   5. Dasselbe Motiv wie bei .steps. */
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.card{background:#fff;border:1px solid var(--line-soft);border-radius:var(--r);padding:14px 14px 15px}
+.dot{width:26px;height:26px;border-radius:50%;background:var(--sand-lt);border:1px solid var(--sand);
+  display:flex;align-items:center;justify-content:center;margin-bottom:11px}
+.dot span{width:8px;height:8px;border-radius:50%;background:var(--sand-deep)}
+/* Die laengste Ueberschrift ist „Entspannter Arbeitsalltag" mit 162,3 px in
+   der 201,6 px breiten Karte — 39 px Luft, hier ist nichts knapp. Wer eine
+   Karte umbenennt, sollte trotzdem nachmessen: zwei Zeilen Titel machen die
+   Karte zur hoechsten und ziehen per Grid alle drei mit, das kostet 18 px. */
+.card h3{font-size:13.5px;line-height:1.3;margin-bottom:6px}
+/* Derselbe Grad wie im Ablauf und im Ueberleitungsblock — 11 px ist der
+   Fliesstext dieses Blattes. Die Karten haengen im Grid aneinander: die
+   laengste bestimmt die Hoehe aller drei. Zurzeit ist das die erste
+   („Attraktiver Arbeitgeber") mit fuenf Zeilen gegen vier und vier; jede
+   weitere Zeile dort kostet 17,6 px auf dem ganzen Blatt. */
+.card p{font-size:11px;line-height:1.6;color:var(--text-lt);font-weight:300}
+
+/* ─── ABLAUF ─────────────────────────────────────────────────────────
+   Der Abschnitt hat KEINE eigene Ueberschrift mehr — „So laeuft die
+   Zusammenarbeit ab" ist am 12.08.2026 gestrichen worden. Die Rolle
+   uebernimmt der Satz „Genau hier setzt Office Dogs an." darueber, der
+   deshalb im Ueberschriftsgrad steht: er leitet in die Mindmap ueber. */
+.proc{flex:none;padding:17px var(--pad) 0}
+/* ── Mindmap-Aeste ──────────────────────────────────────────────────────
+   Variante D aus „Ablauf Design-Varianten.html" (Claude-Design-Entwurf, per
+   ZIP geliefert am 12.08.2026): die Bildmarke als Wurzel links, vier Bezier-
+   Aeste nach rechts zu den Schritten.
+   Die Vorlage rechnet auf 1128 px Blattbreite, hier sind es 718. Uebernommen
+   sind die VERHAELTNISSE, nicht die Zahlen — der Schriftgrad des Blattes ist
+   ein anderer, blosses Skalieren haette 8-px-Text ergeben:
+     Wurzel      300/1128 = 26,6 % waeren 191 px — gesetzt sind 165,
+                 auf Wunsch kleiner als die Vorlage
+     Aeste ab    548/1128 = 48,6 %  → 349 px
+     Rinne dazw. 248/1128 = 22,0 %  → 158 px, darin liegen die Kurven
+   Der Text bekommt damit 369 px, abzueglich Ziffer und Rinne 329 px. */
+.mind{position:relative}
+.mind-lines{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.mind-lines path{stroke:var(--sand);stroke-width:1.1;fill:none}
+.mind-core{position:absolute;left:0;top:50%;transform:translateY(-50%);
+  width:165px;height:165px}
+.mind-core img{width:100%;height:100%;display:block}
+/* Gleiche FREIRAEUME zwischen den Aesten — 30 px von Textende zu naechster
+   Ziffer, ueberall. Das ist eine Entscheidung gegen die Vorlage, und beides
+   zusammen geht nicht:
+     gleich hohe Zeilen (`grid-auto-rows:1fr`) → Ziffern gleichmaessig
+       gefaechert, aber hinter dem zweizeiligen Ast 02 klafft doppelt so viel
+       Weissraum wie hinter dem fuenfzeiligen 03. Genau das ist am 12.08.2026
+       aufgefallen.
+     gleicher `gap` → Weissraum ueberall gleich, dafuer sitzen die Ziffern auf
+       ungleichen Abstaenden (gemessen 92/109/136 px).
+   Solange die vier Texte verschieden lang sind, ist das nicht aufloesbar; nur
+   gleich lange Texte haetten beides. Die Kurven im SVG folgen den Ziffern, der
+   Faecher ist also weiterhin exakt — nur nicht gleichwinklig. */
+.mind-list{margin-left:349px;display:flex;flex-direction:column;gap:30px}
+.mind-br{display:flex;gap:14px;align-items:flex-start}
+/* Die Ziffer traegt sonst 10 px Abstand nach unten (Reihen-Layout) — hier steht
+   sie NEBEN dem Text, der Abstand waere Unsinn. Die 4 px am h3 ruecken die
+   Zeile auf die Mitte der 26-px-Ziffer: 13 gegen 4 + 17,6/2. */
+/* `flex:none` ist Pflicht, nicht Kosmetik: als schrumpfbarer Flex-Posten neben
+   einem breiten Textblock wird der Kreis waagerecht zusammengedrueckt und
+   steht als Ei im Blatt (im ersten Bau genau so passiert). */
+.mind-br .num{margin-bottom:0;flex:none}
+.mind-br h3{font-size:13.5px;line-height:1.3;margin:4px 0 6px}
+.mind-br p{font-size:11px;line-height:1.6;color:var(--text-lt);font-weight:300}
+/* Die Ziffer ist der einzige Rest des frueheren Reihen-Layouts, den die
+   Mindmap weiterverwendet; `margin-bottom` setzt `.mind-br .num` zurueck. */
+.num{width:26px;height:26px;border-radius:50%;background:var(--slate);color:var(--paper);
+  display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:600;margin-bottom:10px}
+
+/* ─── ANSPRUCH ─────────────────────────────────────────────────────────
+   Der Block sitzt zwischen den drei Vorteilskarten und dem Verfahren und
+   dreht die Aussage: erst was Buerohunde bringen koennen, dann warum das
+   nicht von allein passiert. Ohne Kasten und ohne Label — er ist Scharnier,
+   nicht Sektion.
+   Die beiden Saetze stehen als eigene Absaetze, nicht als Fliesstext: jeder
+   ist ein Schritt der Kette (Beobachtung, Bedingung), zusammengezogen
+   verlieren sie ihr Tempo. Die Folgerung darunter traegt den Ueberschriftsgrad
+   und ist zugleich der Kopf der Mindmap.
+   Die beiden Saetze stehen ZWISCHEN zwei Ueberschriften desselben Grades —
+   „… wenn die Rahmenbedingungen stimmen." darueber, „Genau hier setzt Office
+   Dogs an." darunter. Der Abstand muss deshalb oben und unten gleich sein, und
+   weil beide Nachbarn dieselbe Zeilenhoehe haben, reicht dafuer derselbe Wert
+   an beiden Stellen: 17 px hier oben, 17 px an `.claim-schluss` unten. Vorher
+   waren es 24 gegen 11 — der Block klebte sichtbar an der unteren
+   Ueberschrift.
+   Nicht weiter feinjustieren: an den Zeilenkaesten gemessen
+   (`getClientRects()` auf dem Textinhalt, nicht der Elementkasten) kommen
+   20,0 gegen 21,6 px heraus. Der Versuch, die 1,6 px per 15,5-px-Rand
+   auszugleichen, drehte das Verhaeltnis auf 21,2 gegen 19,5 — die Zeilenkaesten
+   runden je nach absoluter Lage im Blattfluss anders. Die Differenz liegt
+   unter dem Rauschen der Messung; symmetrisch gesetzt ist ehrlicher als
+   scheingenau nachjustiert. */
+.claim{flex:none;padding:17px var(--pad) 0}
+.claim-p{font-size:11px;line-height:1.6;color:var(--text-lt);font-weight:300}
+/* Im Grad der Abschnittsueberschriften (20,5 px), nicht im Fliesstext: seit
+   „So laeuft die Zusammenarbeit ab" gestrichen ist, ist dieser Satz die
+   Ueberschrift der Mindmap darunter. Als h2 gesetzt, damit Farbe, Gewicht und
+   Laufweite von der gemeinsamen Regel kommen. */
+.claim-schluss{font-size:20.5px;line-height:1.22;margin-top:17px}
+/* 4 px zwischen den beiden Saetzen. Ohne sie stehen zwei einzeilige Absaetze
+   im Zeilenabstand direkt uebereinander und lesen sich als ein umbrochener
+   Satz — genau das, was die getrennten Absaetze verhindern sollen. Mehr als
+   4 px reisst den Block auseinander, er soll ja eine Kette bleiben. */
+.claim-p + .claim-p{margin-top:4px}
+
+/* ─── PREIS ────────────────────────────────────────────────────────────
+   Ein Band ueber die ganze Breite statt der zweispaltigen Box der Site. Die
+   Site stellt Leistungsliste und Preis NEBENeinander; auf 718 px ginge das
+   nur, wenn die Liste einspaltig untereinander stuende — dafuer ist kein
+   Platz. Hier liegen deshalb Paketname und Preis in einer Zeile und die
+   Leistungen als Haken-Reihe darunter, getrennt durch eine Linie.
+   Die beiden Kleingedruckten stehen zusammen in einer Fusszeile im Band —
+   einzeln haetten sie die rechte Spalte auf ihre Textbreite aufgezogen und
+   den Preis nach links gedrueckt. */
+.pkg-sec{flex:none;padding:17px var(--pad) 0}
+.pkg{background:var(--cream);border:1px solid var(--line-soft);border-radius:var(--r);
+  padding:18px 24px 16px}
+.pkg-top{display:grid;grid-template-columns:1fr auto;gap:28px;align-items:end}
+.pkg-txt h2{font-size:20px;line-height:1.2;margin-top:7px}
+/* SECHS Haken UNTEREINANDER, dieselben sechs wie auf der Site. Das war hier
+   lange anders: mit den kurzen Fassungen („Analyse vor Ort / Individuelles
+   Konzept / Office Dogs Guide / Konkrete Handlungsempfehlungen") passten vier
+   nebeneinander in eine Zeile und sparten dem A4-Blatt rund 70 px, die es
+   nicht hatte.
+   Mit den ausformulierten Punkten geht das nicht mehr: der laengste misst
+   allein 522 px, zweispaltig blieben ihm 324 (bei 1fr) oder 372 (bei 1,35fr) — er
+   braeche in jedem Fall um, und ein umgebrochener Punkt neben fuenf einzeiligen
+   sieht aus wie ein Fehler. Untereinander ist der laengste mit 522 von 668 px
+   bequem einzeilig — nachgemessen sind alle sechs einzeilig — und die Liste
+   liest sich als das, was sie ist: sechs Dinge, die der Kunde bekommt. */
+.pkg-ticks{list-style:none;display:grid;grid-template-columns:1fr;
+  gap:7px;margin-top:13px;padding-top:13px;border-top:1px solid var(--line-soft)}
+.pkg-ticks li{display:flex;align-items:center;gap:8px;
+  font-size:11px;line-height:1.4;font-weight:500;color:var(--slate)}
+.tick{width:16px;height:16px;border-radius:50%;background:var(--sand-lt);flex:none;
+  display:flex;align-items:center;justify-content:center}
+.tick svg{width:9px;height:9px;color:var(--slate)}
+/* Preis und Knopf stehen NEBENeinander, nicht uebereinander, und ohne
+   Ueberschrift darueber. Gestapelt und mit einem „Investition"-Label war die
+   rechte Spalte 120 px hoch und damit der hoechste Posten der ganzen Sektion;
+   so sind es 42. Das Label fehlt nicht: eine grosse Zahl neben dem Paketnamen
+   und einem Anfrage-Knopf ist als Preis nicht missverstaendlich. */
+.pkg-preis{display:flex;align-items:center;gap:16px}
+/* „zzgl. MwSt." steht auf der Grundlinie neben der Zahl, nicht darunter: eine
+   zweite Zeile machte aus dem 42 px hohen Preisblock 58 px und damit .pkg-top
+   um 16 px hoeher — genau die Sorte Zuwachs, die am Blattende die zweite Seite
+   ausloest. Das Kleinunternehmer-Fussnotenformat (10 px, --text-lt) waere hier
+   zu leise; 12 px in --text sind lesbar, ohne der Zahl die Schau zu stehlen.
+   `letter-spacing:0` hebt die -0.03em der Zahl auf, die auf 12 px die Wortluecke
+   zufraesen wuerden.
+   Die Luecke zur Zahl ist ein echtes Leerzeichen im Markup, KEIN `gap` eines
+   Flex-Kastens: als Flex-Abstand steht im PDF-Textlayer „649 €zzgl. MwSt."
+   ohne Trennung, und genau so landet der Preis dann in der Mail, in die ihn
+   jemand hineinkopiert. Als Zeichen der 42-px-Zeile ist es rund 10 px breit,
+   also praktisch derselbe Abstand. Die Grundlinie sitzt ohne Flexbox von
+   selbst richtig, weil der Zusatz inline im Absatz der Zahl laeuft. */
+.price{font-size:42px;font-weight:600;letter-spacing:-0.03em;color:var(--slate);line-height:1;
+  white-space:nowrap}
+.price-mwst{font-size:12px;font-weight:400;letter-spacing:0;color:var(--text)}
+.pkg-cta{display:inline-flex;align-items:center;gap:8px;
+  background:var(--slate);color:var(--paper);font-size:11.5px;font-weight:600;
+  padding:10px 18px;border-radius:999px}
+.pkg-cta svg{width:11px;height:11px}
+/* Nur noch der Hinweis auf individuelle Angebote. Der Steuerhinweis stand
+   frueher hier („Gemaess § 19 UStG …"); er sitzt jetzt als „zzgl. MwSt."
+   direkt am Preis, wo eine Buchhaltung ihn sucht. */
+.pkg-fuss{margin-top:14px;font-size:10px;line-height:1.6;color:var(--text-lt);font-weight:300}
+
+/* ─── ABSCHLUSS: Slate-Band mit Zitat und Kontakt ──────────────────────
+   Entspricht dem Kontaktabschnitt der Site (Slate, weisse Schrift, Sand als
+   Akzent). Das Portraet steht links im Vollbeschnitt bis an die Blattkante.
+   `margin-top:auto` heftet das Band an den unteren Rand, egal wie viel Luft
+   die Abschnitte darueber lassen. */
+/* Hier hing einmal ein 4 px hoher `box-shadow`-Riegel in Slate unter dem Band,
+   der den weissen Strich am Blattfuss zudecken sollte. Er ist raus, und zwar
+   weil er nie funktioniert hat: in diesen Streifen malt CSS ueberhaupt nicht
+   hinein (am 11.08.2026 ausprobiert und am Geraeteraster nachgemessen, siehe
+   Kopf). Geloest ist das Problem allein ueber die Blatthoehe — Vielfaches von
+   6 pt, von build-onepager.ps1 geprueft.
+   Nicht wieder einbauen: der Riegel verdeckt nichts und verschleiert bloss,
+   woran es wirklich haengt. */
+.foot{margin-top:auto;flex:none;background:var(--slate);display:grid;
+  grid-template-columns:190px 1fr;overflow:hidden}
+/* 620x414 auf 190x~207: hier bindet die HOEHE (Faktor 0,5, Bild wird
+   310x207), senkrecht gibt es also keinen Ueberlauf und der zweite Wert ist
+   wirkungslos. Waagerecht sind 120 px zu verteilen. Bei den 44 % der Site
+   steht der Hund halb ausserhalb des Rahmens; 62 % hat Julia UND den Hund
+   komplett im Bild. */
+.foot-portrait{width:100%;height:100%;object-fit:cover;object-position:62% 50%;display:block}
+.foot-in{padding:19px 28px 13px var(--pad);display:flex;flex-direction:column}
+/* Ohne „Warum Office Dogs"-Vorzeile darueber (die Site hat sie, hier ist sie
+   entbehrlich: das Zitat traegt sich selbst und die Zeile darunter nennt
+   Julia) beginnt das Band direkt mit dem Zitat — daher margin-top 0 und
+   stattdessen 2 px mehr Innenabstand oben. */
+blockquote{font-family:'Playfair Display',serif;font-size:19.5px;font-style:italic;font-weight:600;
+  line-height:1.34;color:#fff;max-width:480px;margin:0 0 9px}
+.by{display:flex;align-items:baseline;gap:11px}
+.by b{font-size:12.5px;color:#fff;font-weight:600}
+.by .label{color:oklch(100% 0 0 / .55)}
+/* Die Qualifikationszeile steht unter dem Namen, nicht neben dem Zitat: das
+   Zitat ist Julias Haltung, dieser Satz ihre Fachlichkeit — zwei Register, die
+   uebereinander funktionieren und nebeneinander um dieselbe Zeile stritten.
+   72 % Weiss statt reinem Weiss, damit der Name die Stufe darueber bleibt. */
+.by-txt{margin-top:7px;max-width:470px;font-size:11px;line-height:1.6;font-weight:300;
+  color:oklch(100% 0 0 / .72)}
+
+.contact{margin-top:11px;padding-top:10px;border-top:1px solid oklch(100% 0 0 / .18);
+  display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:20px}
+.contact div{display:flex;flex-direction:column;gap:3px}
+.contact dt{font-size:8.5px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;
+  color:oklch(100% 0 0 / .48)}
+.contact dd{font-size:11.5px;font-weight:500;color:#fff}
+
+.legal{margin-top:10px;padding-top:9px;border-top:1px solid oklch(100% 0 0 / .12);
+  display:flex;justify-content:space-between;gap:14px;
+  font-size:9px;font-weight:300;color:oklch(100% 0 0 / .52)}
+</style>
+</head>
+<body>
+
+<!-- ═══ HERO ═══ -->
+<header class="hero">
+  <div class="hero-img"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-in">
+    <div class="hero-top">
+      <div class="brand">
+        <img src="../../assets/logo-office-dogs.svg" alt="">
+        <b>Office Dogs</b>
+      </div>
+    </div>
+    <div class="hero-txt">
+      <p class="label">Beratung für hundefreundliche Unternehmen</p>
+      <h1>Hunde erfolgreich in den Arbeitsalltag integrieren.</h1>
+      <p class="hero-sub">Individuelle Bürohunde-Konzepte – damit Hunde, Mitarbeitende und Arbeitsabläufe im Unternehmen zuverlässig zusammenpassen.</p>
+    </div>
+  </div>
+</header>
+
+<!-- ═══ WARUM BÜROHUNDE ═══ -->
+<section class="value">
+  <div class="value-head">
+    <h2>Hunde im Büro können ein echter Mehrwert sein …</h2>
+  </div>
+  <div class="cards">
+    <div class="card">
+      <div class="dot"><span></span></div>
+      <h3>Attraktiver Arbeitgeber</h3>
+      <p>Den eigenen Hund mit ins Büro bringen zu können, ist für viele ein echter Pluspunkt – und kann ein guter Grund sein, auch wieder häufiger vor Ort statt im Homeoffice zu arbeiten.</p>
+    </div>
+    <div class="card">
+      <div class="dot"><span></span></div>
+      <h3>Entspannter Arbeitsalltag</h3>
+      <p>Hunde können zu einer entspannten, angenehmen Arbeitsatmosphäre beitragen und damit Kreativität und produktives Arbeiten unterstützen.</p>
+    </div>
+    <div class="card">
+      <div class="dot"><span></span></div>
+      <h3>Stärkeres Miteinander</h3>
+      <p>Hunde bringen Menschen zusammen, schaffen Gesprächsanlässe und können so auch die Verbundenheit im Team stärken.</p>
+    </div>
+  </div>
+  <h2 class="value-schluss">… wenn die Rahmenbedingungen stimmen.</h2>
+</section>
+
+<!-- ═══ ANSPRUCH: Ueberleitung von den Vorteilen zum Verfahren ═══ -->
+<section class="claim">
+  <p class="claim-p">Die Vorteile entstehen nicht automatisch, nur weil Hunde mit ins Büro dürfen.</p>
+  <p class="claim-p">Es braucht klare Strukturen, die zum Unternehmen, zum Team und zu den Hunden passen.</p>
+  <h2 class="claim-schluss">Genau hier setzt Office Dogs an.</h2>
+</section>
+
+<!-- ═══ ABLAUF ═══ -->
+<section class="proc">
+  <div class="mind">
+    <!-- Die vier Aeste. Das viewBox-Mass IST die gemessene Groesse des Blocks
+         (718 x 433,7), damit eine Nutzereinheit genau einem CSS-Pixel
+         entspricht — nur dann treffen die Kurven die Ziffern.
+         x: 169 = Wurzelrand + 4, 336 = Ziffer - 13; die Kontrollpunkte liegen
+         auf 47 % und 52 % der Rinne zwischen Wurzel und Aesten, das sind die
+         Verhaeltnisse der Vorlage.
+         y: 205,7 = Mitte der Wurzel, dann die vier gemessenen Ziffernmitten.
+         Wer Text im Ablauf aendert, muss beides neu messen (Rezept im Kopf der
+         Datei, dazu die Mitten der `.num` gegen `.mind`) — sonst zeigen die
+         Kurven ins Leere. Das faellt beim Bauen NICHT auf. -->
+    <svg class="mind-lines" viewBox="0 0 718 411.3" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M169 205.7 C 251 205.7, 261 13,    336 13"/>
+      <path d="M169 205.7 C 251 205.7, 261 123.3, 336 123.3"/>
+      <path d="M169 205.7 C 251 205.7, 261 216.1, 336 216.1"/>
+      <path d="M169 205.7 C 251 205.7, 261 344,   336 344"/>
+    </svg>
+    <div class="mind-core"><img src="../../assets/logo-office-dogs.svg" alt=""></div>
+    <div class="mind-list">
+      <div class="mind-br">
+        <div class="num">01</div>
+        <div>
+          <h3>Analyse vor Ort</h3>
+          <p>Ich schaue mir Arbeitsabläufe, Räumlichkeiten und die vorhandenen oder geplanten Mensch-Hund-Teams direkt in Ihrem Unternehmen an.</p>
+        </div>
+      </div>
+      <div class="mind-br">
+        <div class="num">02</div>
+        <div>
+          <h3>Individuelles Konzept</h3>
+          <p>Daraus entstehen klare Regeln und konkrete Lösungen, die zu Ihrem Unternehmen und Ihrem Arbeitsalltag passen.</p>
+        </div>
+      </div>
+      <div class="mind-br">
+        <div class="num">03</div>
+        <div>
+          <h3>Direkt in die Praxis</h3>
+          <p>Wir bleiben nicht bei der Theorie. Die wichtigsten Maßnahmen setzen wir direkt vor Ort um und schauen uns typische Situationen gemeinsam an – vom Ruheplatz über Begegnungen bis zum Umgang mit Besuchern oder mehreren Hunden.</p>
+        </div>
+      </div>
+      <div class="mind-br">
+        <div class="num">04</div>
+        <div>
+          <h3>Weitere Begleitung</h3>
+          <p>Kommen weitere Hunde dazu oder verändern sich Abläufe, kann auch das Konzept angepasst werden. Auf Wunsch begleite ich Sie dabei weiter.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PREIS ═══ -->
+<section class="pkg-sec">
+  <div class="pkg">
+    <div class="pkg-top">
+      <div class="pkg-txt">
+        <p class="label">Leistungspaket</p>
+        <h2>Bürohunde-Analyse &amp; Konzept</h2>
+      </div>
+      <div class="pkg-preis">
+        <div class="price">649 € <span class="price-mwst">zzgl. MwSt.</span></div>
+        <a class="pkg-cta" href="mailto:julia@officedogs.training?subject=Anfrage%20Office%20Dogs">Anfrage senden<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      </div>
+    </div>
+    <ul class="pkg-ticks">
+      <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg></span>Analyse direkt in Ihrem Unternehmen</li>
+      <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg></span>Einschätzung von Räumlichkeiten, Abläufen &amp; Mensch-Hund-Teams</li>
+      <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg></span>Individueller Office Dogs Guide mit klaren Regeln für den Arbeitsalltag</li>
+      <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg></span>Praxis-Coaching direkt vor Ort</li>
+      <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg></span>Konkrete Handlungsempfehlungen für den weiteren Alltag</li>
+      <li><span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg></span>Telefonische Nachbesprechung innerhalb von vier Wochen</li>
+    </ul>
+    <p class="pkg-fuss">Für größere Standorte oder mehrere Teams erstelle ich Ihnen gerne ein individuelles Angebot.</p>
+  </div>
+</section>
+
+<!-- ═══ ABSCHLUSS ═══ -->
+<footer class="foot">
+  <img class="foot-portrait" src="../../assets/julia-mit-hund-620.jpg"
+       alt="Julia Doubrawa sitzt entspannt in einem Sessel in einem hellen Loungebereich, ihr Hund wartet ruhig neben ihr">
+  <div class="foot-in">
+    <blockquote>„Denn ein gutes Konzept berücksichtigt nicht nur den Hund – sondern das gesamte Unternehmen."</blockquote>
+    <div class="by"><b>Julia Doubrawa</b><span class="label">Hundetrainerin</span></div>
+    <p class="by-txt">Fachliche Einschätzung von Hundeverhalten kombiniert mit klaren, praktisch umsetzbaren Strukturen für Ihren Unternehmensalltag.</p>
+
+    <dl class="contact">
+      <div><dt>E-Mail</dt><dd><a href="mailto:julia@officedogs.training?subject=Anfrage%20Office%20Dogs">julia@officedogs.training</a></dd></div>
+      <div><dt>Telefon</dt><dd><a href="tel:+491632652070">+49 163 265 20 70</a></dd></div>
+      <div><dt>Web</dt><dd><a href="https://officedogs.training/">officedogs.training</a></dd></div>
+    </dl>
+
+    <div class="legal">
+      <span>Hundetraining Julia Doubrawa · Ligusterweg 5 · 86381 Krumbach · Erlaubnis nach § 11 TierSchG</span>
+      <a href="https://officedogs.training/impressum/">officedogs.training/impressum</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
