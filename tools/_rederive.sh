@@ -359,20 +359,37 @@ fi
 #
 # Als <img> statt CSS-Hintergrund, aus drei Gruenden: es steht unter der Falz
 # und kann so per loading="lazy" wirklich nachgeladen werden, es bekommt einen
-# Alt-Text, und es kann per srcset zwei Breiten anbieten — ein
+# Alt-Text, und es kann per srcset mehrere Breiten anbieten — ein
 # Hintergrundbild haette nichts davon.
 #
-# sizes: auf dem Desktop ist das Panel die halbe Karte, also rund 570 px, egal
-# wie breit das Fenster ist (die Karte deckelt bei 1240 px). Darunter stapelt
-# das Layout und das Bild laeuft ueber die volle Breite. Damit waehlt ein
-# normales Display die 620er Datei (70 KB) und nur ein 2x-Display die
-# 1240er (224 KB).
-IMG="<img class=\"portrait\" src=\"assets/julia-mit-hund-620.jpg\""
-IMG="$IMG srcset=\"assets/julia-mit-hund-620.jpg 620w, assets/julia-mit-hund-1240.jpg 1240w\""
-IMG="$IMG sizes=\"(max-width:1020px) 100vw, 570px\""
-IMG="$IMG width=\"1240\" height=\"828\" loading=\"lazy\" decoding=\"async\""
-IMG="$IMG alt=\"Julia Doubrawa sitzt entspannt in einem Sessel in einem hellen Loungebereich, ihr Hund wartet ruhig neben ihr\">"
-must_sed "s|<div class=\"portrait\"></div>|$IMG|" "<div class=\"portrait\"></div>"
+# sizes: HIER STAND BIS ZUM 02.09.2026 EIN DENKFEHLER, bitte nicht zurueckbauen.
+# Er lautete: "auf dem Desktop ist das Panel die halbe Karte, also rund 570 px"
+# -- und daraus folgte sizes="570px". Die Boxbreite stimmt auch, sie ist bloss
+# nicht die Zahl, die srcset braucht. Das Panel ist naemlich so HOCH wie die
+# Textspalte daneben (gemessen 719-737 px) und damit hochkant, waehrend die
+# Quelle quer liegt. object-fit:cover fuellt also ueber die HOEHE und malt das
+# Bild dabei rund 1104 CSS-px breit -- fast doppelt so breit wie die Box, der
+# Rest faellt links und rechts weg. Mit sizes="570px" holte der Browser
+# folgerichtig die 620er und zog sie auf 1104 px: 1,8x hoch, und das sieht man
+# dem Fell an. sizes muss die GEMALTE Breite nennen, nicht die Boxbreite.
+#
+# Darum jetzt <picture> mit zwei Kandidatenlisten -- ober- und unterhalb von
+# 1020 px hat das Panel schlicht eine andere Geometrie:
+#   Desktop  sizes="1104px", Kandidaten 1240 (1x, 225 KB), 1656 (dpr 1,25/1,5,
+#            369 KB -- Windows auf 125/150 %) und 2208 (2x, 598 KB)
+#   Mobil    .portrait liegt auf aspect-ratio 3/2, gemalte Breite = Boxbreite =
+#            100vw; die Liste endet bewusst bei 1240, sonst holt sich ein
+#            430-px-Telefon mit dpr 3 (430*3=1290) die 598-KB-Datei.
+PIC="<picture>"
+PIC="$PIC<source media=\"(max-width:1020px)\" sizes=\"100vw\""
+PIC="$PIC srcset=\"assets/julia-mit-hund-620.jpg 620w, assets/julia-mit-hund-1240.jpg 1240w\">"
+PIC="$PIC<img class=\"portrait\" src=\"assets/julia-mit-hund-1240.jpg\""
+PIC="$PIC srcset=\"assets/julia-mit-hund-1240.jpg 1240w, assets/julia-mit-hund-1656.jpg 1656w, assets/julia-mit-hund-2208.jpg 2208w\""
+PIC="$PIC sizes=\"1104px\""
+PIC="$PIC width=\"1240\" height=\"828\" loading=\"lazy\" decoding=\"async\""
+PIC="$PIC alt=\"Julia Doubrawa sitzt entspannt in einem Sessel in einem hellen Loungebereich, ihr Hund wartet ruhig neben ihr\">"
+PIC="$PIC</picture>"
+must_sed "s|<div class=\"portrait\"></div>|$PIC|" "<div class=\"portrait\"></div>"
 
 # Karte: Innenabstand wandert vom Container in die Textspalte, damit das Bild
 # buendig abschliesst. overflow:hidden haelt es in den runden Ecken.
@@ -386,7 +403,12 @@ must_sed "s|^\.quote-in{.*}$|.quote-in{display:grid;grid-template-columns:1fr 1f
 # gewachsene Textspalte — der Kasten wurde hoeher und das cover-Fenster damit
 # SCHMALER, wodurch der Hund rechts herausfiel. Die 42 % hier sind der alte
 # Stand des Designs; beim Uebernehmen den Wert aus index.html behalten.
-must_sed "s|^\.portrait{.*}$|.portrait{width:100%;height:100%;min-height:340px;object-fit:cover;object-position:42% 50%;display:block}|" \
+# Grid-Item ist jetzt das <picture>, also traegt es die Panelmasse und das
+# <img> fuellt es nur aus. display:contents auf dem <picture> waere eleganter,
+# faellt aber aus: das <img> wuerde zwar Grid-Item, sein height:100% findet
+# dann keine definite Bezugshoehe mehr und klappt auf die Eigenhoehe des
+# Bildes zusammen -- gemessen 379 statt 737 px.
+must_sed "s|^\.portrait{.*}$|.quote-in>picture{display:block;min-height:340px}\n.portrait{width:100%;height:100%;object-fit:cover;object-position:42% 50%;display:block}|" \
          "^\.portrait{"
 
 # Zwei Regeln aus dem Design sind auf den Kreis zugeschnitten und muessen fuer
@@ -415,7 +437,8 @@ p.label{font-size:11px;font-weight:600;line-height:1.6;max-width:none;margin-bot
    Eigenbreite zusammenfallen. */
 @media (max-width:1020px){
   .quote-in{gap:0;justify-items:stretch}
-  .portrait{height:auto;min-height:0;aspect-ratio:3/2}
+  .quote-in>picture{min-height:0}
+  .portrait{height:auto;aspect-ratio:3/2}
 }
 
 /* Hero-Schleier auf Telefonen. Der Verlauf des Designs hat seine helle Delle

@@ -204,7 +204,14 @@ p.pkg-lead{font-size:14.5px;font-weight:500;color:var(--slate);margin-bottom:12p
 .quote{padding:0 0 clamp(72px,9vw,112px)}
 .quote-in{display:grid;grid-template-columns:1fr 1fr;align-items:stretch;background:var(--cream);border-radius:var(--r);overflow:hidden}
 .quote-in>div{padding:clamp(30px,4vw,56px)}
-.portrait{width:100%;height:100%;min-height:340px;object-fit:cover;object-position:47% 50%;display:block}
+/* <picture> ist blosse Verpackung fuer die Kandidatenlisten, aber es ist das
+   Grid-Item -- also traegt es die Panelmasse und das <img> fuellt es nur aus.
+   display:contents waere der elegantere Weg, funktioniert hier aber nicht: das
+   <img> wuerde zwar Grid-Item, sein height:100% findet dann jedoch keine
+   definite Bezugshoehe mehr und faellt auf auto zurueck -- das Panel klappte
+   gemessen von 737 auf 379 px zusammen, also auf die Eigenhoehe des Bildes. */
+.quote-in>picture{display:block;min-height:340px}
+.portrait{width:100%;height:100%;object-fit:cover;object-position:47% 50%;display:block}
 /* Bildausschnitt auf dem Desktop. Der Kasten steht hochkant (rund 568x737),
    die Quelle liegt quer (1240x828) — cover zeigt also nur etwa die halbe
    Bildbreite, und wo dieses Fenster sitzt, entscheidet, ob der Hund rechts
@@ -296,7 +303,8 @@ p.label{font-size:11px;font-weight:600;line-height:1.6;max-width:none;margin-bot
    Eigenbreite zusammenfallen. */
 @media (max-width:1020px){
   .quote-in{gap:0;justify-items:stretch}
-  .portrait{height:auto;min-height:0;aspect-ratio:3/2}
+  .quote-in>picture{min-height:0}
+  .portrait{height:auto;aspect-ratio:3/2}
 }
 
 /* Hero-Schleier auf Telefonen. Der Verlauf des Designs hat seine helle Delle
@@ -494,7 +502,27 @@ p.label{font-size:11px;font-weight:600;line-height:1.6;max-width:none;margin-bot
 <section class="quote" data-screen-label="Warum Office Dogs">
   <div class="wrap">
     <div class="quote-in">
-      <img class="portrait" src="assets/julia-mit-hund-620.jpg" srcset="assets/julia-mit-hund-620.jpg 620w, assets/julia-mit-hund-1240.jpg 1240w" sizes="(max-width:1020px) 100vw, 570px" width="1240" height="828" loading="lazy" decoding="async" alt="Julia Doubrawa sitzt entspannt in einem Sessel in einem hellen Loungebereich, ihr Hund wartet ruhig neben ihr">
+      <!-- Zwei getrennte Kandidatenlisten, weil das Panel ober- und
+           unterhalb des Breakpoints eine andere Geometrie hat.
+           Oberhalb 1020px: die Box ist hochkant (~568 breit, 719-737 hoch), die
+           Quelle liegt quer. object-fit:cover fuellt ueber die Hoehe und malt
+           die Quelle dabei ~1104 CSS-px breit -- fast doppelt so breit wie die
+           Box. Genau das stand vorher falsch drin: sizes nannte die BOXbreite
+           (570px), also holte der Browser die 620er und zog sie auf 1104 px
+           auseinander. 1,8x hochskaliert, und das sieht man dem Fell an.
+           sizes muss die GEMALTE Breite nennen, sonst kann der Browser gar
+           nicht wissen, wie gross das Bild wirklich wird. Die 1656er
+           Zwischenstufe ist fuer dpr 1,25/1,5 (Windows auf 125/150 %):
+           ohne sie griffe der Browser dort zur 2208er, 598 statt 369 KB
+           fuer eine Aufloesung, die das Display nicht zeigen kann.
+           Bis 1020px: .portrait liegt auf aspect-ratio 3/2, gemalte Breite =
+           Boxbreite = 100vw, und die Liste endet bewusst bei 1240 -- sonst
+           laedt ein 430-px-Telefon mit dpr 3 (430*3=1290) die 598-KB-Datei. -->
+      <picture>
+        <source media="(max-width:1020px)" sizes="100vw"
+                srcset="assets/julia-mit-hund-620.jpg 620w, assets/julia-mit-hund-1240.jpg 1240w">
+        <img class="portrait" src="assets/julia-mit-hund-1240.jpg" srcset="assets/julia-mit-hund-1240.jpg 1240w, assets/julia-mit-hund-1656.jpg 1656w, assets/julia-mit-hund-2208.jpg 2208w" sizes="1104px" width="1240" height="828" loading="lazy" decoding="async" alt="Julia Doubrawa sitzt entspannt in einem Sessel in einem hellen Loungebereich, ihr Hund wartet ruhig neben ihr">
+      </picture>
       <div>
         <p class="label">Warum Office Dogs</p>
         <blockquote>„Ein gutes Bürohunde-Konzept berücksichtigt nicht nur den Hund – sondern das gesamte Unternehmen."</blockquote>

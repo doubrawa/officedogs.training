@@ -126,11 +126,31 @@ Convert-Image "$Local\hero-office-dogs.png" "$Dst\hero-office-dogs.jpg" 1440 960
 # Aus 1200x800 muessen 170 px Hoehe weg. anchorY 0.45 laesst oben genug Luft
 # ueber dem Kopf und schneidet unten nur die vorgestreckten Pfoten an.
 Convert-Image "$Local\hero-office-dogs.png" "$Dst\og-office-dogs.jpg"   1200 630  84 0.45
-# Bildpanel im "Warum Office Dogs"-Block, zwei Breiten fuer srcset. Angezeigt
-# wird es mit rund 570 CSS-px (halbe Karte): 620 px reichen fuer normale
-# Displays, 1240 px sind die 2x-Fassung. Zielverhaeltnis 1.498 entspricht der
-# Quelle (2400x1602), es wird also praktisch nichts beschnitten -- den
-# Ausschnitt macht spaeter object-fit im Browser, je nach Texthoehe.
+# Bildpanel im "Warum Office Dogs"-Block, drei Breiten fuer srcset.
+# Zielverhaeltnis 1.498 entspricht der Quelle (2400x1602), es wird also
+# praktisch nichts beschnitten -- den Ausschnitt macht object-fit im Browser,
+# je nach Texthoehe.
+#
+# ACHTUNG, hier steckte der Fehler: das Panel ist zwar nur ~568 CSS-px BREIT
+# (halbe Karte), aber es ist so HOCH wie die Textspalte daneben -- gemessen
+# 719 bis 737 px ueber den ganzen Desktop-Bereich. Die Box ist damit hochkant
+# (Verhaeltnis 0,64 bis 0,78), die Quelle liegt quer. `object-fit:cover` fuellt
+# also ueber die HOEHE und blaest das Bild dabei auf rund 1104 CSS-px Breite
+# auf -- fast das Doppelte der Boxbreite, der Rest wird links und rechts
+# weggeschnitten. Massgeblich ist diese GEMALTE Breite, nicht die Boxbreite:
+#   1x-Desktop     1104 px  -> 1240 deckt das (leichtes Verkleinern schaerft eher)
+#   1,25x / 1,5x   1656 px  -> neue 1656er-Fassung
+#   2x-Desktop     2208 px  -> neue 2208er-Fassung
+# Die 1656er ist kein Luxus, sondern spart: Windows-Notebooks laufen sehr oft
+# auf 125 % oder 150 % Skalierung (dpr 1,25/1,5). Ohne diese Stufe griffe der
+# Browser dort zur 2208er und laedt 598 statt 369 KB, obwohl er die Aufloesung
+# gar nicht darstellen kann.
+#   Mobil (<=1020px) liegt .portrait auf aspect-ratio 3/2, dort deckt sich
+#   gemalte Breite mit der Boxbreite und 620/1240 reichen wie bisher.
+# Vor dem grossen Bildpanel (Commit 9b6dca1) war das Portrait ein 200-px-Rund,
+# da stimmten 620/1240 -- die Dateien sind beim Umbau nur nie mitgewachsen.
+Convert-Image "$Src\hero-alltagstipps.jpg" "$Dst\julia-mit-hund-2208.jpg" 2208 1474 82 0.5
+Convert-Image "$Src\hero-alltagstipps.jpg" "$Dst\julia-mit-hund-1656.jpg" 1656 1106 82 0.5
 Convert-Image "$Src\hero-alltagstipps.jpg" "$Dst\julia-mit-hund-1240.jpg" 1240 828  82 0.5
 Convert-Image "$Src\hero-alltagstipps.jpg" "$Dst\julia-mit-hund-620.jpg"   620 414  82 0.5
 # Favicon-Fallback fuer Browser ohne SVG-Support (Alpha bleibt).
