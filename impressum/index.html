@@ -21,6 +21,8 @@
   --maxw:1240px;--pad:clamp(22px,4vw,52px);--r:16px;
 }
 html{scroll-behavior:smooth}
+/* Wer „Bewegung reduzieren“ gesetzt hat, springt hart statt zu fahren. */
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--text);
   overflow-x:hidden;-webkit-font-smoothing:antialiased}
 a{color:var(--sand-deep)}a:hover{color:var(--slate)}

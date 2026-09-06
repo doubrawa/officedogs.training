@@ -95,7 +95,16 @@ $raw   = [System.Text.Encoding]::GetEncoding(28591).GetString([System.IO.File]::
 $pages = ([regex]::Matches($raw, '/Type\s*/Page[^s]')).Count
 $fonts = ([regex]::Matches($raw, '/FontFile[23]')).Count
 $links = ([regex]::Matches($raw, '/Subtype\s*/Link')).Count
-$box   = ([regex]::Match($raw, '/MediaBox\s*\[\s*0\s+0\s+([\d.]+)\s+([\d.]+)')).Groups
+$boxM  = [regex]::Match($raw, '/MediaBox\s*\[\s*0\s+0\s+([\d.]+)\s+([\d.]+)')
+# Wie bei $soll unten geprueft, bevor zugegriffen wird: greift das Muster
+# nicht (andere Schreibweise der Nullen, MediaBox nur im Seitenbaum vererbt),
+# starb die Umrechnung sonst an einem leeren String, statt zu sagen was los
+# ist -- und liess das temporaere PDF in %TEMP% liegen.
+if (-not $boxM.Success) {
+    Remove-Item $tmp -Force
+    throw "Keine MediaBox im PDF gefunden. Chrome hat vermutlich kein vollstaendiges PDF geschrieben."
+}
+$box   = $boxM.Groups
 
 # Die @page-Regel aus der Quelle lesen. Breite steht dort in mm, die Hoehe in pt
 # (warum, steht im Kommentarkopf von onepager.html) - deshalb beide Einheiten.
@@ -108,8 +117,14 @@ if ($pages -ne 1) {
     $hint = if ($soll.Success) { "ueber die $($soll.Groups[3].Value)$($soll.Groups[4].Value) aus der @page-Regel" } else { "ueber die Blatthoehe" }
     throw "PDF hat $pages Seiten statt 1. Der Inhalt laeuft $hint hinaus - entweder onepager.html kuerzen oder dort die Blatthoehe (@page UND html,body) anheben."
 }
-if ($fonts -lt 2) {
-    throw "Nur $fonts eingebettete Schriften. DM Sans und Playfair Display muessen beide drin sein."
+# Die Familien nachweisen, nicht die Schriftstroeme zaehlen. Das Blatt setzt DM
+# Sans in vier Schnitten: schon zwei davon brachten die alte Pruefung
+# ($fonts -lt 2) ueber die Huerde, waehrend Playfair fehlte und das Zitat in
+# einer Ersatzserife stand. Chrome benennt die Subsets "AAAAAA+DMSans9pt-..."
+# und "EAAAAA+PlayfairDisplay-Italic", der Praefix ist je Subset verschieden.
+$fehlend = @('DMSans','PlayfairDisplay') | Where-Object { $raw -notmatch "/BaseFont\s*/[A-Z]{6}\+$_" }
+if ($fehlend) {
+    throw "Nicht eingebettet: $($fehlend -join ', '). DM Sans und Playfair Display muessen beide drin sein ($fonts Schriftstroeme gefunden)."
 }
 
 $mmW = [math]::Round([double]$box[1].Value * 25.4 / 72, 1)

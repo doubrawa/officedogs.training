@@ -69,16 +69,38 @@ def target_weight(name: str) -> int | None:
     return int(m.group(1)) if m else None
 
 
+def gebrauchte_dateien() -> set[str]:
+    """Dateinamen, die assets/fonts.css tatsaechlich anfordert.
+
+    Die Quelle liefert neun Schnitte, die Seiten fordern fuenf davon an. Ohne
+    diesen Filter kopierte ein Lauf die vier ueberzaehligen Playfair-Schnitte
+    wieder ins Repo, nachdem sie dort einmal entfernt worden sind — ein
+    stiller Rueckbau, den niemand mit dem Schriften-Lauf in Verbindung braechte.
+    Wer einen Schnitt braucht, deklariert ihn in fonts.css; von dort holt er
+    sich dann auch seine Datei.
+    """
+    css = (REPO / "assets" / "fonts.css").read_text(encoding="utf-8")
+    return set(re.findall(r"url\('fonts/([^']+\.woff2)'\)", css))
+
+
 def main() -> int:
     if not SRC.is_dir():
         print(f"FEHLER: Quellverzeichnis {SRC} nicht gefunden")
         return 1
     DST.mkdir(parents=True, exist_ok=True)
 
+    gebraucht = gebrauchte_dateien()
+    if not gebraucht:
+        print("FEHLER: assets/fonts.css fordert keine woff2-Datei an")
+        return 1
+
     before_total = after_total = 0
     print(f"Fonts instanzieren + subsetten (Quelle: {SRC}):")
 
     for src_file in sorted(SRC.glob("*.woff2")):
+        if src_file.name not in gebraucht:
+            print(f"  {src_file.name:<30} uebersprungen (nicht in fonts.css)")
+            continue
         before = src_file.stat().st_size
         font = TTFont(src_file)
 
@@ -111,6 +133,14 @@ def main() -> int:
         after_total += after
         print(f"  {src_file.name:<30} {before // 1024:>3} KB -> "
               f"{after // 1024:>3} KB  {pinned}")
+
+    # Ein vorhandenes, aber leeres Verzeichnis lief bis hierher durch und starb
+    # dann an der Division. SRC zeigt per Default in ein ANDERES Repo -- ein
+    # knapp danebengesetztes Argument ist der Normalfall, kein Sonderfall, und
+    # verdient dieselbe Meldung wie das fehlende Verzeichnis oben.
+    if before_total == 0:
+        print(f"FEHLER: keine .woff2-Datei in {SRC} gefunden")
+        return 1
 
     saved = 100 * (before_total - after_total) // before_total
     print("  " + "-" * 54)

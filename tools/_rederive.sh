@@ -159,6 +159,28 @@ cat > "$DST/sitemap.xml" <<XML
 XML
 echo "  sitemap.xml erzeugt (2 URLs)"
 
+# --- Schema.org in index.html gegenpruefen ---------------------------------
+# build-schema.py liest Preis, Paketname und Leistungsposten AUS der Seite,
+# damit die strukturierten Daten nicht von der sichtbaren Seite abdriften
+# koennen. Diese Zusage galt, solange das Script index.html selbst schrieb.
+# Seit dem Rollenwechsel laeuft der Generator nur noch in TEIL 2, also gegen
+# index.neu.html — fuer die handgepflegte index.html gab es sie nicht mehr:
+# wer den Preis im Markup aendert, aendert das JSON-LD 100 Zeilen darunter
+# nicht mit, und nichts schlaegt an. Genau der Fall, den der Docstring dort
+# fuer unmoeglich erklaert.
+#
+# Deshalb hier die Gegenprobe. Sie SCHREIBT NICHT — index.html bleibt Quelle
+# und Handarbeit —, sie rechnet den Block neu und vergleicht ihn mit dem, der
+# drinsteht. Weicht er ab, bricht der Lauf ab (set -e), statt die Abweichung
+# stehen zu lassen.
+if [ -f "$DST/index.html" ]; then
+  if py -c "" >/dev/null 2>&1; then
+    py "$DST/tools/build-schema.py" --check "$DST/index.html"
+  else
+    echo "  WARNUNG: py fehlt — JSON-LD in index.html ungeprueft"
+  fi
+fi
+
 if [ "$MODE" = pflege ]; then
   echo
   echo "Pflegelauf fertig. index.html wurde nicht angefasst — sie ist die Quelle."
@@ -258,7 +280,13 @@ must_sed "s|^<meta name=\"description\" content=\".*\">$|<meta name=\"descriptio
 # derselbe Name zweimal anders geschrieben steht, liest sich wie ein Tippfehler.
 # Idempotent: "Office Dogs Guide" enthaelt "Office Dog Guide" nicht.
 # Das JSON-LD-Angebot liest den Namen ohnehin aus der Seite und folgt von selbst.
-must_sed "s|Office Dog Guide|Office Dogs Guide|g" "Office Dog Guide"
+#
+# Bewusst KEIN must_sed, aus demselben Grund wie bei der E-Mail-Adresse unten:
+# die Sonde waere hier der Tippfehler selbst. Wird er im Design korrigiert —
+# der erwuenschte Ausgang —, braeche must_sed den Import mit "Muster nicht mehr
+# gefunden" ab, obwohl gar nichts kaputt ist. Korrekturen, deren Verschwinden
+# der Erfolgsfall ist, laufen leer statt laut zu scheitern.
+sed -i "s|Office Dog Guide|Office Dogs Guide|g" "$F"
 
 # --- E-Mail-Adresse --------------------------------------------------------
 # Das Design liefert info@adventuredogs.training — die Adresse existiert nicht.
@@ -278,9 +306,18 @@ sed -i "s|info@adventuredogs\.training|julia@officedogs.training|g" "$F"
 # Ausgleich in die margin von .price, sonst klebt der Button am Preis.
 # Beides passiert nur, wenn der Zusatz überhaupt noch da ist — sobald es im
 # Design korrigiert ist, greift der Block gar nicht mehr.
-if grep -q 'class="price-sub">zzgl\. MwSt\.' "$F"; then
-  sed -i '/<div class="price-sub">zzgl\. MwSt\.<\/div>/d' "$F"
-  sed -i 's|\(\.price{[^}]*\)margin:12px 0 7px}|\1margin:12px 0 34px}|' "$F"
+#
+# Beide Schritte ueber must_sed, und die Sonde des if ist dieselbe wie das
+# Loeschmuster: vorher fragte sie nur nach 'class="price-sub">zzgl. MwSt.'
+# ohne das schliessende </div> auf derselben Zeile, und der Ausgleich hing an
+# einem ungeprueften sed. Aendert das Design die margin der .price-Regel, wurde
+# der Zusatz geloescht, der Ausgleich blieb aus — und die echo-Zeile meldete
+# trotzdem Vollzug. Uebrig blieb ein Knopf, der am Preis klebt, ohne Hinweis.
+if grep -q '<div class="price-sub">zzgl\. MwSt\.</div>' "$F"; then
+  must_sed '/<div class="price-sub">zzgl\. MwSt\.<\/div>/d' \
+           '<div class="price-sub">zzgl\. MwSt\.</div>'
+  must_sed 's|\(\.price{[^}]*\)margin:12px 0 7px}|\1margin:12px 0 34px}|' \
+           '\.price{[^}]*margin:12px 0 7px}'
   echo "  Preis: 'zzgl. MwSt.' entfernt (Kleinunternehmerregelung) — pruefen, siehe DEPLOY.md"
 fi
 
@@ -325,10 +362,20 @@ must_sed "s|^\.hero-overlay{.*}$|.hero-overlay{position:absolute;inset:0;backgro
 # Gegengewicht: engerer Schatten statt breiter Weichzeichnung — 10 px Blur
 # verteilt die Deckkraft so weit, dass direkt an der Buchstabenkante kaum
 # etwas ankommt. Ein 3-px-Kern traegt dort deutlich mehr.
-sed -i 's|text-shadow:0 1px 10px oklch(0% 0 0 / \.3)|text-shadow:0 1px 3px oklch(0% 0 0 / .5),0 2px 14px oklch(0% 0 0 / .4)|g' "$F"
+#
+# Beide ueber must_sed, und beide Sonden tragen dieselbe Bedingung wie ihre
+# Ersetzung. Das ist hier keine Formsache: der Ausgleich ist gemessen, und ohne
+# ihn liefert der Import eine Seite, die den helleren Schleier bekommt, aber
+# nicht sein Gegengewicht — zwei Textstellen faenden sich dann unter AA wieder,
+# ohne dass der Lauf etwas sagt. Vorher lief der erste als blankes sed, und die
+# Sonde des zweiten fragte nur nach "^\.hero \.label{": ein minimal
+# verschobener Sandton haette das sed leerlaufen lassen, waehrend grep
+# weiterhin fuendig wurde.
+must_sed 's|text-shadow:0 1px 10px oklch(0% 0 0 / \.3)|text-shadow:0 1px 3px oklch(0% 0 0 / .5),0 2px 14px oklch(0% 0 0 / .4)|g' \
+         'text-shadow:0 1px 10px oklch(0% 0 0 / \.3)'
 
 must_sed "s|^\.hero \.label{color:oklch(93% 0.02 85)}$|.hero .label{color:oklch(93% 0.02 85);text-shadow:0 1px 3px oklch(0% 0 0 / .5),0 1px 14px oklch(0% 0 0 / .4)}|" \
-         "^\.hero \.label{"
+         "^\.hero \.label{color:oklch(93% 0\.02 85)}$"
 
 # --- Marke in der Kopfzeile -------------------------------------------------
 # Neben dem Logo stand "Office Dogs" mit dem Zusatz "Adventure Dogs · Julia

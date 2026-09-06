@@ -34,6 +34,8 @@
   --maxw:1240px;--pad:clamp(22px,4vw,52px);--r:16px;
 }
 html{scroll-behavior:smooth}
+/* Wer „Bewegung reduzieren“ gesetzt hat, springt hart statt zu fahren. */
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--text);overflow-x:hidden;-webkit-font-smoothing:antialiased}
 a{color:var(--sand-deep)}a:hover{color:var(--slate)}
 section{scroll-margin-top:80px}
@@ -525,7 +527,7 @@ p.label{font-size:11px;font-weight:600;line-height:1.6;max-width:none;margin-bot
       </picture>
       <div>
         <p class="label">Warum Office Dogs</p>
-        <blockquote>„Ein gutes Bürohunde-Konzept berücksichtigt nicht nur den Hund – sondern das gesamte Unternehmen."</blockquote>
+        <blockquote>„Ein gutes Bürohunde-Konzept berücksichtigt nicht nur den Hund – sondern das gesamte Unternehmen“</blockquote>
         <p>Als Hundetrainerin bringe ich die fachliche Einschätzung von Hundeverhalten mit den Anforderungen des Unternehmensalltags zusammen.</p>
         <p>Denn ob ein Bürohunde-Konzept funktioniert, hängt nicht allein davon ab, ob ein Hund grundsätzlich bürotauglich ist.</p>
         <p>Entscheidend ist das Zusammenspiel aus Hund, Mensch, Räumlichkeiten, Arbeitsabläufen und klaren gemeinsamen Regeln.</p>

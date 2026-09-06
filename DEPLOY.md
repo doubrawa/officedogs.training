@@ -8,7 +8,7 @@
 ## 1. GitHub-Repo anlegen und pushen
 
 ```bash
-gh repo create officedogs.training --private --source . --remote origin
+gh repo create officedogs.training --public --source . --remote origin
 git push -u origin main
 ```
 

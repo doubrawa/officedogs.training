@@ -32,39 +32,18 @@
   src: url('fonts/dm-sans-600.woff2') format('woff2');
 }
 
-/* Playfair Display 600 / 700 / 900 – normal & italic */
-@font-face {
-  font-family: 'Playfair Display';
-  font-style: normal;
-  font-weight: 600;
-  font-display: swap;
-  src: url('fonts/playfair-600.woff2') format('woff2');
-}
-@font-face {
-  font-family: 'Playfair Display';
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url('fonts/playfair-700.woff2') format('woff2');
-}
-@font-face {
-  font-family: 'Playfair Display';
-  font-style: normal;
-  font-weight: 900;
-  font-display: swap;
-  src: url('fonts/playfair-900.woff2') format('woff2');
-}
+/* Playfair Display 600 kursiv – der einzige Schnitt, den die Seiten anfordern.
+   Playfair steht ausschliesslich im Zitat (index.html und der One-Pager, beide
+   font-style:italic;font-weight:600); font-weight 700 oder 900 kommt in keiner
+   Datei vor. Die vier uebrigen Schnitte (600/700/900 normal, 700 kursiv, rund
+   79 KB) waren deklariert, aber von keiner Regel erreichbar — sie wurden nie
+   ausgeliefert und lagen trotzdem im Repo. Kommt ein Schnitt zurueck, gehoert
+   er hier UND in assets/fonts/ wieder hin; subset-fonts.py liest die Liste der
+   gebrauchten Dateien aus dieser Datei. */
 @font-face {
   font-family: 'Playfair Display';
   font-style: italic;
   font-weight: 600;
   font-display: swap;
   src: url('fonts/playfair-600-italic.woff2') format('woff2');
-}
-@font-face {
-  font-family: 'Playfair Display';
-  font-style: italic;
-  font-weight: 700;
-  font-display: swap;
-  src: url('fonts/playfair-700-italic.woff2') format('woff2');
 }
