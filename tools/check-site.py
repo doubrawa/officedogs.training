@@ -10,7 +10,7 @@ zugeschnitten. Geprueft wird:
   2. SEO               - hat jede Seite title, description, canonical, og:*,
                          viewport, und zeigt das canonical auf die eigene URL?
   3. Verweise          - loesen alle internen href/src auf eine Datei auf?
-  4. Bilder            - keine Ausreisser bei Maessen und Gewicht
+  4. Bilder            - keine Ausreisser bei Massen und Gewicht
   5. Seitengewicht     - bleibt jede Seite unter dem Budget?
 
 FEHLER blockieren (Exit 1), WARNUNG nicht. tools/hooks/pre-commit ruft das
@@ -237,23 +237,43 @@ def pruefe_seo(liste):
 
 
 # -------------------------------------------------------------------- 3. Verweise
+def ziel_pfad(ordner, ziel):
+    """Verweisziel -> Pfad auf der Platte, oder None wenn nichts zu pruefen ist."""
+    if ziel.startswith(('http', 'mailto:', 'tel:', 'data:', '//', '#')):
+        return None
+    sauber = ziel.split('?')[0].split('#')[0]
+    if not sauber:
+        return None
+    basis = WURZEL if sauber.startswith('/') else ordner
+    voll = os.path.normpath(os.path.join(basis, sauber.lstrip('/').replace('/', os.sep)))
+    if os.path.isdir(voll):
+        voll = os.path.join(voll, 'index.html')
+    return voll
+
+
 def pruefe_verweise():
     anzahl = 0
     for rel in html_dateien():
         pfad = os.path.join(WURZEL, rel.replace('/', os.sep))
         ordner = os.path.dirname(pfad)
         text = open(pfad, encoding='utf-8', errors='ignore').read()
-        for treffer in re.finditer(r'(?:href|src)="([^"#][^"]*)"', text):
-            ziel = treffer.group(1)
-            if ziel.startswith(('http', 'mailto:', 'tel:', 'data:', '//', '#')):
+
+        ziele = [t.group(1) for t in re.finditer(r'(?:href|src)="([^"#][^"]*)"', text)]
+
+        # srcset traegt eine Kandidatenliste ("datei 620w, datei 1240w") und
+        # faellt durch das Muster oben. Ohne diesen Zweig bleibt eine fehlende
+        # Fassung unsichtbar: das <img> zeigt per src auf eine ANDERE Datei,
+        # und nur ein Geraet mit passender Pixeldichte fordert die
+        # verschwundene an. Nachgemessen am 09.09.2026 -- ein geloeschtes
+        # julia-mit-hund-1656.jpg lief glatt durch, obwohl jedes
+        # Windows-Notebook auf 125 oder 150 % Skalierung genau diese Datei holt.
+        for treffer in re.finditer(r'srcset="([^"]+)"', text, re.I):
+            ziele.extend(k.strip().split(' ')[0] for k in treffer.group(1).split(','))
+
+        for ziel in ziele:
+            voll = ziel_pfad(ordner, ziel)
+            if voll is None:
                 continue
-            sauber = ziel.split('?')[0].split('#')[0]
-            if not sauber:
-                continue
-            basis = WURZEL if sauber.startswith('/') else ordner
-            voll = os.path.normpath(os.path.join(basis, sauber.lstrip('/').replace('/', os.sep)))
-            if os.path.isdir(voll):
-                voll = os.path.join(voll, 'index.html')
             anzahl += 1
             if not os.path.exists(voll):
                 melde_fehler('Verweise', '%s verweist auf %s - existiert nicht' % (rel, ziel))
@@ -311,7 +331,7 @@ def pruefe_bilder():
 
         # Die Breite gilt fuer alle: ein 4000-px-Bild ist auch als og:image
         # falsch, und es zeigt, dass jemand ein Original ungeprueft abgelegt hat.
-        if breite > BILD_MAX_BREITE and name not in NICHT_VERLINKT:
+        if breite > BILD_MAX_BREITE:
             melde_fehler('Bilder', '%s ist %d px breit (max %d) - optimize-images.ps1 laufen lassen'
                          % (name, breite, BILD_MAX_BREITE))
 

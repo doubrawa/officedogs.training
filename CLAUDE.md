@@ -87,6 +87,21 @@ Hero und og:image aus dem Repo, das Portrait aus der Schwesterseite, und die
 Favicon-Vorlage gibt es gar nicht mehr (nur noch die Vektorfassung
 `assets/logo-office-dogs.svg`, aus der man erst rastern müsste).
 
+**Ein neues Logo muss durch scour.** Die ausgelieferte
+`assets/logo-office-dogs.svg` ist optimiert, und zwar mit:
+
+```bash
+py -m scour.scour -i logo.svg -o assets/logo-office-dogs.svg --set-precision=5 --enable-id-stripping --enable-comment-stripping --shorten-ids --remove-metadata --strip-xml-prolog --no-line-breaks
+```
+
+Das brachte 30,2 → 20,1 KB roh und 9,4 → 6,3 KB übertragen. Der Gewinn kommt
+aus relativen Pfadbefehlen und weggelassenen Trennzeichen, nicht aus gerundeten
+Zahlen: `precision=5` ist für diese Quelle verlustfrei, weil dort höchstens
+vierstellige Werte mit einer Nachkommastelle stehen. Nachgemessen an einem
+Pixel-Diff bei 600×600: 20 abweichende Pixel von 360.000, alle auf Kanten,
+also reines Antialiasing. Bis zum 09.09.2026 lief das automatisch im
+Pflegelauf; seit dessen Wegfall macht es niemand mehr von selbst.
+
 Beim Bildpanel im „Warum Office Dogs"-Block gilt: **`sizes` nennt die gemalte
 Breite, nicht die Boxbreite.** Das Panel ist 568 px breit, aber hochkant und
 füllt per `object-fit: cover` über die Höhe – gemalt werden rund 1104 px. Die

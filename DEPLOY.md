@@ -47,18 +47,24 @@ liefern.
 
 ## 4. Verlinkung von adventuredogs.training
 
-Der Nav-Punkt „OfficeDogs" gehört ins claude.ai/design-Projekt (die Nav steht
-auf jeder Seite inline im Export, nicht in der Pipeline). Absolute URL
-verwenden – `clean_page` im Hauptrepo schreibt nur `adventuredogs.training`-URLs
-um und fasst `officedogs.training` nicht an:
+Der Nav-Punkt „Office Dogs" steht drüben **in den HTML-Dateien selbst**, auf
+jeder der 16 Seiten inline – nicht im claude.ai/design-Projekt und nicht in
+einer Pipeline. Beides galt einmal, ist aber seit dem 08.09.2026 hinfällig:
+dort ist die Design-Pipeline entfernt worden, `clean_page` gibt es nicht mehr.
+
+Die URL muss **absolut** sein, weil officedogs.training eine eigene Domain ist –
+ein relativer Pfad liefe ins Leere. So sieht der Eintrag dort aus:
 
 ```html
 <!-- Desktop: in <ul class="nav-links">, vor dem CTA -->
-<li><a href="https://officedogs.training/">OfficeDogs</a></li>
+<li><a href="https://officedogs.training/">Office Dogs</a></li>
 
 <!-- Mobil: in <div class="nav-mobile">, an gleicher Position -->
-<a href="https://officedogs.training/">OfficeDogs</a>
+<a href="https://officedogs.training/">Office Dogs</a>
 ```
+
+Wer ihn ändert, ändert ihn auf allen Seiten des Schwesterrepos – dessen
+`check-site.py` prüft interne Verweise, aber keine fremden Domains.
 
 ## 5. One-Pager als PDF
 
