@@ -1,16 +1,35 @@
 # Bildoptimierung fuer officedogs.training.
 #
-# Erzeugt die ausgelieferten Bildvarianten aus zwei Quellen:
-#   $Src   = claude.ai/design-Export, liefert unoptimiert (2400x1602 u.ae.)
-#   $Local = tools\assets-src, Originale die es im Design gar nicht gibt
-# Wird von tools/_rederive.sh aufgerufen.
+# Von Hand aufrufen, wenn ein Bild dazukommt oder neu geschnitten wird:
+#
+#   powershell -ExecutionPolicy Bypass -File tools\optimize-images.ps1
+#
+# Bis zum 09.09.2026 rief tools/_rederive.sh dieses Skript bei jedem
+# Pflegelauf auf und holte die Quellen aus dem claude.ai/design-Export. Den
+# Export gibt es nicht mehr. Woher die Quellen heute kommen:
+#
+#   Hero + og:image  $Local\hero-office-dogs.png
+#                    Im Repo versioniert (tools\assets-src), kam direkt vom
+#                    Auftraggeber.
+#   Portrait         $Portrait -- hero-alltagstipps.jpg der Schwesterseite.
+#                    Dasselbe Foto wie auf adventuredogs.training, 2400x1602.
+#                    Liegt NICHT in diesem Repo; die Vorgabe zeigt hinueber.
+#   Favicons         $LogoPng -- logo-office-dogs.png. Lag nur im Export und
+#                    ist damit weg. Im Repo liegt die Vektorfassung
+#                    assets\logo-office-dogs.svg; wer die PNG-Favicons neu
+#                    braucht, rastert sie erst daraus. Ein Werkzeug dafuer
+#                    gibt es hier nicht, deshalb keine Vorgabe.
+#
+# Fehlt eine Quelle, ueberspringt das Skript den betroffenen Block und sagt es.
+# Was in assets/ liegt, bleibt dann unveraendert stehen.
 #
 # Hinweis: kein ImageMagick/pngquant auf diesem Rechner -> System.Drawing.
 # Umlaute in .ps1 bewusst vermieden (PowerShell 5.1 liest die Datei als CP1252).
 param(
-  [string]$Src   = "C:\DATA\Claude\design-extract-v53\assets",
-  [string]$Local = "C:\DATA\Claude\officedogs.training\tools\assets-src",
-  [string]$Dst   = "C:\DATA\Claude\officedogs.training\assets"
+  [string]$Local    = "C:\DATA\Claude\officedogs.training\tools\assets-src",
+  [string]$Portrait = "C:\DATA\Claude\adventuredogs.training\assets\hero-alltagstipps.jpg",
+  [string]$LogoPng  = "",
+  [string]$Dst      = "C:\DATA\Claude\officedogs.training\assets"
 )
 $ErrorActionPreference = "Stop"
 Add-Type -AssemblyName System.Drawing
@@ -149,11 +168,19 @@ Convert-Image "$Local\hero-office-dogs.png" "$Dst\og-office-dogs.jpg"   1200 630
 #   gemalte Breite mit der Boxbreite und 620/1240 reichen wie bisher.
 # Vor dem grossen Bildpanel (Commit 9b6dca1) war das Portrait ein 200-px-Rund,
 # da stimmten 620/1240 -- die Dateien sind beim Umbau nur nie mitgewachsen.
-Convert-Image "$Src\hero-alltagstipps.jpg" "$Dst\julia-mit-hund-2208.jpg" 2208 1474 82 0.5
-Convert-Image "$Src\hero-alltagstipps.jpg" "$Dst\julia-mit-hund-1656.jpg" 1656 1106 82 0.5
-Convert-Image "$Src\hero-alltagstipps.jpg" "$Dst\julia-mit-hund-1240.jpg" 1240 828  82 0.5
-Convert-Image "$Src\hero-alltagstipps.jpg" "$Dst\julia-mit-hund-620.jpg"   620 414  82 0.5
-# Favicon-Fallback fuer Browser ohne SVG-Support (Alpha bleibt).
-Convert-Png   "$Src\logo-office-dogs.png" "$Dst\favicon-192.png"      192 ""
-# iOS-Homescreen: deckende Flaeche in Paper-Ton, sonst komponiert iOS auf Schwarz.
-Convert-Png   "$Src\logo-office-dogs.png" "$Dst\apple-touch-icon.png" 180 "#FCFAF6"
+if ($Portrait -and (Test-Path $Portrait)) {
+  Convert-Image $Portrait "$Dst\julia-mit-hund-2208.jpg" 2208 1474 82 0.5
+  Convert-Image $Portrait "$Dst\julia-mit-hund-1656.jpg" 1656 1106 82 0.5
+  Convert-Image $Portrait "$Dst\julia-mit-hund-1240.jpg" 1240 828  82 0.5
+  Convert-Image $Portrait "$Dst\julia-mit-hund-620.jpg"   620 414  82 0.5
+} else {
+  Write-Output "  Portrait uebersprungen, Quelle fehlt: $Portrait"
+}
+if ($LogoPng -and (Test-Path $LogoPng)) {
+  # Favicon-Fallback fuer Browser ohne SVG-Support (Alpha bleibt).
+  Convert-Png $LogoPng "$Dst\favicon-192.png"      192 ""
+  # iOS-Homescreen: deckende Flaeche in Paper-Ton, sonst komponiert iOS auf Schwarz.
+  Convert-Png $LogoPng "$Dst\apple-touch-icon.png" 180 "#FCFAF6"
+} else {
+  Write-Output "  Favicons uebersprungen, keine PNG-Vorlage (-LogoPng, siehe Kopf)"
+}

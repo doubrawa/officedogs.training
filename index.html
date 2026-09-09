@@ -47,6 +47,13 @@ h1,h2,h3{color:var(--slate);font-weight:600;letter-spacing:-0.015em;text-wrap:pr
 /* NAV */
 nav{position:fixed;top:0;left:0;right:0;z-index:100;height:80px;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:0 var(--pad);background:transparent;border-bottom:1px solid transparent;transition:background .3s,backdrop-filter .3s,border-color .3s}
 nav.scrolled{background:oklch(98.5% 0.005 85 / .92);backdrop-filter:blur(12px);border-bottom-color:var(--line-soft)}
+/* Der Textschatten auf Nav und Kicker ist Gegengewicht zum zurueckgenommenen
+   Hero-Schleier, nicht Zierrat: beide Stellen liegen schon ohne ihn knapp
+   unter dem AA-Kontrast (Navigationslinks 3,4 ueber der hellen Fensterfront,
+   die Zeile ueber der Headline ebenfalls 3,4) und sacken mit dem helleren
+   Schleier weiter ab. Enger Kern statt breiter Weichzeichnung: 10 px Blur
+   verteilt die Deckkraft so weit, dass an der Buchstabenkante kaum etwas
+   ankommt — ein 3-px-Kern traegt dort deutlich mehr. */
 nav .brand b{color:#fff;text-shadow:0 1px 3px oklch(0% 0 0 / .5),0 2px 14px oklch(0% 0 0 / .4)}
 nav .links a{color:oklch(100% 0 0 / .92);text-shadow:0 1px 3px oklch(0% 0 0 / .5),0 2px 14px oklch(0% 0 0 / .4)}
 nav .links a:hover{color:#fff}
@@ -93,7 +100,28 @@ nav.scrolled .burger span{background:var(--slate)}
 
 /* HERO */
 .hero{position:relative;height:100svh;min-height:620px;display:flex;align-items:flex-end;overflow:hidden;padding-top:80px}
+/* Bildausschnitt. Das Foto zeigt eine Frau am Schreibtisch (links oben) und
+   den Hund davor auf dem Boden (Mitte unten). Mit `cover` beschneidet immer
+   nur EINE Achse — breite Viewports vertikal, schmale horizontal —, die
+   beiden Werte stoeren sich also nie gegenseitig:
+     44 % vertikal   greift auf breiten Viewports und laesst oben die Decke,
+                     unten die Pfoten gerade noch im Bild.
+     36 % horizontal greift auf Telefonen, wo nur rund 31 % der Bildbreite zu
+                     sehen sind. Bei 50 % zeigte das Telefon einen leeren
+                     Bueroflur: ihr Gesicht links raus, der Hund hinter dem
+                     Text. Gemessen, nicht geschaetzt — 30/36/42 % gerendert
+                     und verglichen. */
 .hero-img{position:absolute;inset:0;background:url('assets/hero-office-dogs.jpg') 36% 44% / cover no-repeat}
+/* Der Schleier ueber dem Foto, zweimal gemessen statt nach Gefuehl gesetzt.
+   Alle Stopps sind gegenueber dem urspruenglichen Entwurf um rund ein
+   Fuenftel zurueckgenommen (mittlere Bildhelligkeit 0,071 -> 0,085), damit
+   das Foto durchkommt; die Stopps unten blieben fast unangetastet, denn dort
+   steht der Text. Gemessen per Canvas — Hero im echten cover-Ausschnitt plus
+   beide Verlaeufe gerendert, dann der schlechteste Kontrastwert hinter jedem
+   Textblock: H1 3,81 (Grosstext braucht 3,0), Fliesstext 6,97 (braucht 4,5).
+   Wer Bildausschnitt, Schleier oder Text aendert, misst neu — die Zeilen
+   wandern dabei ueber andere Stellen des Fotos. Fuer Telefone gilt eine
+   eigene Fassung weiter unten (@media max-width:660px). */
 .hero-overlay{position:absolute;inset:0;background:linear-gradient(to right,oklch(22% 0.04 250 / .62) 0%,oklch(22% 0.04 250 / .24) 58%,oklch(22% 0.04 250 / .05) 100%),linear-gradient(to bottom,oklch(24% 0.04 250 / .42) 0%,oklch(24% 0.04 250 / .14) 32%,oklch(22% 0.04 250 / .60) 72%,oklch(18% 0.04 250 / .87) 100%)}
 .hero-in{position:relative;z-index:2;width:100%;max-width:var(--maxw);margin:0 auto;padding:0 var(--pad) clamp(52px,7vh,88px);display:flex;flex-direction:column;align-items:flex-start}
 .hero .label{color:oklch(93% 0.02 85);text-shadow:0 1px 3px oklch(0% 0 0 / .5),0 1px 14px oklch(0% 0 0 / .4)}

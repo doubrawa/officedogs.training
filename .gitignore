@@ -1,13 +1,3 @@
-# Nebenprodukt von `tools/_rederive.sh --import`: der frisch gebaute
-# Design-Export zum Vergleichen. index.html ist die Quelle, diese Datei ist
-# Wegwerfware — nach dem Uebernehmen loeschen.
-index.neu.html
-
-# Zwischendateien des Import-Laufs. Das Script raeumt sie selbst weg; liegen
-# sie herum, ist ein Lauf mittendrin abgebrochen.
-.css-patch.tmp
-.schema.tmp
-
 # PNG-Vorschau von `build-onepager.ps1 -Preview`, nur zum Draufschauen.
 # Das PDF daneben ist das Erzeugnis und gehoert sehr wohl ins Repo.
 assets/office-dogs-onepager.png

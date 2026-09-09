@@ -1,0 +1,24 @@
+# Jekyll-Konfiguration. Einziger Zweck: festlegen, was NICHT ausgeliefert wird.
+#
+# GitHub Pages laesst Jekyll ueber dieses Repo laufen — eine `.nojekyll`-Datei
+# gibt es hier bewusst nicht. Alles, was Jekyll nicht ausschliesst, ist unter
+# officedogs.training/<pfad> oeffentlich abrufbar. Nachgemessen am 09.09.2026:
+#
+#   DEPLOY.html                            200   (aus DEPLOY.md gebaut)
+#   tools/optimize-images.ps1              200
+#   tools/onepager/onepager.html           200
+#   tools/assets-src/hero-office-dogs.png  200   (2,3 MB Original)
+#   README.html                            404   (faellt durch die Vorgabe von
+#                                                 GitHub Pages heraus)
+#
+# Geheim ist nichts davon — das Repo ist oeffentlich —, aber auf der Domain der
+# Kundin haben interne Notizen und Werkzeuge nichts zu suchen, und das
+# Hero-Original will niemand versehentlich verlinkt sehen.
+#
+# ACHTUNG: `exclude` ERSETZT die Vorgabeliste, es ergaenzt sie nicht. Deshalb
+# steht README.md hier mit drin, obwohl es bisher schon draussen war.
+exclude:
+  - tools/
+  - README.md
+  - CLAUDE.md
+  - DEPLOY.md

@@ -25,9 +25,9 @@ Das Rendering aendert sich nicht: der Browser waehlt die Schnitte weiterhin
 ueber die font-weight-Angaben der @font-face-Regeln, und jede Datei liefert
 danach genau das Gewicht, unter dem sie deklariert ist.
 
-NICHT Teil von _rederive.sh — Schriften aendern sich nicht mit einem
-Design-Export. Nur laufen lassen, wenn ein Schnitt dazukommt oder die
-Quelldateien getauscht werden.
+Laeuft nicht automatisch mit, auch nicht im pre-commit-Hook: Schriften
+aendern sich nicht, wenn sich die Seite aendert. Nur laufen lassen, wenn ein
+Schnitt dazukommt oder die Quelldateien getauscht werden.
 
 Voraussetzung:  py -m pip install fonttools brotli
 Aufruf:         py tools/subset-fonts.py

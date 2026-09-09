@@ -108,8 +108,7 @@ mit 297 gegen 368 mm ohne Murren durch (das Blatt war zum Zeitpunkt des Tests
 an den Blattfuß gedrückt wird. Zu klein gesetzt fällt es einfach dorthin, wo der
 Text endet – bei den derzeit rund 17 px Reserve unsichtbar, bei mehr Luft nicht.
 
-Wichtig: das Blatt kommt **nicht** aus dem claude.ai/design-Projekt und wird von
-`_rederive.sh` nicht angefasst — ein neuer Export lässt es unverändert. Farben,
+Wichtig: das Blatt kommt **nicht** aus dem claude.ai/design-Projekt. Farben,
 Schriften und Bausteine sind aus `index.html` abgeschrieben. Wer die Palette
 oder die Texte der Site ändert, muss hier nachziehen; das merkt sonst niemand.
 
@@ -174,10 +173,9 @@ bis x=529 in den hellen Fensterbereich und 3,7 % ihres Glyphensaums lagen unter
 
 - ~~Postfach `julia@officedogs.training` einrichten.~~ Erledigt am 04.08.2026.
 - ~~E-Mail und Preisangabe im Design korrigieren.~~ Erledigt mit Export v53:
-  das Design liefert jetzt selbst `julia@officedogs.training` und den Preis ohne
-  MwSt.-Zusatz. Die beiden Korrekturregeln in `_rederive.sh` laufen dadurch
-  leer. Sie bleiben trotzdem drin – falls ein späterer Export sie wieder
-  einschleppt, fangen sie es ab.
+  das Design lieferte zuletzt selbst `julia@officedogs.training` und den Preis
+  ohne MwSt.-Zusatz. Die beiden Korrekturregeln, die das vorher geradezogen
+  haben, sind mit der Pipeline am 09.09.2026 entfallen.
 - ~~**Google Search Console**: Property anlegen und Sitemap einreichen.~~
   Erledigt am 05.08.2026. Die Sitemap muss danach **nicht** erneut eingereicht
   werden – Google holt sie von selbst wieder ab. Nur wenn sich ihre URL ändert,
@@ -186,10 +184,11 @@ bis x=529 in den hellen Fensterbereich und 3,7 % ihres Glyphensaums lagen unter
   Weg, nicht die Sitemap: die meldet, welche Seiten es gibt, nicht dass sich
   eine geändert hat.
 - **Handgepflegt sind `index.html`, `impressum/index.html` und der One-Pager.**
-  Seit dem 13.08.2026 ist `index.html` die Quelle, nicht mehr das Erzeugnis:
-  `_rederive.sh` kann sie nicht mehr überschreiben, ein neuer Design-Export
-  landet in `index.neu.html` zum Vergleichen. Aus dem Design kommen nur noch
-  Bilder und Logo-SVG. Hintergrund und Ablauf stehen in `README.md`.
+  Seit dem 13.08.2026 ist `index.html` die Quelle, nicht mehr das Erzeugnis;
+  seit dem 09.09.2026 gibt es überhaupt keinen Import mehr. Aus dem Design
+  kommt damit nichts mehr von selbst – auch Bilder und Logo nicht. Was von dort
+  übernommen wird, wird ausdrücklich benannt und von Hand übertragen.
+  Hintergrund und Ablauf stehen in `README.md`.
 
 ### Umsatzsteuer
 
@@ -221,13 +220,11 @@ gleichzeitig geht nicht. Offen sind:
 2. ~~die Preisangabe **im Design**.~~ Seit dem 13.08.2026 gegenstandslos:
    `index.html` ist die Quelle, ein Export überschreibt sie nicht mehr. Der
    Zusatz steht dort dauerhaft von Hand.
-3. der `price-sub`-Block in `_rederive.sh` – er löscht ein „zzgl. MwSt." aus
-   dem Design wieder heraus und ändert dabei die `margin` von `.price`. Er
-   greift auf die handgesetzte Fassung nicht (die nutzt `.price-mwst` inline
-   statt `.price-sub` als eigenen Block). Gefährlich ist er nicht mehr – er
-   wirkt nur noch auf `index.neu.html` –, aber wer einen Import übernimmt, muss
-   dort bewusst entscheiden statt den Block laufen zu lassen. Der Kommentar an
-   der Stelle sagt das inzwischen.
+3. ~~der `price-sub`-Block in `_rederive.sh`~~, der ein „zzgl. MwSt." aus dem
+   Design wieder herauslöschte und dabei die `margin` von `.price` nachzog.
+   Mit der Pipeline am 09.09.2026 entfallen; auf die handgesetzte Fassung
+   (`.price-mwst` inline statt `.price-sub` als eigener Block) hat er ohnehin
+   nie gegriffen.
 4. in `tools/build-schema.py` das auskommentierte `valueAddedTaxIncluded`.
    Bleibt bewusst ungesetzt, solange sich Seite und Impressum widersprechen –
    „false" wäre eine maschinenlesbare Steueraussage ohne Deckung. Der Preis

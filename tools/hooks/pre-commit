@@ -1,0 +1,80 @@
+#!/bin/bash
+# Laeuft vor jedem Commit. Aktiviert mit:
+#
+#   git config core.hooksPath tools/hooks
+#
+# (einmalig je Arbeitskopie; .git/hooks ist nicht versioniert, tools/hooks
+# schon — deshalb dieser Umweg.)
+#
+# Warum es den Hook gibt: GitHub Pages veroeffentlicht jeden Push binnen ein
+# bis drei Minuten. Zwischen "committet" und "steht im Netz" liegt nichts.
+# Vorher hingen beide Kontrollen daran, dass jemand vor dem Commit an den
+# Pflegelauf dachte — die Sitemap neu zu erzeugen und nachzusehen, ob das
+# JSON-LD noch zur sichtbaren Seite passt. Das hier denkt daran.
+#
+# Umgehen im Notfall:  git commit --no-verify
+set -u
+
+WURZEL="$(git rev-parse --show-toplevel)"
+cd "$WURZEL" || exit 1
+
+echo "pre-commit: Seite pruefen"
+
+# ── 1. sitemap.xml ────────────────────────────────────────────────────
+# Neu erzeugen und, wenn sie dabei von der gestageten Fassung abweicht,
+# gleich mit in den Commit nehmen. Die Datei wird nie von Hand bearbeitet,
+# es geht hier also nichts verloren — und die Alternative (abbrechen und um
+# ein `git add` bitten) kostet bei jeder Textaenderung einen zweiten Anlauf.
+bash tools/generate-sitemap.sh || {
+    echo "  ABBRUCH: generate-sitemap.sh ist gescheitert."
+    exit 1
+}
+
+if ! git diff --quiet -- sitemap.xml; then
+    git add sitemap.xml
+    echo "  sitemap.xml war nicht aktuell — neu erzeugt und in den Commit genommen."
+fi
+
+# Ausnahme Teil-Commit (`git commit -- pfad`): git baut dafuer einen
+# temporaeren Index. Nachgemessen — die Sitemap landet trotzdem im Commit,
+# aber der echte Index bleibt auf dem alten Stand, `git status` zeigt sie
+# danach als geaendert. Einmal `git add sitemap.xml` raeumt das auf.
+
+# Beide folgenden Pruefungen brauchen Python. Fehlt es, wird gewarnt statt
+# blockiert — auf einem Rechner ohne Python soll ein Commit moeglich bleiben.
+if command -v py >/dev/null 2>&1; then
+    PY=py
+elif command -v python3 >/dev/null 2>&1; then
+    PY=python3
+elif command -v python >/dev/null 2>&1; then
+    PY=python
+else
+    echo "  HINWEIS: kein Python gefunden, Seite und JSON-LD ungeprueft."
+    exit 0
+fi
+
+# ── 2. Website pruefen ────────────────────────────────────────────────
+# Seiten gegen die Sitemap, SEO-Bloecke, interne Verweise, Bildmasse,
+# Seitengewicht. Das Gegenstueck zu check-site.py im Hauptrepo.
+"$PY" tools/check-site.py || {
+    echo
+    echo "  ABBRUCH: check-site.py meldet Fehler (siehe oben)."
+    echo "  Wenn es wirklich so committet werden soll: git commit --no-verify"
+    exit 1
+}
+
+# ── 3. JSON-LD gegen die Seite pruefen ────────────────────────────────
+# build-schema.py rechnet den Block aus dem Markup neu und vergleicht ihn mit
+# dem, der in der Datei steht. index.html ist handgepflegt: wer den Preis im
+# Markup aendert, aendert das JSON-LD hundert Zeilen darunter nicht mit, und
+# ohne diese Probe faellt es niemandem auf. Google wertet eine veraltete
+# Preisangabe in strukturierten Daten als irrefuehrend. check-site.py prueft
+# das bewusst nicht mit: dort ginge es nur um Vorhandensein, hier um Inhalt.
+"$PY" tools/build-schema.py --check index.html || {
+    echo
+    echo "  ABBRUCH: JSON-LD und Seite gehen auseinander (siehe oben)."
+    echo "  Wenn es wirklich so committet werden soll: git commit --no-verify"
+    exit 1
+}
+
+echo "pre-commit: in Ordnung"

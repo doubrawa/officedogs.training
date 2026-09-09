@@ -11,13 +11,18 @@ Seite zeigt den neuen -- und Google bekommt monatelang den alten serviert, ohne
 dass es jemandem auffaellt. Google wertet das als irrefuehrend. Gelesen statt
 gespiegelt kann das nicht passieren.
 
-Aufruf (macht _rederive.sh): py tools/build-schema.py <index.html> <ausgabe>
-                             py tools/build-schema.py --check <index.html>
+Aufruf:  py tools/build-schema.py --check <index.html>
+         py tools/build-schema.py <index.html> <ausgabe>
 
 --check schreibt nichts, sondern vergleicht den JSON-LD-Block, der in der Datei
 steht, mit dem, der sich aus ihrem Markup ergibt. Das ist seit dem
 Rollenwechsel am 13.08.2026 der einzige Weg, auf dem die Zusage oben noch fuer
 index.html gilt: geschrieben wird die Datei von Hand, gelesen wird sie hier.
+Deshalb ruft tools/hooks/pre-commit genau diesen Aufruf vor jedem Commit auf.
+
+Die zweite Form schreibt den Block in eine Datei, statt zu vergleichen. Sie
+bediente frueher den Design-Import; geblieben ist sie fuer den Fall, dass der
+Block in index.html einmal komplett neu gesetzt werden muss.
 """
 import html
 import json
