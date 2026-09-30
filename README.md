@@ -85,3 +85,16 @@ Nach dem nächsten Push nachsehen (soll 404 sein):
 ```bash
 curl -s -o /dev/null -w "%{http_code}\n" https://officedogs.training/DEPLOY.html
 ```
+
+## Lizenz
+
+Alle Rechte vorbehalten, siehe [LICENSE](LICENSE). Das Repo ist nur öffentlich,
+weil GitHub Pages ohne GitHub Pro nicht aus privaten Repos ausliefert –
+einsehbar heißt nicht frei verwendbar. Das gilt für den Code ebenso wie für
+Texte, Fotos, Logo und One-Pager.
+
+Ausgenommen sind die Schriften in `assets/fonts/`: DM Sans und Playfair Display
+stehen unter der SIL Open Font License 1.1, und die verlangt, dass Copyright
+und Lizenztext mitgeliefert werden – dafür liegt dort `OFL.txt`. Kommt eine
+weitere Schrift dazu, gehört ihre Copyright-Zeile oben in `OFL.txt` (sie steht
+im `name`-Eintrag 0 der Schriftdatei).
